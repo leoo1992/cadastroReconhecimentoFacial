@@ -1,20 +1,21 @@
 "use strict";
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize'); // Importe o DataTypes do Sequelize
 
 const Controlador = require("./Controlador");
 const Pessoa = require("./Pessoa");
 
+
 const Log = sequelize.define("Log", {
   id: {
     allowNull: false,
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
   data: {
-    type: Sequelize.DATE,
+    type: DataTypes.DATE,
     allowNull: false,
-    defaultValue: Sequelize.NOW,
+    defaultValue: sequelize.NOW,
   },
 });
 

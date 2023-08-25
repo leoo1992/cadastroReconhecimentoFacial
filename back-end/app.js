@@ -1,17 +1,18 @@
 require("dotenv").config();
-const createError = require("http-errors");
 const express = require("express");
+const bodyParser = require('body-parser');
 const Pessoa = require("./models/Pessoa");
-const path = require("path");
 const sequelize = require("./database");
 const cors = require("cors");
 const sanitizeHtml = require("sanitize-html");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
+
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(cors());
 
 // Conexão com o banco de dados

@@ -1,36 +1,40 @@
 "use strict";
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
+const sanitizeHtml = require('sanitize-html');
+const { body, validationResult } = require('express-validator');
 
 const Pessoa = sequelize.define("Pessoa", {
   id: {
     allowNull: false,
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
   nome: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   cpf: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   tipo: {
-    type: Sequelize.ENUM("0", "1", "2", "3"),
+    type: DataTypes.ENUM("0", "1", "2", "3"),
     allowNull: false,
     defaultValue: "0",
   },
   ativo: {
-    type: Sequelize.BOOLEAN,
+    type: DataTypes.BOOLEAN,
     defaultValue: true,
     allowNull: false,
   },
   dataNascimento: {
-    type: Sequelize.DATEONLY,
+    type: DataTypes.DATEONLY,
     allowNull: false,
-    defaultValue: Sequelize.NOW,
+    defaultValue: DataTypes.NOW,
   },
 });
 
 module.exports = Pessoa;
+

@@ -1,12 +1,12 @@
 "use strict";
-const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require('sequelize');
 
 const Pessoa = require("./Pessoa");
 
 const PessoaResponsabilidade = sequelize.define("PessoaResponsabilidade", {
   id: {
     allowNull: false,
-    type: Sequelize.INTEGER,
+    type: sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },

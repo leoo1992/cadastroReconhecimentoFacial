@@ -1,49 +1,51 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
+const { DataTypes } = require('sequelize');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Logs", {
       id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
       tokenAutorizacao: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       dataNascimento: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: DataTypes.NOW,
       },
-        FK_PessoaId: {
-        type: Sequelize.INTEGER,
+      FK_PessoaId: {
+        type: DataTypes.INTEGER,
         references: {
-          model: 'Pessoa', 
-          key: 'id', 
+          model: 'Pessoa',
+          key: 'id',
         },
       },
-        FK_ControladorId: {
-        type: Sequelize.INTEGER,
+      FK_ControladorId: {
+        type: DataTypes.INTEGER,
         references: {
-        model: 'Controlador',
-        key: 'id',
+          model: 'Controlador',
+          key: 'id',
         },
       },
-        createdAt: {
+      createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
-        updatedAt: {
+      updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
       },
+    });
   },
-
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Logs");
   },
 };
+

@@ -1,37 +1,38 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
+const { DataTypes } = require('sequelize');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Pessoa", {
       id: {
         allowNull: false,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
       },
       nome: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       cpf: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       tipo: {
-        type: Sequelize.ENUM("0", "1", "2", "3"),
+        type: DataTypes.ENUM("0", "1", "2", "3"),
         allowNull: false,
         defaultValue: "0",
       },
       ativo: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },
       dataNascimento: {
-        type: Sequelize.DATEONLY,
+        type: DataTypes.DATEONLY,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: DataTypes.NOW,
       },
     });
   },

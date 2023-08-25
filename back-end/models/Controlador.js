@@ -1,15 +1,15 @@
 "use strict";
-const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require('sequelize');
 
 const Controlador = sequelize.define("Controlador", {
   id: {
     allowNull: false,
-    type: Sequelize.INTEGER,
+    type: sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
   tokenAutorizacao: {
-    type: Sequelize.STRING,
+    type: sequelize.STRING,
     allowNull: false,
   },
 });
