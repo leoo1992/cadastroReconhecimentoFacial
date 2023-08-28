@@ -1,17 +1,18 @@
 "use strict";
-const sequelize = require('sequelize');
-
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
 const Controlador = sequelize.define("Controlador", {
   id: {
     allowNull: false,
-    type: sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
   tokenAutorizacao: {
-    type: sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
   },
+}, {
+  tableName: "controlador"
 });
-
 module.exports = Controlador;
