@@ -1,9 +1,11 @@
 "use strict";
-
 /** @type {import('sequelize-cli').Migration} */
 const { DataTypes } = require('sequelize');
+const seedLog = require('../seeders/logSeeder');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    //alimentada
+    await seedLog(),
     await queryInterface.createTable("Logs", {
       id: {
         allowNull: false,
@@ -44,8 +46,13 @@ module.exports = {
       },
     });
   },
+  
   down: async (queryInterface, Sequelize) => {
+    console.log('INITIALIZE UNDO: Logs');
+    await queryInterface.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await queryInterface.dropTable("Logs");
+    console.log('COMPLETE UNDO: Logs');
   },
+  
 };
 
