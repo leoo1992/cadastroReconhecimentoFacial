@@ -1,8 +1,6 @@
 "use strict";
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize');
-const sanitizeHtml = require('sanitize-html');
-const { body, validationResult } = require('express-validator');
 
 const Pessoa = sequelize.define("Pessoa", {
   id: {
@@ -34,6 +32,8 @@ const Pessoa = sequelize.define("Pessoa", {
     allowNull: false,
     defaultValue: DataTypes.NOW,
   },
+},{
+  tableName: "pessoa"
 });
 
 module.exports = Pessoa;
