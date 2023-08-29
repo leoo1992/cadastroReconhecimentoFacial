@@ -7,12 +7,10 @@
   align-items: flex-start;
   flex-direction: row;
   flex-wrap: nowrap;
-
   background-color: #bbdefb;
   height: 100%;
   padding: 15px;
   gap: 5px;
-
 }
 
 .bg-fundo {
