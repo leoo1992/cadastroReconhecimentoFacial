@@ -1,2 +1,2 @@
-# cadastro Reconhecimento Facial 
-## React no front e Express ++ no back
+# cadastro 
+## React no front Express com sequelize no back

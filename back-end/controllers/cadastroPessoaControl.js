@@ -14,7 +14,6 @@ const cadastrarPessoa = async (req, res) => {
             cpf: req.body.cpf,
             tipo: req.body.tipo,
             ativo: req.body.ativo,
-            dataNascimento: req.body.dataNascimento,
         };
 
         const existingUser = await Pessoa.findOne({
@@ -31,7 +30,6 @@ const cadastrarPessoa = async (req, res) => {
                 cpf: formData.cpf,
                 tipo: formData.tipo,
                 ativo: formData.ativo,
-                dataNascimento: formData.dataNascimento,
             });
 
             res.status(200).json({ message: "Cadastro realizado com sucesso." });
