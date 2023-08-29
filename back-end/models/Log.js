@@ -17,12 +17,12 @@ const Log = sequelize.define("Log", {
     defaultValue: sequelize.NOW,
   },
 }, {
-  tableName: "logs"
+  tableName: "Log"
 });
 
-Log.belongsTo(Pessoa, { foreignKey: "FK_PessoaId" });
+Log.belongsTo(Pessoa, { foreignKey: "PessoaId" });
 Pessoa.hasMany(Log);
 
-Log.belongsTo(Controlador, { foreignKey: "FK_ControladorId" });
+Log.belongsTo(Controlador, { foreignKey: "ControladorId" });
 Controlador.hasMany(Log);
 module.exports = Log;

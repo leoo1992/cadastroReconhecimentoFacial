@@ -1,7 +1,7 @@
 "use strict";
 /** @type {import('sequelize-cli').Migration} */
-const { DataTypes } = require('sequelize');
-const seedPessoa = require('../seeders/pessoaSeeder');
+const { DataTypes } = require("sequelize");
+const seedPessoa = require("../seeders/pessoaSeeder");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -41,9 +41,9 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    console.log('INITIALIZE UNDO: Pessoa');
-    await queryInterface.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    console.log("INITIALIZE UNDO: Pessoa");
+    await queryInterface.sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
     await queryInterface.dropTable("Pessoa");
-    console.log('COMPLETE UNDO: Pessoa');
+    console.log("COMPLETE UNDO: Pessoa");
   },
 };
