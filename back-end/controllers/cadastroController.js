@@ -1,3 +1,4 @@
+/*
 const { validationResult } = require("express-validator");
 const Pessoa = require("../models/Pessoa");
 
@@ -42,3 +43,4 @@ const cadastrarPessoa = async (req, res) => {
 module.exports = {
   cadastrarPessoa,
 };
+*/

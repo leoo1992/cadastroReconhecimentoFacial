@@ -1,3 +1,4 @@
+/*
 const express = require("express");
 const router = express.Router();
 const Pessoa = require("../models/Pessoa"); // Importe o modelo Pessoa
@@ -36,4 +37,4 @@ router.post("/cadastro", async (req, res) => {
 });
 
 module.exports = router;
-
+*/

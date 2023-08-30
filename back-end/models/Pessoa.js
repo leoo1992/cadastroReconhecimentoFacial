@@ -25,14 +25,9 @@ const Pessoa = sequelize.define(
       defaultValue: "0",
     },
     ativo: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      type: DataTypes.STRING,
+      defaultValue: "0",
       allowNull: false,
-    },
-    dataNascimento: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
     },
   },
   {
