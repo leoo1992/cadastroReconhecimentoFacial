@@ -43,18 +43,17 @@ const Cadastro = () => {
     }
 
     api
-    .post("/cadastro", formData)
-    .then(() => {
-      setFormErrors({});
-      alert('Cadastrado com Sucesso')
-      navigate("/");
-    })
-    .catch((error) => {
-      console.error(error);
-      alert('Erro ao cadastrar : ' + error)
-      navigate("/");
-    });
-
+      .post("/cadastro", formData)
+      .then(() => {
+        setFormErrors({});
+        alert("Cadastrado com Sucesso");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Erro ao cadastrar : " + error);
+        navigate("/");
+      });
   };
 
   const [formErrors, setFormErrors] = useState({
