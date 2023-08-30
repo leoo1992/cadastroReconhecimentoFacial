@@ -6,13 +6,11 @@ const HomePage = () => {
   return (
     <>
       <div className="bg-fundo flex-container">
-        <h3 className="p-0 m-0 text-start text-danger d-inline">Reconhecimento Facial</h3>
+        <h3 className="p-0 m-0 text-start text-danger d-inline">
+          Reconhecimento Facial
+        </h3>
         <div className="btn-group">
-
-        <div className="justify-content-end">
-          /*
-          TODO: Rota relatorio
-          */
+          <div className="justify-content-end">
             <Link to="/relatorio" className="btn btn-success fw-bold mr-1">
               Relatório de Acessos
             </Link>
@@ -24,7 +22,6 @@ const HomePage = () => {
             </Link>
           </div>
         </div>
-
       </div>
     </>
   );

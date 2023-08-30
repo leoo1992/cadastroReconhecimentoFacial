@@ -26,12 +26,7 @@ const Cadastro = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const requiredFields = [
-      'nome',
-      'cpf',
-      'tipo',
-      'ativo',
-    ];
+    const requiredFields = ["nome", "cpf", "tipo", "ativo"];
 
     const errors = {};
 
@@ -48,7 +43,7 @@ const Cadastro = () => {
     }
 
     api
-      .post("/cadastro")
+      .post("/", formData)
       .then(() => {
         setFormErrors({});
         navigate("/");
@@ -69,8 +64,7 @@ const Cadastro = () => {
     if (errorRef.current) {
       errorRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [formErrors]
-  );
+  }, [formErrors]);
 
   return (
     <div className="p-0 m-0 bg-cadastro">
@@ -78,7 +72,6 @@ const Cadastro = () => {
       <div className="d-flex justify-content-center align-items-center p-md-5 p-lg-5 p-sm-2 fw-bold">
         <div className="cadastro w-25 border-success rounded-3 p-4">
           <form onSubmit={handleSubmit}>
-
             <div className="form-group pt-sm-1 pt-md-2 pt-lg-2">
               <label>Nome:</label>
               <input
@@ -149,7 +142,6 @@ const Cadastro = () => {
                 Cadastrar
               </button>
             </div>
-
           </form>
           <Link to="/" className="btn btn-danger fw-bold">
             Voltar
