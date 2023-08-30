@@ -9,11 +9,12 @@ const express = require("express"),
   Log = require('./models/Log'),
   Pessoa = require('./models/Pessoa'),
   PessoaResponsabilidade = require('./models/PessoaResponsabilidade');
+const cadastroRoutes = require('./routes/cadastroPessoa');
 
-
+app.use(cors());
+app.use('/cadastro', cadastroRoutes);
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(cors());
 
 console.log("Tentando conectar ao banco de dados...");
 sequelize
