@@ -1,28 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "./styles.css";
+import NavBar from './NavBar';
 
 const HomePage = () => {
   return (
     <>
-      <div className="bg-fundo flex-container">
-        <h3 className="p-0 m-0 text-start text-danger d-inline">
+      <div className="bg-fundo flex-container m-0 p-0">
+        <h5 className="text-start text-info d-inline mt-0 mr-0 mb-0 ml-3 p-0 justify-content-center align-content-center align-items-center align-middle align-self-center">
           Reconhecimento Facial
-        </h3>
-        <div className="btn-group">
-          <div className="justify-content-end">
-            <Link to="/relatorio" className="btn btn-success fw-bold mr-1">
-              Relatório de Acessos
-            </Link>
-          </div>
-
-          <div className="justify-content-end">
-            <Link to="/cadastro" className="btn btn-danger fw-bold">
-              Cadastro de Pessoas
-            </Link>
-          </div>
-        </div>
+        </h5>
+        <NavBar className="p-0 m-0 justify-content-center align-content-center text-center align-items-center align-middle align-self-center"/>
       </div>
+
+
     </>
   );
 };

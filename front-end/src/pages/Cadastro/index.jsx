@@ -70,7 +70,7 @@ const Cadastro = () => {
   }, [formErrors]);
 
   return (
-    <div className="p-0 m-0 bg-cadastro">
+    <div className="p-0 m-0 bg-cadastro w-100 h-100">
       <h3 className="text-center m-0 p-0 pt-4 text-danger">Cadastro</h3>
       <div className="d-flex justify-content-center align-items-center p-md-5 p-lg-5 p-sm-2 fw-bold">
         <div className="cadastro w-25 border-success rounded-3 p-4">
@@ -141,14 +141,14 @@ const Cadastro = () => {
                   Há campos acima para verificar.
                 </div>
               )}
-              <button type="submit" className="btn btn-danger fw-bold">
+              <Link to="/" type="submit" className="btn btn-danger fw-bold">
                 Cadastrar
-              </button>
+              </Link>
+              <Link to="/" className="btn btn-success fw-bold">
+                Voltar
+              </Link>
             </div>
           </form>
-          <Link to="/" className="btn btn-danger fw-bold">
-            Voltar
-          </Link>
         </div>
       </div>
     </div>
