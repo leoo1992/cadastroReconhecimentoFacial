@@ -4,16 +4,12 @@ import NavBar from './NavBar';
 
 const HomePage = () => {
   return (
-    <>
-      <div className="bg-fundo flex-container m-0 p-0">
-        <h5 className="text-start text-info d-inline mt-0 mr-0 mb-0 ml-3 p-0 justify-content-center align-content-center align-items-center align-middle align-self-center">
+    <div className="bg-fundo flex-container m-0 p-0">
+        <h5 className="titulo p-0 text-start text-info d-inline justify-content-center align-content-center align-items-center align-middle align-self-center">
           Reconhecimento Facial
         </h5>
-        <NavBar className="p-0 m-0 justify-content-center align-content-center text-center align-items-center align-middle align-self-center"/>
-      </div>
-
-
-    </>
+      <NavBar className="navibar-button justify-content-center align-content-center text-center align-items-center align-middle align-self-center" />
+    </div>
   );
 };
 

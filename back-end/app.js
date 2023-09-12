@@ -5,7 +5,7 @@ const cors = require("cors");
 const Pessoa = require("./models/Pessoa");
 const app = express();
 const port = 3000;
-const { body, validationResult } = require("express-validator");
+const {validationResult } = require("express-validator");
 
 app.use(express.json());
 app.use(cors());
@@ -69,12 +69,10 @@ app.get("/listar", async (req, res) => {
     const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
     const paginacao = (pagina - 1) * limitePorPagina;
     const numeroDePaginas = Math.ceil(totalRegistros/limitePorPagina) || 1;
-
     const registros = await Pessoa.findAll({
       limit: limitePorPagina,
       offset: paginacao,
     });
-
 
     res.status(200).json({'registros' : registros, 'numerodepaginas' : numeroDePaginas , 'totalregistros': totalRegistros});
 
