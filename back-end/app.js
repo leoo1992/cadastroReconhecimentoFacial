@@ -2,16 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const sequelize = require("./config/sequelize");
 const cors = require("cors");
-const Controlador = require("./models/Controlador");
-const Log = require("./models/Log");
 const Pessoa = require("./models/Pessoa");
-const PessoaResponsabilidade = require("./models/PessoaResponsabilidade");
-const cadastroRoutes = require("./routes/cadastroPessoa");
-const { body, validationResult } = require("express-validator");
-const sanitizeHtml = require("sanitize-html");
-
 const app = express();
 const port = 3000;
+const { body, validationResult } = require("express-validator");
 
 app.use(express.json());
 app.use(cors());
@@ -42,26 +36,20 @@ sequelize
 // Rota para cadastro
 app.post(
   "/cadastro",
-
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const formData = {
-      nome: sanitizeHtml(req.body.nome),
-      cpf: sanitizeHtml(req.body.cpf),
-      tipo: sanitizeHtml(req.body.tipo),
-      ativo: sanitizeHtml(req.body.ativo),
-    };
+    const { nome, cpf, tipo, ativo } = req.body;
 
     try {
       const createdUser = await Pessoa.create({
-        nome: formData.nome,
-        cpf: formData.cpf,
-        tipo: formData.tipo,
-        ativo: formData.ativo,
+        nome,
+        cpf,
+        tipo,
+        ativo,
       });
 
       res.status(200).json({ message: "Cadastro realizado com sucesso." });
@@ -71,3 +59,27 @@ app.post(
     }
   }
 );
+
+
+// Rota para listagem
+app.get("/listar", async (req, res) => {
+  try {
+    const totalRegistros = await Pessoa.count();
+    const pagina = parseInt(req.query.pagina) || 1;
+    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
+    const paginacao = (pagina - 1) * limitePorPagina;
+    const numeroDePaginas = Math.ceil(totalRegistros/limitePorPagina) || 1;
+
+    const registros = await Pessoa.findAll({
+      limit: limitePorPagina,
+      offset: paginacao,
+    });
+
+
+    res.status(200).json({'registros' : registros, 'numerodepaginas' : numeroDePaginas , 'totalregistros': totalRegistros});
+
+  } catch (err) {
+    console.error("Erro ao listar os dados: ", err);
+    res.status(500).json({ error: "Erro ao listar os dados." });
+  }
+});

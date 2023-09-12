@@ -1,12 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import api from "./axiosConfig";
 import { Link } from "react-router-dom";
 import "./styles.css";
 
 const Cadastro = () => {
   const [isFormValid, setIsFormValid] = useState(true);
-  const navigate = useNavigate();
   const errorRef = useRef(null);
   const [formData, setFormData] = useState({
     nome: "",
@@ -24,21 +22,24 @@ const Cadastro = () => {
   };
 
   const handleSubmit = (e) => {
+    console.error(e);
     e.preventDefault();
 
     const requiredFields = ["nome", "cpf", "tipo", "ativo"];
 
     const errors = {};
-
+    console.error(errors);
     requiredFields.forEach((field) => {
       if (!formData[field]) {
         errors[field] = "Campo obrigatório";
+        console.error(errors);
       }
     });
 
     setFormErrors(errors);
-
+    console.error(errors);
     if (Object.keys(errors).length > 0) {
+      console.error(errors);
       return;
     }
 
@@ -47,13 +48,13 @@ const Cadastro = () => {
       .then(() => {
         setFormErrors({});
         alert("Cadastrado com Sucesso");
-        navigate("/");
       })
       .catch((error) => {
         console.error(error);
         alert("Erro ao cadastrar : " + error);
-        navigate("/");
       });
+
+      console.error(errors);
   };
 
   const [formErrors, setFormErrors] = useState({
@@ -141,9 +142,9 @@ const Cadastro = () => {
                   Há campos acima para verificar.
                 </div>
               )}
-              <Link to="/" type="submit" className="btn btn-danger fw-bold">
+              <button type="submit" className="btn btn-danger fw-bold">
                 Cadastrar
-              </Link>
+              </button>
               <Link to="/" className="btn btn-success fw-bold">
                 Voltar
               </Link>

@@ -1,20 +1,12 @@
-
-
-body {
-  width: 100vw;
-height: 100vh;
-
-}
-
 .cadastro {
-  background-color: #f1f1f1;
+  background-color: #e8ecff;
+  border: 1px solid;
 }
 
 .bg-cadastro {
   height: 100vh;
-  background-color: rgba(11, 34, 98, 0.978);
 }
 
-.error-message{
+.error-message {
   color: red;
 }
