@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./styles.css";
-import NavBar from './NavBar';
+import NavBar from './NavBar2';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 
@@ -20,7 +20,7 @@ const HomePage = () => {
         <h5 className="titulo p-0 text-start text-info d-inline justify-content-center align-content-center align-items-center align-middle align-self-center">
           Face-ID
         </h5>
-        <NavBar className="navibar-button justify-content-center align-content-center text-center align-items-center align-middle align-self-center" />
+        <NavBar/>
       </div>
       <div className={`container-fluid mt-0 p-0 d-flex flex-column align-items-end vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
         <div className='m-3'>

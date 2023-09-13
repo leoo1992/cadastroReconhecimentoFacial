@@ -36,3 +36,12 @@
   padding-right: 5px;
   font-size: small;
 }
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  width: 100vw;
+  height: 100vh;
+}
