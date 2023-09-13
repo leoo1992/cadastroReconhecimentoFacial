@@ -3,7 +3,8 @@ import "./styles.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faArrowLeft, faEdit, faTimesCircle, faTrash, faSearch} from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faArrowLeft, faEdit, faTimesCircle, faTrash, faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Triangle } from 'react-loader-spinner'
 
 const Cadastrados = () => {
   const [searchText, setSearchText] = useState("");
@@ -51,9 +52,10 @@ const Cadastrados = () => {
 
   const contextActions = React.useMemo(() => {
     const handleDelete = () => {
-      if (window.confirm(`Voce tem certeza que deseja deletar o(s) registro(s) selecionados ${selectedRows.map(r => r.title)}?`)) {
+      const selectedIds = selectedRows.map(r => r.id);
+      if (window.confirm(`Você tem certeza que deseja deletar o(s) registro(s) selecionado(s) com IDs: ${selectedIds.join(', ')}?`)) {
         setToggleCleared(!toggleCleared);
-        setData((data, selectedRows, 'title'));
+        setData((data, selectedRows, 'id'));
       }
     };
 
@@ -82,7 +84,17 @@ const Cadastrados = () => {
     noMatch: 'Nenhum registro encontrado',
     page: 'Página',
     of: 'de',
-    selected: 'selecionado',
+    selected: '{0} selecionado',
+    noSelectedRowsSelected: '',
+    selectedRows: {
+      one: '{0} selecionado',
+      other: '{0} selecionados',
+    },
+    noRowsSelected: '',
+  };
+
+  const customSelectedMessage = (selectedCount, selectedRows) => {
+    return `${selectedCount} ${selectedCount === 1 ? 'selecionado' : 'selecionados'}`;
   };
 
   const columns = [
@@ -149,15 +161,17 @@ const Cadastrados = () => {
           ativo: registro.ativo,
         }));
 
-        setData(formattedData);
+        setTimeout(() => {
+          setData(formattedData);
 
-        setPagination((prevPagination) => ({
-          ...prevPagination,
-          totalRecords: response.data.totalRegistros,
-          totalPages: response.data.numeroDePaginas,
-        }));
+          setPagination((prevPagination) => ({
+            ...prevPagination,
+            totalRecords: response.data.totalRegistros,
+            totalPages: response.data.numeroDePaginas,
+          }));
 
-        setLoading(false);
+          setLoading(false);
+        }, 3000);
       } catch (error) {
         console.error('Erro ao buscar dados do servidor:', error);
         setLoading(false);
@@ -165,7 +179,6 @@ const Cadastrados = () => {
     };
 
     fetchData();
-
   }, [pagination.page]);
 
   const handlePageChange = (page) => {
@@ -173,77 +186,100 @@ const Cadastrados = () => {
   };
 
   return (
-    <html>
+    <>
       {loading ? (
-        <p>{customText.loading}</p>
+        <div className='container-fluid text-center m-0 p-0 d-flex flex-column justify-content-center align-items-center vh-100 vw-100 bg-dark'>
+          <Triangle
+            className='vh-100 vw-100'
+            color="#4fa94d"
+            ariaLabel="triangle-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
+          <h1 className='text-center text-success mt-3 pt-3'>{customText.loading}</h1>
+        </div>
       ) : (
-        <div>
+        <>
           <div className="top-0 text-end bg-fundo flex-container">
             <h4 className='text-start text-info m-0 p-0' >Relatório de Cadastrados</h4>
             <div>
               <button onClick={handleGoBack} className='btn btn-danger p-0 m-0'><FontAwesomeIcon icon={faArrowLeft} /></button>
               <span> </span>
-              <button onClick={toggleTheme} className='btn btn-info p-0 m-0'>
+              <button onClick={toggleTheme} className='btn-tamanho btn btn-info p-0 m-0'>
                 {theme === "dark" ? (
-                  <FontAwesomeIcon icon={faSun} />
+                  <FontAwesomeIcon icon={faSun} className='text-white' />
                 ) : (
-                  <FontAwesomeIcon icon={faMoon} />
+                  <FontAwesomeIcon icon={faMoon} className='text-black' />
                 )}
               </button>
               <span> </span>
             </div>
           </div>
-          <DataTable
-            columns={columns}
-            striped
-            data={data}
-            actions
-            defaultSortField="id"
-            defaultSortAsc
-            contextActions={contextActions}
-            onSelectedRowsChange={handleRowSelected}
-            clearSelectedRows={toggleCleared}
-                      pagination
-            selectableRows
-            selectableRowsSingle
-            paginationServer
-            progressPending={loading}
-            paginationTotalRows={pagination.totalRecords}
-            paginationPerPage={10}
-            paginationRowsPerPageOptions={[10, 20, 30]}
-            paginationComponentOptions={{
-              rowsPerPageText: 'Linhas por página:',
-              rangeSeparatorText: 'de',
-              noRowsPerPage: false,
-            }}
-            onChangePage={handlePageChange}
-            text={customText}
-            highlightOnHover
-            pointerOnHover
-            theme={theme}
-            dense
-            subHeader
-            subHeaderComponent={
-              <div className='text-end container-fluid'>
-                <input
-                  className='text-center rounded-2'
-                  type="text"
-                  placeholder="Pesquisar"
-                  value={searchText}
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-                <span> </span>
-                <button className="btn btn-outline-secondary m-0 p-0">
-                  <FontAwesomeIcon icon={faSearch} className='p-1' />
-                </button>
-              </div>
-            }
-            subHeaderAlign="left"
-            onSearch={handleSearch}
-          />
-        </div>
+          <div className={`container-fluid m-0 p-0 d-flex flex-column justify-content-center align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
+            <DataTable
+              className='vh-100'
+              columns={columns}
+              striped
+              data={data}
+              actions
+              defaultSortField="id"
+              defaultSortAsc
+              contextActions={contextActions}
+              onSelectedRowsChange={handleRowSelected}
+              clearSelectedRows={toggleCleared}
+              pagination
+              selectableRows
+              selectableRowsSingle
+              paginationServer
+              progressPending={loading}
+              paginationTotalRows={pagination.totalRecords}
+              paginationPerPage={10}
+              paginationRowsPerPageOptions={[10, 20, 30]}
+              paginationComponentOptions={{
+                rowsPerPageText: 'Linhas por página:',
+                rangeSeparatorText: 'de',
+                noRowsPerPage: false,
+              }}
+              customSelectedMessage={customSelectedMessage}
+              onChangePage={handlePageChange}
+              text={customText}
+              highlightOnHover
+              pointerOnHover
+              theme={theme}
+              dense
+              subHeader
+              subHeaderComponent={
+                <div className='flex-container m-0 p-0 col align-items-center'>
+                  <div className='text-start m-0 p-0'>
+                    <button className="btn btn-sm btn-primary p-0 m-0">
+                      <FontAwesomeIcon icon={faPlus} />Adicionar
+                    </button>
+                  </div>
+                  <div className='text-end'>
+                    <span> </span>
+                    <button className="btn btn-secondary btn-sm p-0 m-0">
+                    <input
+                      className='text-center rounded p-0 m-0'
+                      type="text"
+                      placeholder="Pesquisar"
+                      value={searchText}
+                      onChange={(e) => handleSearch(e.target.value)}
+                    />
+                    <span> </span>
+                      <FontAwesomeIcon icon={faSearch} />
+                    </button>
+                  </div>
+                </div>
+              }
+              subHeaderAlign="left"
+              onSearch={handleSearch}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
+        </>
       )}
-    </html>
+    </>
   );
 };
 

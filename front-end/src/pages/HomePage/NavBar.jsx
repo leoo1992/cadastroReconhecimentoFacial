@@ -67,14 +67,12 @@ const NavBar = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
 
   return (
-    <Nav className='navibar-button navbar navbar-dark p-0 m-0 justify-content-center align-content-center align-items-center align-middle align-self-center'>
+    <Nav className='navibar-button navbar navbar-dark p-1 m-0 justify-content-center align-content-center align-items-center align-middle align-self-center'>
       <MobileNavToggle onClick={() => setIsMobileNavOpen(!isMobileNavOpen)} className='justify-content-end align-content-end align-items-end align-middle align-self-end'>
         {isMobileNavOpen ?
-          <button type="button" className="btn btn-sm btn-danger text-white p-0 m-0 mb-2 rounded-circle" aria-label="Close"><span className='botao-x'>x</span>
+          <button type="button" className="btn btn-sm btn-danger text-white p-0 m-0 rounded-circle" aria-label="Close"><span className='botao-x'>x</span>
           </button> :
-          <button type="button" className="btn btn-sm btn-white fs-6 justify-content-center align-content-center align-items-center align-middle align-self-center" aria-label="Menu">
-            <span className="navbar-toggler-icon"></span>
-          </button>}
+          <span className="navbar-toggler-icon"></span>}
       </MobileNavToggle>
 
       <DesktopNav className='navibar-button justify-content-center align-content-center align-items-center align-middle align-self-center'>
