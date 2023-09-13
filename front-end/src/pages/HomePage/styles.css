@@ -1,6 +1,5 @@
 .flex-container {
   display: flex;
-
   justify-content: space-between;
   align-items: flex-start;
   flex-direction: row;
@@ -22,13 +21,13 @@
 }
 
 .navibar-button {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  align-self: center;
-  position: center;
-  align-content: center;
-  vertical-align: middle;
+  justify-content: end;
+  align-items: end;
+  text-align: end;
+  align-self: end;
+  position: end;
+  align-content: end;
+  vertical-align: end;
 }
 
 .botao-x {
@@ -40,7 +39,7 @@
 .popup-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: end;
   background-color: #ffffff;
   width: 100vw;
   height: 100vh;
