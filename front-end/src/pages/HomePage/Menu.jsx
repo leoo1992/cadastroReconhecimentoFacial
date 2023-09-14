@@ -3,7 +3,8 @@ import Popup from 'reactjs-popup'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdClose } from 'react-icons/io'
 import { Link } from "react-router-dom";
-import './styles.css'
+import 'react-toastify/dist/ReactToastify.css';
+import './home.css'
 import {
   NavContent,
   HamburgerIconButton,
@@ -13,20 +14,20 @@ import {
   NavLinkItem,
 } from './styledComponents'
 
-function NavBar() {
+function Menu() {
   return (
     <NavContent>
       <Popup
         modal
         trigger={
-          <HamburgerIconButton data-testid="hamburgerIconButton" className=''>
+          <HamburgerIconButton data-testid="hamburgerIconButton">
             <GiHamburgerMenu size="30" className='text-info' />
           </HamburgerIconButton>
         }
         className="popup-content"
       >
         {close => (
-          <ModalContainer className='bg-dark w-auto d-flex col'>
+          <ModalContainer className='bg-fundo w-auto d-flex col'>
             <CloseButton
               type="button"
               className='btn btn-close btn-danger bg-danger m-1'
@@ -60,4 +61,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default Menu;

@@ -8,6 +8,7 @@ export const HamburgerIconButton = styled.button`
   width: 42px;
   height: 35px;
   border: none;
+  align-self: flex-end;
 `
 
 export const ModalContainer = styled.div`

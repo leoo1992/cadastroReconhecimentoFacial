@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import api from "./axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
-import "./styles.css";
+import 'react-toastify/dist/ReactToastify.css';
+import "./cadastro.css";
 
 const Cadastro = () => {
   const navigate = useNavigate();

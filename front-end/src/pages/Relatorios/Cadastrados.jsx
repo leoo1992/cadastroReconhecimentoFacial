@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import "./styles.css";
+import "./relatorio.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faArrowLeft, faEdit, faTimesCircle, faTrash, faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faTrash, faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
+import MenuIcon from '../HomePage/Menuicon';
 
 const Cadastrados = () => {
   const [searchText, setSearchText] = useState("");
@@ -13,15 +14,26 @@ const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [toggleCleared, setToggleCleared] = React.useState(false);
   const [theme, setTheme] = useState("default");
+  const divElement = document.querySelector('.sc-dIEoRj.FTDsi');
+
+  if (divElement) {
+    divElement.textContent = '1 item selecionado';
+  }
+
   const ativoEnum = {
     0: "Sim",
     1: "Não",
   };
+
   const tipoEnum = {
     0: "Aluno",
     1: "Professor",
     2: "Responsável",
     3: "Terceiro",
+  };
+
+  const updateTheme = (newTheme) => {
+    setTheme(newTheme);
   };
 
   const [pagination, setPagination] = useState({
@@ -32,18 +44,6 @@ const Cadastrados = () => {
 
   const handleSearch = (value) => {
     setSearchText(value);
-  };
-
-  const handleGoBack = () => {
-    window.history.back();
-  };
-
-  const toggleTheme = () => {
-    if (theme === "dark") {
-      setTheme("default");
-    } else {
-      setTheme("dark");
-    }
   };
 
   const handleRowSelected = React.useCallback(state => {
@@ -61,15 +61,15 @@ const Cadastrados = () => {
 
     return (
       <div className='p-0 m-0'>
-        <button className="btn btn-primary p-1 m-0">
+        <button className="btn btn-light text-bg-primary p-1 m-0">
           <FontAwesomeIcon icon={faEdit} />
         </button>
         <span> </span>
-        <button className="btn btn-warning p-1 m-0">
+        <button className="btn btn-light text-bg-warning p-1 m-0">
           <FontAwesomeIcon icon={faTimesCircle} />
         </button>
         <span> </span>
-        <button className="btn btn-danger p-1 m-0" key="delete" onClick={handleDelete}>
+        <button className="btn btn-light p-1 m-0 text-bg-danger" key="delete" onClick={handleDelete}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
       </div>
@@ -193,8 +193,6 @@ const Cadastrados = () => {
             className='vh-100 vw-100'
             color="#4fa94d"
             ariaLabel="triangle-loading"
-            wrapperStyle={{}}
-            wrapperClassName=""
             visible={true}
           />
           <h1 className='text-center text-success mt-3 pt-3'>{customText.loading}</h1>
@@ -202,23 +200,12 @@ const Cadastrados = () => {
       ) : (
         <>
           <div className="top-0 text-end bg-fundo col d-flex">
-            <h4 className='text-start text-info m-0 p-1 col' >Relatório de Cadastrados</h4>
-            <div>
-              <button onClick={handleGoBack} className='btn btn-danger p-0 m-0'><FontAwesomeIcon icon={faArrowLeft} /></button>
-              <span> </span>
-              <button onClick={toggleTheme} className='btn-tamanho btn btn-info p-0 m-0'>
-                {theme === "dark" ? (
-                  <FontAwesomeIcon icon={faSun} className='text-white' />
-                ) : (
-                  <FontAwesomeIcon icon={faMoon} className='text-black' />
-                )}
-              </button>
-              <span> </span>
-            </div>
+            <h4 className='text-start text-info m-0 p-1 col align-self-center' >Cadastrados</h4>
+            <MenuIcon updateTheme={updateTheme} />
           </div>
-          <div className={`container-fluid m-0 p-0 d-flex flex-column justify-content-center align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
+          <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
             <DataTable
-              className='vh-100'
+              className=''
               columns={columns}
               striped
               data={data}
@@ -251,14 +238,14 @@ const Cadastrados = () => {
               subHeader
               subHeaderComponent={
                 <div className='flex-container m-0 p-0 col align-items-center'>
-                  <div className='text-start m-0 p-0'>
-                    <button className="btn btn-sm btn-primary p-0 m-0">
-                      <FontAwesomeIcon icon={faPlus} />Adicionar
+
+                  <div className='text-start m-0 p-0 col'>
+                    <button className="btn btn-sm btn-light text-bg-primary p-0 m-0 text-center align-items-center">
+                      <FontAwesomeIcon icon={faPlus} className='p-2 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
                     </button>
                   </div>
-                  <div className='text-end'>
-                    <span> </span>
-                    <button className="btn btn-secondary btn-sm p-0 m-0">
+
+                  <div className='text-end d-flex col m-0 p-0 input-group-sm justify-content-end'>
                     <input
                       className='text-center rounded p-0 m-0'
                       type="text"
@@ -267,6 +254,7 @@ const Cadastrados = () => {
                       onChange={(e) => handleSearch(e.target.value)}
                     />
                     <span> </span>
+                    <button className="btn btn-light text-bg-secondary btn-sm ml-1">
                       <FontAwesomeIcon icon={faSearch} />
                     </button>
                   </div>
