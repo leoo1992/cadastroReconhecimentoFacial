@@ -201,8 +201,8 @@ const Cadastrados = () => {
         </div>
       ) : (
         <>
-          <div className="top-0 text-end bg-fundo flex-container">
-            <h4 className='text-start text-info m-0 p-0' >Relatório de Cadastrados</h4>
+          <div className="top-0 text-end bg-fundo col d-flex">
+            <h4 className='text-start text-info m-0 p-1 col' >Relatório de Cadastrados</h4>
             <div>
               <button onClick={handleGoBack} className='btn btn-danger p-0 m-0'><FontAwesomeIcon icon={faArrowLeft} /></button>
               <span> </span>

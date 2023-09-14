@@ -1,12 +1,7 @@
 .flex-container {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   flex-direction: row;
   flex-wrap: nowrap;
-  height: 100%;
-  padding: 15px;
-  gap: 5px;
 }
 
 .bg-fundo {
@@ -21,13 +16,14 @@
 }
 
 .navibar-button {
-  justify-content: end;
-  align-items: end;
-  text-align: end;
-  align-self: end;
-  position: end;
-  align-content: end;
-  vertical-align: end;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  align-self: center;
+  position: center;
+  align-content: center;
+  vertical-align: center;
+  width: 150px;
 }
 
 .botao-x {
@@ -39,8 +35,13 @@
 .popup-content {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   background-color: #ffffff;
   width: 100vw;
   height: 100vh;
 }
+
+.popup-content{
+  background:rgba(0, 0, 0, 0.77);
+}
+

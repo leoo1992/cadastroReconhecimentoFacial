@@ -21,8 +21,8 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="top-0 text-end bg-fundo flex-container">
-        <h4 className='text-start text-info m-0 p-0' >Relatórios</h4>
+      <div className="top-0 text-end bg-fundo d-flex col">
+        <h4 className='text-start text-info m-0 p-1 col' >Relatórios</h4>
         <div>
           <button onClick={handleGoBack} className='btn btn-danger p-0 m-0'><FontAwesomeIcon icon={faArrowLeft} /></button>
           <span> </span>

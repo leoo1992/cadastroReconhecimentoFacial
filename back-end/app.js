@@ -66,7 +66,7 @@ app.get("/listar", async (req, res) => {
   try {
     const totalRegistros = await Pessoa.count();
     const pagina = parseInt(req.query.pagina) || 1;
-    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
+    const limitePorPagina = parseInt(req.query.limitePorPagina) || 1000000;
     const paginacao = (pagina - 1) * limitePorPagina;
     const numeroDePaginas = Math.ceil(totalRegistros/limitePorPagina) || 1;
     const registros = await Pessoa.findAll({
