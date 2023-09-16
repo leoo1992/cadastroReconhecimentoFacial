@@ -188,14 +188,14 @@ const Cadastrados = () => {
   return (
     <>
       {loading ? (
-        <div className='container-fluid text-center m-0 p-0 d-flex flex-column justify-content-center align-items-center vh-100 vw-100 bg-dark'>
+        <div className='container-fluid text-center m-0 p-0 d-flex flex-column justify-content-center align-items-center vh-100 vw-100 bg-fundo'>
           <Triangle
-            className='vh-100 vw-100'
-            color="#4fa94d"
+            color='cyan'
+            className='vh-100 vw-100 c-info'
             ariaLabel="triangle-loading"
             visible={true}
           />
-          <h1 className='text-center text-success mt-3 pt-3'>{customText.loading}</h1>
+          <h1 className='text-center text-info mt-3 pt-3'>{customText.loading}</h1>
         </div>
       ) : (
         <>
