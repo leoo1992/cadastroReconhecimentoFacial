@@ -46,7 +46,7 @@ const HomePage = () => {
         <Menu />
       </div>
       <div className={`mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
-        <h3 className='text-info fw-bold'>Reconhecimento Facial</h3>
+        <h3 className='text-info fw-bold pt-5 mt-5'>Reconhecimento Facial</h3>
       </div>
     </>
   );

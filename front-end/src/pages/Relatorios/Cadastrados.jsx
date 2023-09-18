@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
+
 const Cadastrados = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
@@ -93,7 +94,7 @@ const Cadastrados = () => {
     rowsPerPage: 'Linhas por página:',
     previous: 'Anterior',
     next: 'Próxima',
-    loading: 'Carregando...',
+    loading: 'Carregando',
     noMatch: 'Nenhum registro encontrado',
     page: 'Página',
     of: 'de',
@@ -125,8 +126,6 @@ const Cadastrados = () => {
       selector: row => row.nome,
       sortable: true,
       reorder: true,
-      wrap: true,
-      compact: true,
     },
     {
       name: 'CPF',
@@ -135,7 +134,6 @@ const Cadastrados = () => {
       reorder: true,
       width: '110px',
       compact: true,
-      hide: 'sm',
     },
     {
       name: 'Tipo',
@@ -153,7 +151,6 @@ const Cadastrados = () => {
       width: '60px',
       center: true,
       compact: true,
-      hide: 'sm',
     },
   ];
 
@@ -210,10 +207,10 @@ const Cadastrados = () => {
   return (
     <>
       {loading ? (
-        <div className='container-fluid text-center m-0 p-0 d-flex flex-column justify-content-center align-items-center vh-100 vw-100 bg-fundo'>
+        <div className='container-fluid text-center m-0 p-0 d-flex flex-column justify-content-center align-items-center align-self-center vh-100 vw-100 bg-fundo'>
           <Triangle
             color='cyan'
-            className='vh-100 vw-100 c-info'
+            className='vh-100 vw-100 p-0 m-0'
             ariaLabel="triangle-loading"
             visible={true}
           />
