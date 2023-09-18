@@ -4,6 +4,9 @@ import Menu from './Menu';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 import 'react-toastify/dist/ReactToastify.css';
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const HomePage = () => {
   const [theme, setTheme] = useState("default");
@@ -15,25 +18,35 @@ const HomePage = () => {
       setTheme("dark");
     }
   };
+
+  const toggleThemeTooltip = (
+    <Tooltip id="toggle-theme-tooltip">
+      {theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+    </Tooltip>
+  );
+
   return (
     <>
-      <div className="text-end bg-fundo d-flex col">
-        <h5 className='text-start text-info m-0 p-1 col align-self-center'>
+      <div className="text-end bg-fundo d-flex">
+        <h5 className='text-start text-info m-0 p-2 col align-self-center fw-bold'>
           Face-ID
         </h5>
-        <div className="mt-1 col">
-          <button onClick={toggleTheme} className='btn-tamanho btn btn-info p-0 m-0'>
+
+        <div className="d-flex m-1 p-0 align-items-center">
+        <OverlayTrigger placement="bottom" overlay={toggleThemeTooltip}>
+          <Button onClick={toggleTheme} className='btn-tamanho btn btn-info p-0 m-1'>
             {theme === "dark" ? (
-              <FontAwesomeIcon icon={faSun} className='text-white' />
+              <FontAwesomeIcon icon={faSun} className='text-white p-0 m-0' />
             ) : (
-              <FontAwesomeIcon icon={faMoon} className='text-black' />
+              <FontAwesomeIcon icon={faMoon} className='text-black  m-0 p-0 ' />
             )}
-          </button>
+          </Button>
+        </OverlayTrigger>
         </div>
-          <Menu/>
+        <Menu />
       </div>
-      <div className={`mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
-        <h3 className='text-info'>Reconhecimento Facial</h3>
+      <div className={`mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
+        <h3 className='text-info fw-bold'>Reconhecimento Facial</h3>
       </div>
     </>
   );

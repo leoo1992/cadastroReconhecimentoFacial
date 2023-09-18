@@ -6,6 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTimesCircle, faTrash, faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const Cadastrados = () => {
   const [searchText, setSearchText] = useState("");
@@ -15,9 +18,13 @@ const Cadastrados = () => {
   const [toggleCleared, setToggleCleared] = React.useState(false);
   const [theme, setTheme] = useState("default");
   const divElement = document.querySelector('.sc-dIEoRj.FTDsi');
+  const divElement2 = document.querySelector('.sc-ktwNLz.cpNOok');
 
   if (divElement) {
     divElement.textContent = '1 item selecionado';
+  }
+  if (divElement2) {
+    divElement2.textContent = '1 item selecionado';
   }
 
   const ativoEnum = {
@@ -61,17 +68,23 @@ const Cadastrados = () => {
 
     return (
       <div className='p-0 m-0'>
-        <button className="btn btn-light text-bg-primary p-1 m-0">
-          <FontAwesomeIcon icon={faEdit} />
-        </button>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
+          <Button className="btn btn-light text-bg-primary p-1 m-0">
+            <FontAwesomeIcon icon={faEdit} />
+          </Button>
+        </OverlayTrigger>
         <span> </span>
-        <button className="btn btn-light text-bg-warning p-1 m-0">
-          <FontAwesomeIcon icon={faTimesCircle} />
-        </button>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
+          <Button className="btn btn-light text-bg-warning p-1 m-0">
+            <FontAwesomeIcon icon={faTimesCircle} />
+          </Button>
+        </OverlayTrigger>
         <span> </span>
-        <button className="btn btn-light p-1 m-0 text-bg-danger" key="delete" onClick={handleDelete}>
-          <FontAwesomeIcon icon={faTrash} />
-        </button>
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
+          <Button className="btn btn-light p-1 m-0 text-bg-danger" key="delete" onClick={handleDelete}>
+            <FontAwesomeIcon icon={faTrash} />
+          </Button>
+        </OverlayTrigger>
       </div>
     );
   }, [data, selectedRows, toggleCleared]);
@@ -185,6 +198,15 @@ const Cadastrados = () => {
     setPagination({ ...pagination, page });
   };
 
+  const addButtonTooltip = (
+    <Tooltip id="add-button-tooltip">Novo</Tooltip>
+  );
+
+  const searchButtonTooltip = (
+    <Tooltip id="search-button-tooltip">Pesquisar</Tooltip>
+  );
+
+
   return (
     <>
       {loading ? (
@@ -200,7 +222,7 @@ const Cadastrados = () => {
       ) : (
         <>
           <div className="top-0 text-end bg-fundo col d-flex">
-            <h4 className='text-start text-info m-0 p-1 col align-self-center' >Cadastrados</h4>
+            <h4 className='text-start text-info m-0 p-2 col align-self-center' >Cadastrados</h4>
             <MenuIcon updateTheme={updateTheme} />
           </div>
           <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
@@ -240,9 +262,11 @@ const Cadastrados = () => {
                 <div className='flex-container m-0 p-0 col align-items-center'>
 
                   <div className='text-start m-0 p-0 col'>
-                    <button className="btn btn-sm btn-light text-bg-primary p-0 m-0 text-center align-items-center">
-                      <FontAwesomeIcon icon={faPlus} className='p-2 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
-                    </button>
+                    <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
+                      <Button className="btn btn-sm btn-light text-bg-primary p-0 m-0 text-center align-items-center">
+                        <FontAwesomeIcon icon={faPlus} className='p-2 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                      </Button>
+                    </OverlayTrigger>
                   </div>
 
                   <div className='text-end d-flex col m-0 p-0 input-group-sm justify-content-end'>
@@ -254,9 +278,11 @@ const Cadastrados = () => {
                       onChange={(e) => handleSearch(e.target.value)}
                     />
                     <span> </span>
-                    <button className="btn btn-light text-bg-secondary btn-sm ml-1">
-                      <FontAwesomeIcon icon={faSearch} />
-                    </button>
+                    <OverlayTrigger placement="bottom" overlay={searchButtonTooltip}>
+                      <Button className="btn btn-light text-bg-secondary btn-sm ml-1">
+                        <FontAwesomeIcon icon={faSearch} />
+                      </Button>
+                    </OverlayTrigger>
                   </div>
                 </div>
               }

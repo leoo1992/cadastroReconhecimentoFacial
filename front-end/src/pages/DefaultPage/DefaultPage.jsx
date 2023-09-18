@@ -16,7 +16,7 @@ const DefaultPage = () => {
         <MenuIcon updateTheme={updateTheme} />
       </div>
 
-      <div className={`container-fluid mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
+      <div className={`container-fluid mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
 
         <h4>CONTEUDO AQUI</h4>
 

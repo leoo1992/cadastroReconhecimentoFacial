@@ -1,70 +1,109 @@
-import { useState } from 'react';
-import { GiHamburgerMenu } from 'react-icons/gi'
+import React, { useState } from 'react';
+import { GiHamburgerMenu } from 'react-icons/gi';
 import { Link } from 'react-router-dom';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
+import CloseButton from 'react-bootstrap/CloseButton';
 import 'react-toastify/dist/ReactToastify.css';
-import './home.css'
+import './home.css';
+import { Transition } from 'react-transition-group';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
-
-// <NavContent>
-//   <Popup
-//     modal
-//     trigger={
-
-//     }
-//     className="popup-content fade"
-//   >
-//     {close => (
-//       <ModalContainer className='bg-fundo w-auto d-flex col collapse collapse-horizontal' id="collapseWidthExample">
-//         <CloseButton
-//           type="button"
-//           className='btn btn-close btn-danger bg-danger m-1'
-//           data-testid="closeButton"
-//           onClick={() => close()}
-//         >
-//         </CloseButton>
-
-
-//       </ModalContainer>
-//     )}
-//   </Popup>
-// </NavContent>
 function Menu() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => setOpen(false);
+  const handleShow = () => setOpen(true);
+  const duration = 300;
+
+  const defaultStyle = {
+    transition: `opacity ${duration}ms ease-in-out`,
+    opacity: 0,
+    display: 'none',
+  };
+
+  const transitionStyles = {
+    entering: { opacity: 0, display: 'block' },
+    entered: { opacity: 1, display: 'block' },
+    exiting: { opacity: 0, display: 'block' },
+    exited: { opacity: 0, display: 'none' },
+  };
+
+  const closeButtonTooltip = (
+    <Tooltip id="close-button-tooltip">Fechar</Tooltip>
+  );
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        <GiHamburgerMenu size="30" className='text-info' />
-      </Button>
+      <OverlayTrigger placement="bottom" overlay={<Tooltip id="menu-tooltip">Menu</Tooltip>}>
+        <Button
+          variant="primary"
+          onClick={handleShow}
+          aria-expanded={open}
+          className='d-flex m-2 p-1 align-items-center text-black bg-info border-0'
+          type="button"
+        >
+          <GiHamburgerMenu className='p-0 m-0' />
+        </Button>
+      </OverlayTrigger>
 
-      <Offcanvas show={show} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-        <ul className='p-3 m-0 d-flex col list-unstyled'>
-            <li className='justify-content-center align-content-center align-items-center align-middle align-self-center'>
-              <Link to="/relatorios" className="navibar-button justify-content-center align-content-center align-items-center align-middle align-self-center btn btn-light btn-sm m-1 fs-6">
-                Relatórios
-              </Link>
-            </li>
-            <li className=' justify-content-center align-content-center align-items-center align-middle align-self-center'>
-              <Link to="/cadastro" className="navibar-button justify-content-center align-content-center align-items-center align-middle align-self-center btn btn-info btn-sm m-1 fs-6">
-                Cadastro
-              </Link>
-            </li>
-            <li className=' justify-content-center align-content-center align-items-center align-middle align-self-center'>
-              <Link to="/reconhecimento" className="navibar-button justify-content-center align-content-center align-items-center align-middle align-self-center btn btn-success btn-sm m-1 fs-6">
-                Acessar
-              </Link>
-            </li>
-          </ul>
-        </Offcanvas.Body>
-      </Offcanvas>
+
+
+      <Transition in={open} timeout={duration}>
+        {(state) => (
+          <div
+            style={{
+              ...defaultStyle,
+              ...transitionStyles[state],
+            }}
+          >
+            <Offcanvas
+              show={open}
+              onHide={handleClose}
+              placement="end"
+              className="w-auto border-1 border-info"
+            >
+              <Offcanvas.Header className='bg-fundo flex-row'>
+                <div className='col'>
+                  <Offcanvas.Title><h5 className='text-center text-info m-0 p-0'>Menu</h5></Offcanvas.Title>
+                </div>
+                <div className='d-flex'>
+                  <OverlayTrigger placement="bottom" overlay={closeButtonTooltip}>
+                    <CloseButton type="button" onClick={handleClose} className='text-end btn btn-info  btn-sm bg-info text-white p-1 m-0' data-bs-dismiss="offcanvasDark" aria-label="Close" />
+                  </OverlayTrigger>
+                </div>
+              </Offcanvas.Header>
+
+              <Offcanvas.Body className='bg-fundo d-flex justify-content-center'>
+                <ul className='p-1 m-0 list-unstyled d-flex-column'>
+                  <li className>
+                    <OverlayTrigger placement="left" overlay={<Tooltip id="relatorios-tooltip">Relatórios</Tooltip>}>
+                      <Link to="/relatorios" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
+                        Relatórios
+                      </Link>
+                    </OverlayTrigger>
+                  </li>
+                  <li className>
+                    <OverlayTrigger placement="left" overlay={<Tooltip id="cadastro-tooltip">Cadastro</Tooltip>}>
+                      <Link to="/cadastro" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
+                        Cadastro
+                      </Link>
+                    </OverlayTrigger>
+                  </li>
+                  <li className>
+                    <OverlayTrigger placement="left" overlay={<Tooltip id="acessar-tooltip">Acessar</Tooltip>}>
+                      <Link to="/reconhecimento" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
+                        Acessar
+                      </Link>
+                    </OverlayTrigger>
+                  </li>
+                </ul>
+              </Offcanvas.Body>
+            </Offcanvas>
+          </div>
+        )}
+      </Transition>
     </>
   );
 }
