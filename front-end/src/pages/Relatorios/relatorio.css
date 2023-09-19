@@ -1,4 +1,4 @@
-.btn-tamanho{
+.btn-tamanho {
   width: 20px;
 }
 
@@ -6,6 +6,12 @@
   width: 150px;
 }
 
-.rdt_TableHeader > div {
-  background-color: #00000044;
+.rdt_TableHeader>div {
+  background-color: #00aeffb6;
+
+}
+
+.rdt_TableHeader>div>div {
+  color: rgba(11, 34, 98, 0.978);
+  font-weight: bold;
 }

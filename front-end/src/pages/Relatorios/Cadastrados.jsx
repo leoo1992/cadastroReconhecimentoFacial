@@ -3,16 +3,15 @@ import "./relatorio.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTimesCircle, faTrash, faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const Cadastrados = () => {
-  const [searchText, setSearchText] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggleCleared, setToggleCleared] = useState(false);
   const [theme, setTheme] = useState("default");
@@ -21,8 +20,22 @@ const Cadastrados = () => {
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
+  // eslint-disable-next-line
   const [perPage, setPerPage] = useState(10);
+  // eslint-disable-next-line
   const [numerodepaginas, setNumerodepaginas] = useState(1);
+  const [ativo, setAtivo] = useState("");
+  const navigate = useNavigate();
+  const divElement = document.querySelector('.rdt_TableHeader > div > div');
+  if (divElement) {
+    const selectedNome = selectedRows.map((r) => r.nome);
+    divElement.textContent = selectedNome+ '  -  Selecionado';
+  }
+
+  const ativoEnum = {
+    0: "Não",
+    1: "Sim",
+  };
 
   const fetchUsers = useCallback(async (page, perPage) => {
     setLoading(true);
@@ -30,10 +43,12 @@ const Cadastrados = () => {
       const response = await api.get(`/listar?pagina=${page}&limitePorPagina=${perPage}`);
       const { registros, numerodepaginas, totalregistros } = response.data;
 
-      setData(registros);
-      setTotalRows(totalregistros);
-      setNumerodepaginas(numerodepaginas);
-      setLoading(false);
+      setTimeout(() => {
+        setData(registros);
+        setTotalRows(totalregistros);
+        setNumerodepaginas(numerodepaginas);
+        setLoading(false);
+      }, 2000);
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
       setLoading(false);
@@ -49,11 +64,6 @@ const Cadastrados = () => {
     setPaginationPerPage(newPerPage);
   };
 
-  const ativoEnum = {
-    0: "Sim",
-    1: "Não",
-  };
-
   const tipoEnum = {
     0: "Aluno",
     1: "Funcionário",
@@ -65,23 +75,24 @@ const Cadastrados = () => {
     setTheme(newTheme);
   };
 
-  const handleSearch = (value) => {
-    setSearchText(value);
-  };
-
   const handleRowSelected = (state) => {
     setSelectedRows(state.selectedRows);
+    if (state.selectedRows.length === 1) {
+      setAtivo(state.selectedRows[0].ativo);
+    } else {
+      setAtivo("");
+    }
   };
 
   const contextActions = React.useMemo(() => {
     const handleDelete = () => {
       const selectedIds = selectedRows.map((r) => r.id);
-      if (window.confirm(`Você tem certeza que deseja deletar o(s) registro(s) selecionado(s) com IDs: ${selectedIds.join(', ')}?`)) {
+      if (window.confirm(`Você tem certeza que deseja deletar o registro selecionado(s) com ID: ${selectedIds.join(', ')}?`)) {
         selectedIds.forEach(async (id) => {
           try {
             await api.delete(`/deletar/${id}`);
-            alert("Registro Excluido com Sucesso");
-
+            alert("Registro excluido com sucesso");
+            window.location.reload();
           } catch (error) {
             alert("Erro ao excluir registro");
           }
@@ -91,16 +102,40 @@ const Cadastrados = () => {
       }
     };
 
+    const handleDesativar = async () => {
+      const selectedIds = selectedRows.map((r) => r.id);
+      if (window.confirm(`Você tem certeza que deseja ${ativo === "1" ? "desativar" : "ativar"} o registro selecionado com ID: ${selectedIds.join(', ')}?`)) {
+        selectedIds.forEach(async (id) => {
+          try {
+            await api.put(`/desativar/${id}`, { ativo: ativo === "1" ? 0 : 1 });
+            alert(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso`);
+            window.location.reload();
+          } catch (error) {
+            alert("Erro ao Ativar/Desativar registro");
+          }
+        });
+
+        setToggleCleared(!toggleCleared);
+      }
+    };
+
+    const handleEditar = async () => {
+      if (selectedRows.length === 1) {
+        const selectedId = selectedRows[0].id;
+        navigate(`/atualiza/${selectedId}`);
+      }
+    };
+
     return (
       <div className='p-0 m-0'>
         <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
-          <Button className="btn btn-light text-bg-primary p-1 m-0">
+          <Button className="btn btn-light text-bg-primary p-1 m-0" onClick={handleEditar}>
             <FontAwesomeIcon icon={faEdit} />
           </Button>
         </OverlayTrigger>
         <span> </span>
         <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
-          <Button className="btn btn-light text-bg-warning p-1 m-0">
+          <Button className="btn btn-light text-bg-warning p-1 m-0" onClick={handleDesativar}>
             <FontAwesomeIcon icon={faTimesCircle} />
           </Button>
         </OverlayTrigger>
@@ -112,7 +147,7 @@ const Cadastrados = () => {
         </OverlayTrigger>
       </div>
     );
-  }, [selectedRows, toggleCleared]);
+  }, [selectedRows, toggleCleared, ativo]);
 
   const customText = {
     rowsPerPage: 'Linhas por página:',
@@ -180,14 +215,12 @@ const Cadastrados = () => {
 
   useEffect(() => {
     fetchUsers(page, paginationPerPage);
-  }, [page, paginationPerPage]);
+
+  }, [page, paginationPerPage, fetchUsers]);
+
 
   const addButtonTooltip = (
     <Tooltip id="add-button-tooltip">Novo</Tooltip>
-  );
-
-  const searchButtonTooltip = (
-    <Tooltip id="search-button-tooltip">Pesquisar</Tooltip>
   );
 
   return (
@@ -251,25 +284,15 @@ const Cadastrados = () => {
                       </Link>
                     </OverlayTrigger>
                   </div>
-                  <div className='text-end d-flex col m-0 p-0 input-group-sm justify-content-end'>
+                  {/* <div className='text-end d-flex col m-0 p-0 input-group-sm justify-content-end'>
                     <input
-                      className='text-center rounded p-0 m-0'
                       type="text"
                       placeholder="Pesquisar"
-                      value={searchText}
-                      onChange={(e) => handleSearch(e.target.value)}
                     />
-                    <span> </span>
-                    <OverlayTrigger placement="bottom" overlay={searchButtonTooltip}>
-                      <Button className="btn btn-light text-bg-secondary btn-sm ml-1">
-                        <FontAwesomeIcon icon={faSearch} />
-                      </Button>
-                    </OverlayTrigger>
-                  </div>
+                  </div> */}
                 </div>
               }
               subHeaderAlign="left"
-              onSearch={handleSearch}
               style={{ width: '100%', height: '100%' }}
             />
           </div>

@@ -6,6 +6,7 @@ const Pessoa = require("./models/Pessoa");
 const app = express();
 const port = 3000;
 const {validationResult } = require("express-validator");
+const { Op } = require('sequelize');
 
 app.use(express.json());
 app.use(cors());
@@ -60,7 +61,6 @@ app.post(
   }
 );
 
-
 // Rota para listagem
 app.get("/listar", async (req, res) => {
   try {
@@ -103,6 +103,45 @@ app.put("/atualizar/:id", async (req, res) => {
   }
 });
 
+// Rota para buscar uma pessoa pelo id
+app.get("/atualizar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const pessoaExistente = await Pessoa.findByPk(id);
+
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
+    }
+
+    res.status(200).json(pessoaExistente);
+  } catch (err) {
+    console.error("Erro ao buscar registro pelo id: ", err);
+    res.status(500).json({ error: "Erro ao buscar registro pelo id." });
+  }
+});
+
+// Rota para desativar por id
+app.put("/desativar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { ativo } = req.body;
+
+    const pessoaExistente = await Pessoa.findByPk(id);
+
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
+    }
+
+    await pessoaExistente.update({ativo });
+
+    res.status(200).json(pessoaExistente);
+  } catch (err) {
+    console.error("Erro ao atualizar registro: ", err);
+    res.status(500).json({ error: "Erro ao atualizar registro." });
+  }
+});
+
 //rota para deletar por id:
 app.delete("/deletar/:id", async (req, res) => {
   try {
@@ -122,4 +161,36 @@ app.delete("/deletar/:id", async (req, res) => {
     res.status(500).json({ error: "Erro ao excluir registro." });
   }
 });
+
+// Rota para pesquisa geral
+app.get("/pesquisar", async (req, res) => {
+  try {
+    const { termo } = req.query;
+
+    if (!termo) {
+      return res.status(400).json({ error: "O parâmetro 'termo' de pesquisa é obrigatório." });
+    }
+
+    console.log("Termo de pesquisa:", termo);
+
+    const resultados = await Pessoa.findAll({
+      where: {
+        [Op.or]: [
+          { nome: { [Op.like]: `%${termo}%` } },
+          { cpf: { [Op.like]: `%${termo}%` } },
+          { id: { [Op.eq]: termo } },
+        ],
+      },
+    });
+    res.status(200).json({ resultados });
+  } catch (err) {
+    console.error("Erro ao realizar pesquisa geral: ", err);
+    res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+  }
+});
+
+
+
+
+
 
