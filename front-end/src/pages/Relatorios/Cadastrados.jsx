@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import "./relatorio.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
@@ -10,23 +10,43 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-
 const Cadastrados = () => {
   const [searchText, setSearchText] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState();
-  const [selectedRows, setSelectedRows] = React.useState([]);
-  const [toggleCleared, setToggleCleared] = React.useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [toggleCleared, setToggleCleared] = useState(false);
   const [theme, setTheme] = useState("default");
-  const divElement = document.querySelector('.sc-dIEoRj.FTDsi');
-  const divElement2 = document.querySelector('.sc-ktwNLz.cpNOok');
+  const [paginationPerPage, setPaginationPerPage] = useState(10);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [numerodepaginas, setNumerodepaginas] = useState(1);
 
-  if (divElement) {
-    divElement.textContent = '1 item selecionado';
-  }
-  if (divElement2) {
-    divElement2.textContent = '1 item selecionado';
-  }
+  const fetchUsers = useCallback(async (page, perPage) => {
+    setLoading(true);
+    try {
+      const response = await api.get(`/listar?pagina=${page}&limitePorPagina=${perPage}`);
+      const { registros, numerodepaginas, totalregistros } = response.data;
+
+      setData(registros);
+      setTotalRows(totalregistros);
+      setNumerodepaginas(numerodepaginas);
+      setLoading(false);
+    } catch (error) {
+      console.error("Erro ao buscar dados do servidor: ", error);
+      setLoading(false);
+    }
+  }, []);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const handlePerRowsChange = async (newPerPage) => {
+    setPerPage(newPerPage);
+    setPaginationPerPage(newPerPage);
+  };
 
   const ativoEnum = {
     0: "Sim",
@@ -44,26 +64,20 @@ const Cadastrados = () => {
     setTheme(newTheme);
   };
 
-  const [pagination, setPagination] = useState({
-    page: 1,
-    totalRecords: 1,
-    totalPages: 1,
-  });
-
   const handleSearch = (value) => {
     setSearchText(value);
   };
 
-  const handleRowSelected = React.useCallback(state => {
+  const handleRowSelected = (state) => {
     setSelectedRows(state.selectedRows);
-  }, []);
+  };
 
   const contextActions = React.useMemo(() => {
     const handleDelete = () => {
-      const selectedIds = selectedRows.map(r => r.id);
+      const selectedIds = selectedRows.map((r) => r.id);
       if (window.confirm(`Você tem certeza que deseja deletar o(s) registro(s) selecionado(s) com IDs: ${selectedIds.join(', ')}?`)) {
         setToggleCleared(!toggleCleared);
-        setData((data, selectedRows, 'id'));
+        // Lógica de exclusão aqui, se necessário
       }
     };
 
@@ -88,7 +102,7 @@ const Cadastrados = () => {
         </OverlayTrigger>
       </div>
     );
-  }, [data, selectedRows, toggleCleared]);
+  }, [selectedRows, toggleCleared]);
 
   const customText = {
     rowsPerPage: 'Linhas por página:',
@@ -107,14 +121,14 @@ const Cadastrados = () => {
     noRowsSelected: '',
   };
 
-  const customSelectedMessage = (selectedCount, selectedRows) => {
+  const customSelectedMessage = (selectedCount) => {
     return `${selectedCount} ${selectedCount === 1 ? 'selecionado' : 'selecionados'}`;
   };
 
   const columns = [
     {
       name: 'Id',
-      selector: row => row.id,
+      selector: (row) => row.id,
       sortable: true,
       reorder: true,
       width: '28px',
@@ -123,13 +137,13 @@ const Cadastrados = () => {
     },
     {
       name: 'Nome',
-      selector: row => row.nome,
+      selector: (row) => row.nome,
       sortable: true,
       reorder: true,
     },
     {
       name: 'CPF',
-      selector: row => row.cpf,
+      selector: (row) => row.cpf,
       sortable: true,
       reorder: true,
       width: '110px',
@@ -137,7 +151,7 @@ const Cadastrados = () => {
     },
     {
       name: 'Tipo',
-      selector: row => tipoEnum[row.tipo],
+      selector: (row) => tipoEnum[row.tipo],
       sortable: true,
       reorder: true,
       width: '120px',
@@ -145,7 +159,7 @@ const Cadastrados = () => {
     },
     {
       name: 'Ativo',
-      selector: row => ativoEnum[row.ativo],
+      selector: (row) => ativoEnum[row.ativo],
       sortable: true,
       reorder: true,
       width: '60px',
@@ -155,45 +169,8 @@ const Cadastrados = () => {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get('/listar', {
-          params: {
-            pagina: pagination.page,
-          },
-        });
-
-        const formattedData = response.data.registros.map((registro) => ({
-          id: registro.id,
-          nome: registro.nome,
-          cpf: registro.cpf,
-          tipo: registro.tipo,
-          ativo: registro.ativo,
-        }));
-
-        setTimeout(() => {
-          setData(formattedData);
-
-          setPagination((prevPagination) => ({
-            ...prevPagination,
-            totalRecords: response.data.totalRegistros,
-            totalPages: response.data.numeroDePaginas,
-          }));
-
-          setLoading(false);
-        }, 3000);
-      } catch (error) {
-        console.error('Erro ao buscar dados do servidor:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [pagination.page]);
-
-  const handlePageChange = (page) => {
-    setPagination({ ...pagination, page });
-  };
+    fetchUsers(page, paginationPerPage);
+  }, [page, paginationPerPage]);
 
   const addButtonTooltip = (
     <Tooltip id="add-button-tooltip">Novo</Tooltip>
@@ -202,7 +179,6 @@ const Cadastrados = () => {
   const searchButtonTooltip = (
     <Tooltip id="search-button-tooltip">Pesquisar</Tooltip>
   );
-
 
   return (
     <>
@@ -239,8 +215,8 @@ const Cadastrados = () => {
               selectableRowsSingle
               paginationServer
               progressPending={loading}
-              paginationTotalRows={pagination.totalRecords}
-              paginationPerPage={10}
+              paginationTotalRows={totalRows}
+              paginationPerPage={paginationPerPage}
               paginationRowsPerPageOptions={[10, 20, 30]}
               paginationComponentOptions={{
                 rowsPerPageText: 'Linhas por página:',
@@ -249,6 +225,7 @@ const Cadastrados = () => {
               }}
               customSelectedMessage={customSelectedMessage}
               onChangePage={handlePageChange}
+              onChangeRowsPerPage={handlePerRowsChange}
               text={customText}
               highlightOnHover
               pointerOnHover
@@ -257,7 +234,6 @@ const Cadastrados = () => {
               subHeader
               subHeaderComponent={
                 <div className='flex-container m-0 p-0 col align-items-center'>
-
                   <div className='text-start m-0 p-0 col'>
                     <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
                       <Button className="btn btn-sm btn-light text-bg-primary p-0 m-0 text-center align-items-center">
@@ -265,7 +241,6 @@ const Cadastrados = () => {
                       </Button>
                     </OverlayTrigger>
                   </div>
-
                   <div className='text-end d-flex col m-0 p-0 input-group-sm justify-content-end'>
                     <input
                       className='text-center rounded p-0 m-0'
