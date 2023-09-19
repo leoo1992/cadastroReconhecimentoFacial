@@ -40,20 +40,18 @@ const Cadastrados = () => {
   const fetchUsers = useCallback(async (page, perPage) => {
     setLoading(true);
     try {
-      const response = await api.get(`/listar?pagina=${page}&limitePorPagina=${perPage}`);
+      const response = await api.get(`/listar?pagina=${page}&limitePorPagina=${paginationPerPage}`);
       const { registros, numerodepaginas, totalregistros } = response.data;
 
-      setTimeout(() => {
-        setData(registros);
-        setTotalRows(totalregistros);
-        setNumerodepaginas(numerodepaginas);
-        setLoading(false);
-      }, 2000);
+      setData(registros);
+      setTotalRows(totalregistros);
+      setNumerodepaginas(numerodepaginas);
+      setLoading(false);
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
       setLoading(false);
     }
-  }, []);
+  }, [paginationPerPage]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -214,8 +212,8 @@ const Cadastrados = () => {
   ];
 
   useEffect(() => {
+    setLoading(true);
     fetchUsers(page, paginationPerPage);
-
   }, [page, paginationPerPage, fetchUsers]);
 
 

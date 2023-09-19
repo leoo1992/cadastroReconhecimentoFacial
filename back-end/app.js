@@ -11,6 +11,32 @@ const { Op } = require('sequelize');
 app.use(express.json());
 app.use(cors());
 
+// Rota para listagem
+app.get("/listar", async (req, res) => {
+  try {
+    const totalRegistros = await Pessoa.count();
+    const pagina = parseInt(req.query.pagina) || 1;
+    const limitePorPagina = parseInt(req.query.limitePorPagina) || totalRegistros;
+    const paginacao = (pagina - 1) * limitePorPagina;
+    const numeroDePaginas = Math.ceil(totalRegistros/limitePorPagina) || 1;
+    const registros = await Pessoa.findAll({
+      limit: limitePorPagina,
+      offset: paginacao,
+    });
+
+    res.status(200).json({
+      'registros' : registros,
+      'numerodepaginas' : numeroDePaginas ,
+      'totalregistros': totalRegistros
+    });
+
+  } catch (err) {
+    console.error("Erro ao listar os dados: ", err);
+    res.status(500).json({ error: "Erro ao listar os dados." });
+  }
+});
+
+
 // Conexão com o banco de dados
 console.log("Tentando conectar ao banco de dados...");
 sequelize
@@ -60,27 +86,6 @@ app.post(
     }
   }
 );
-
-// Rota para listagem
-app.get("/listar", async (req, res) => {
-  try {
-    const totalRegistros = await Pessoa.count();
-    const pagina = parseInt(req.query.pagina) || 1;
-    const limitePorPagina = parseInt(req.query.limitePorPagina) || totalRegistros;
-    const paginacao = (pagina - 1) * limitePorPagina;
-    const numeroDePaginas = Math.ceil(totalRegistros/limitePorPagina) || 1;
-    const registros = await Pessoa.findAll({
-      limit: limitePorPagina,
-      offset: paginacao,
-    });
-
-    res.status(200).json({'registros' : registros, 'numerodepaginas' : numeroDePaginas , 'totalregistros': totalRegistros});
-
-  } catch (err) {
-    console.error("Erro ao listar os dados: ", err);
-    res.status(500).json({ error: "Erro ao listar os dados." });
-  }
-});
 
 // Rota para atualizar por id
 app.put("/atualizar/:id", async (req, res) => {
