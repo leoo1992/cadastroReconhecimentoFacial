@@ -81,3 +81,45 @@ app.get("/listar", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
+
+// Rota para atualizar por id
+app.put("/atualizar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, cpf, tipo, ativo } = req.body;
+
+    const pessoaExistente = await Pessoa.findByPk(id);
+
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
+    }
+
+    await pessoaExistente.update({ nome, cpf, tipo, ativo });
+
+    res.status(200).json(pessoaExistente);
+  } catch (err) {
+    console.error("Erro ao atualizar registro: ", err);
+    res.status(500).json({ error: "Erro ao atualizar registro." });
+  }
+});
+
+//rota para deletar por id:
+app.delete("/deletar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const pessoaExistente = await Pessoa.findByPk(id);
+
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
+    }
+
+    await pessoaExistente.destroy();
+
+    res.status(204).send();
+  } catch (err) {
+    console.error("Erro ao excluir registro: ", err);
+    res.status(500).json({ error: "Erro ao excluir registro." });
+  }
+});
+

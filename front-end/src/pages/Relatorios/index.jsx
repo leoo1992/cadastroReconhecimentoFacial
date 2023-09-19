@@ -14,7 +14,6 @@ const Relatorios = () => {
     setTheme(newTheme);
   };
 
-  // Função para criar um botão com tooltip
   const createButtonWithTooltip = (text, link, tooltipText) => (
     <OverlayTrigger
       key={text}

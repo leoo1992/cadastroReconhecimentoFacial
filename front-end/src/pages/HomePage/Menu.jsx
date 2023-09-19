@@ -62,7 +62,7 @@ function Menu() {
               show={open}
               onHide={handleClose}
               placement="end"
-              className="w-auto border-1 border-info"
+              className="w-auto border-1 border-info hover-menu"
             >
               <Offcanvas.Header className='bg-fundo flex-row'>
                 <div className='col'>

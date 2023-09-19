@@ -8,6 +8,7 @@ import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { Link } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const Cadastrados = () => {
@@ -55,7 +56,7 @@ const Cadastrados = () => {
 
   const tipoEnum = {
     0: "Aluno",
-    1: "Professor",
+    1: "Funcionário",
     2: "Responsável",
     3: "Terceiro",
   };
@@ -76,8 +77,17 @@ const Cadastrados = () => {
     const handleDelete = () => {
       const selectedIds = selectedRows.map((r) => r.id);
       if (window.confirm(`Você tem certeza que deseja deletar o(s) registro(s) selecionado(s) com IDs: ${selectedIds.join(', ')}?`)) {
+        selectedIds.forEach(async (id) => {
+          try {
+            await api.delete(`/deletar/${id}`);
+            alert("Registro Excluido com Sucesso");
+
+          } catch (error) {
+            alert("Erro ao excluir registro");
+          }
+        });
+
         setToggleCleared(!toggleCleared);
-        // Lógica de exclusão aqui, se necessário
       }
     };
 
@@ -236,9 +246,9 @@ const Cadastrados = () => {
                 <div className='flex-container m-0 p-0 col align-items-center'>
                   <div className='text-start m-0 p-0 col'>
                     <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
-                      <Button className="btn btn-sm btn-light text-bg-primary p-0 m-0 text-center align-items-center">
-                        <FontAwesomeIcon icon={faPlus} className='p-2 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
-                      </Button>
+                      <Link to="/cadastro">
+                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-2 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                      </Link>
                     </OverlayTrigger>
                   </div>
                   <div className='text-end d-flex col m-0 p-0 input-group-sm justify-content-end'>
