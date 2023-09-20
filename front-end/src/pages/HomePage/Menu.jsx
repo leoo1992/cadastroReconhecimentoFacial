@@ -94,7 +94,7 @@ function Menu() {
                   <li className>
                     <OverlayTrigger placement="left" overlay={<Tooltip id="acessar-tooltip">Acessar</Tooltip>}>
                       <Link to="/reconhecimento" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
-                        Acessar
+                        App
                       </Link>
                     </OverlayTrigger>
                   </li>
