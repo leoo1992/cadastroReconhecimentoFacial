@@ -78,9 +78,9 @@ function Menu() {
               <Offcanvas.Body className='bg-fundo d-flex justify-content-center'>
                 <ul className='p-1 m-0 list-unstyled d-flex-column'>
                   <li className>
-                    <OverlayTrigger placement="left" overlay={<Tooltip id="relatorios-tooltip">Relatórios</Tooltip>}>
-                      <Link to="/relatorios" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
-                        Relatórios
+                    <OverlayTrigger placement="left" overlay={<Tooltip id="listas-tooltip">Listas</Tooltip>}>
+                      <Link to="/listas" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
+                        Listas
                       </Link>
                     </OverlayTrigger>
                   </li>

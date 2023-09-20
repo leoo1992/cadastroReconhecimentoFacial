@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./relatorio.css";
+import "./listas.css";
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import MenuIcon from '../HomePage/Menuicon';
@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-const Relatorios = () => {
+const Listas = () => {
   const [theme, setTheme] = useState("default");
 
   const updateTheme = (newTheme) => {
@@ -33,7 +33,7 @@ const Relatorios = () => {
   return (
     <>
       <div className="text-end bg-fundo d-flex col">
-        <h4 className='text-start text-info m-0 p-2 col align-self-center' >Relatórios</h4>
+        <h4 className='text-start text-info m-0 p-2 col align-self-center'>Listas</h4>
         <MenuIcon updateTheme={updateTheme} />
       </div>
       <div className={`container-fluid mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
@@ -45,4 +45,4 @@ const Relatorios = () => {
   );
 };
 
-export default Relatorios;
+export default Listas;

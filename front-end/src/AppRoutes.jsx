@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Cadastro from "./pages/Cadastro";
 import Atualiza from "./pages/Cadastro/Atualiza";
-import Relatorios from "./pages/Relatorios";
-import Cadastrados from "./pages/Relatorios/Cadastrados";
+import Listas from "./pages/Listas";
+import Cadastrados from "./pages/Listas/Cadastrados";
 
 const AppRoutes = () => {
   return (
@@ -12,7 +12,7 @@ const AppRoutes = () => {
       <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route exact path="/cadastro" element={<Cadastro />} />
-        <Route exact path="/relatorios" element={<Relatorios />} />
+        <Route exact path="/listas" element={<Listas />} />
         <Route exact path="/cadastrados" element={<Cadastrados />} />
         <Route path="/atualiza/:id" element={<Atualiza />} />
         <Route exact path="/reconhecimento" />

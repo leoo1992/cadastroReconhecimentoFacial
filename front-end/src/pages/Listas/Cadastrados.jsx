@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import "./relatorio.css";
+import "./listas.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTimesCircle, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
-import Button from 'react-bootstrap/Button';
+import { Button } from "react-bootstrap";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
+
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -17,7 +18,7 @@ const Cadastrados = () => {
   const [theme, setTheme] = useState("default");
   const [paginationPerPage, setPaginationPerPage] = useState(10);
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
   // eslint-disable-next-line
@@ -29,7 +30,7 @@ const Cadastrados = () => {
   const divElement = document.querySelector('.rdt_TableHeader > div > div');
   if (divElement) {
     const selectedNome = selectedRows.map((r) => r.nome);
-    divElement.textContent = selectedNome+ '  -  Selecionado';
+    divElement.textContent = selectedNome + '  -  Selecionado';
   }
 
   const ativoEnum = {
@@ -38,7 +39,7 @@ const Cadastrados = () => {
   };
 
   const fetchUsers = useCallback(async (page, perPage) => {
-    setLoading(true);
+
     try {
       const response = await api.get(`/listar?pagina=${page}&limitePorPagina=${paginationPerPage}`);
       const { registros, numerodepaginas, totalregistros } = response.data;
@@ -46,11 +47,11 @@ const Cadastrados = () => {
       setData(registros);
       setTotalRows(totalregistros);
       setNumerodepaginas(numerodepaginas);
-      setLoading(false);
+
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
-      setLoading(false);
     }
+
   }, [paginationPerPage]);
 
   const handlePageChange = (newPage) => {
@@ -127,9 +128,7 @@ const Cadastrados = () => {
     return (
       <div className='p-0 m-0'>
         <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
-          <Button className="btn btn-light text-bg-primary p-1 m-0" onClick={handleEditar}>
-            <FontAwesomeIcon icon={faEdit} />
-          </Button>
+          <FontAwesomeIcon icon={faEdit} className="btn btn-light text-bg-primary p-1 m-0" onClick={handleEditar} />
         </OverlayTrigger>
         <span> </span>
         <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
@@ -212,8 +211,11 @@ const Cadastrados = () => {
   ];
 
   useEffect(() => {
-    setLoading(true);
+
     fetchUsers(page, paginationPerPage);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, [page, paginationPerPage, fetchUsers]);
 
 
@@ -282,12 +284,7 @@ const Cadastrados = () => {
                       </Link>
                     </OverlayTrigger>
                   </div>
-                  {/* <div className='text-end d-flex col m-0 p-0 input-group-sm justify-content-end'>
-                    <input
-                      type="text"
-                      placeholder="Pesquisar"
-                    />
-                  </div> */}
+                  {/* LEONARDO - Search Field TO DO */}
                 </div>
               }
               subHeaderAlign="left"
