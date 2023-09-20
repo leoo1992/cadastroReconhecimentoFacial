@@ -9,7 +9,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 function MenuIcon(props) {
-  const [theme, setTheme] = useState("default");
+  const [theme, setTheme] = useState("dark");
 
   const handleGoHome = () => {
     window.location.href = '/';

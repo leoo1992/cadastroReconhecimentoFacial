@@ -8,7 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const Listas = () => {
-  const [theme, setTheme] = useState("default");
+  const [theme, setTheme] = useState("dark");
 
   const updateTheme = (newTheme) => {
     setTheme(newTheme);
@@ -32,7 +32,7 @@ const Listas = () => {
 
   return (
     <>
-      <div className="text-end bg-fundo d-flex col">
+      <div className="text-end bg-fundo d-flex col sombra-baixo">
         <h4 className='text-start text-info m-0 p-2 col align-self-center'>Listas</h4>
         <MenuIcon updateTheme={updateTheme} />
       </div>

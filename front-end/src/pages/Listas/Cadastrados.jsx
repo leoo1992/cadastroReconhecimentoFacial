@@ -3,31 +3,37 @@ import "./listas.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTimesCircle, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
-import { Button } from "react-bootstrap";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
-
+import { SearchField } from '@aws-amplify/ui-react';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggleCleared, setToggleCleared] = useState(false);
-  const [theme, setTheme] = useState("default");
+  const [theme, setTheme] = useState("dark");
   const [paginationPerPage, setPaginationPerPage] = useState(10);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
+  const [setPerPage] = useState(10);
   // eslint-disable-next-line
-  const [perPage, setPerPage] = useState(10);
-  // eslint-disable-next-line
-  const [numerodepaginas, setNumerodepaginas] = useState(1);
+  const [setNumerodepaginas] = useState(1);
   const [ativo, setAtivo] = useState("");
   const navigate = useNavigate();
   const divElement = document.querySelector('.rdt_TableHeader > div > div');
+  const [showInactive, setShowInactive] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // eslint-disable-next-line
+  const toggleVisibility = () => {
+    setShowInactive(!showInactive);
+  };
+
   if (divElement) {
     const selectedNome = selectedRows.map((r) => r.nome);
     divElement.textContent = selectedNome + '  -  Selecionado';
@@ -38,21 +44,38 @@ const Cadastrados = () => {
     1: "Sim",
   };
 
-  const fetchUsers = useCallback(async (page, perPage) => {
-
+  const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
-      const response = await api.get(`/listar?pagina=${page}&limitePorPagina=${paginationPerPage}`);
+      let whereClause = {};
+      if (!showInactive) {
+        whereClause = { ativo: 1 };
+      }
+
+      const response = await api.get(`/listar?pagina=${page}&limitePorPagina=${paginationPerPage}&showInactive=${showInactive}&search=${searchQuery}`, {
+        params: {
+          where: whereClause,
+        },
+      });
+
+
       const { registros, numerodepaginas, totalregistros } = response.data;
 
       setData(registros);
       setTotalRows(totalregistros);
       setNumerodepaginas(numerodepaginas);
-
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
+  }, [paginationPerPage, showInactive]);
 
-  }, [paginationPerPage]);
+  const search = async (query) => {
+    try {
+      const response = await api.get(`/pesquisar?termo=${query}`);
+      setData(response.data.resultados);
+    } catch (error) {
+      console.error("Erro ao realizar pesquisa: ", error);
+    }
+  };
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -126,23 +149,28 @@ const Cadastrados = () => {
     };
 
     return (
-      <div className='p-0 m-0'>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
-          <FontAwesomeIcon icon={faEdit} className="btn btn-light text-bg-primary p-1 m-0" onClick={handleEditar} />
-        </OverlayTrigger>
-        <span> </span>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
-          <Button className="btn btn-light text-bg-warning p-1 m-0" onClick={handleDesativar}>
-            <FontAwesomeIcon icon={faTimesCircle} />
-          </Button>
-        </OverlayTrigger>
-        <span> </span>
-        <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
-          <Button className="btn btn-light p-1 m-0 text-bg-danger" key="delete" onClick={handleDelete}>
-            <FontAwesomeIcon icon={faTrash} />
-          </Button>
-        </OverlayTrigger>
-      </div>
+      <>
+        <div className='p-0 m-0 container d-flex justify-content-end' >
+          <div className='p-0 m-0 row align-items-center' >
+            <div className='p-0 m-0'>
+
+              <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
+                <FontAwesomeIcon icon={faEdit} className="btn text-bg-primary p-1 m-1" onClick={handleEditar} />
+              </OverlayTrigger>
+
+              <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
+                <FontAwesomeIcon icon={faTimesCircle} className="btn text-bg-warning p-1 m-1" onClick={handleDesativar} />
+              </OverlayTrigger>
+
+              <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
+                <FontAwesomeIcon icon={faTrash} className="btn p-1 m-1 text-bg-danger" key="delete" onClick={handleDelete} />
+              </OverlayTrigger>
+
+            </div>
+            <br />
+          </div>
+        </div>
+      </>
     );
   }, [selectedRows, toggleCleared, ativo]);
 
@@ -173,9 +201,7 @@ const Cadastrados = () => {
       selector: (row) => row.id,
       sortable: true,
       reorder: true,
-      width: '28px',
-      center: true,
-      compact: true,
+      width: '60px',
     },
     {
       name: 'Nome',
@@ -188,8 +214,7 @@ const Cadastrados = () => {
       selector: (row) => row.cpf,
       sortable: true,
       reorder: true,
-      width: '110px',
-      compact: true,
+      width: '120px',
     },
     {
       name: 'Tipo',
@@ -197,31 +222,38 @@ const Cadastrados = () => {
       sortable: true,
       reorder: true,
       width: '120px',
-      compact: true,
     },
     {
       name: 'Ativo',
       selector: (row) => ativoEnum[row.ativo],
       sortable: true,
       reorder: true,
-      width: '60px',
-      center: true,
-      compact: true,
+      width: '80px',
     },
   ];
 
   useEffect(() => {
-
-    fetchUsers(page, paginationPerPage);
+    search(searchQuery);
+    fetchUsers(page, paginationPerPage, searchQuery);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-  }, [page, paginationPerPage, fetchUsers]);
+  }, [page, paginationPerPage, fetchUsers, showInactive, searchQuery]);
 
 
   const addButtonTooltip = (
     <Tooltip id="add-button-tooltip">Novo</Tooltip>
   );
+
+  const onClear = () => {
+    setSearchQuery('');
+    search('');
+  };
+
+  const onChange = (event) => {
+    const newValue = event.target.value;
+    setSearchQuery(newValue);
+  };
 
   return (
     <>
@@ -237,7 +269,7 @@ const Cadastrados = () => {
         </div>
       ) : (
         <>
-          <div className="top-0 text-end bg-fundo col d-flex">
+          <div className="top-0 text-end bg-fundo col d-flex sombra-baixo">
             <h4 className='text-start text-info m-0 p-2 col align-self-center' >Cadastrados</h4>
             <MenuIcon updateTheme={updateTheme} />
           </div>
@@ -280,11 +312,39 @@ const Cadastrados = () => {
                   <div className='text-start m-0 p-0 col'>
                     <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
                       <Link to="/cadastro">
-                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-2 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
                       </Link>
                     </OverlayTrigger>
+
+                    {showInactive ? (
+                      <OverlayTrigger placement="bottom" overlay={<Tooltip id="ocultar-button-tooltip">Ocultar Inativos</Tooltip>}>
+                        <FontAwesomeIcon icon={faEyeSlash} onClick={() => setShowInactive(false)} className='eye-icon btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                      </OverlayTrigger>
+                    ) : (
+                      <OverlayTrigger placement="bottom" overlay={<Tooltip id="exibir-button-tooltip">Exibir Inativos</Tooltip>}>
+                        <FontAwesomeIcon icon={faEye} onClick={() => setShowInactive(true)} className='eye-icon btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                      </OverlayTrigger>
+                    )}
                   </div>
-                  {/* LEONARDO - Search Field TO DO */}
+
+                  <SearchField
+                    placeholder="Procurar"
+                    size="small"
+                    hasSearchButton={false}
+                    hasSearchIcon={false}
+                    labelHidden={false}
+                    onChange={(event) => onChange(event)}
+                    onClear={onClear}
+                    value={searchQuery}
+                    className='m-0 p-0 d-flex rounded border-0 text-center fw-bolder'
+                    style={{
+                      textAlign: "center",
+                      borderRadius: "8px",
+                      lineHeight: "29px"
+                    }}
+                  />
+
+
                 </div>
               }
               subHeaderAlign="left"

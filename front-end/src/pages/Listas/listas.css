@@ -8,10 +8,16 @@
 
 .rdt_TableHeader>div {
   background-color: #00aeffb6;
-
+  padding-right: 2.5rem;
 }
 
 .rdt_TableHeader>div>div {
   color: rgba(11, 34, 98, 0.978);
   font-weight: bold;
+  width: 60%;
+  overflow-y: auto;
+}
+
+.amplify-button{
+display: none;
 }

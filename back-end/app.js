@@ -5,37 +5,81 @@ const cors = require("cors");
 const Pessoa = require("./models/Pessoa");
 const app = express();
 const port = 3000;
-const {validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const { Op } = require('sequelize');
 
 app.use(express.json());
 app.use(cors());
 
-// Rota para listagem
+// Rota para pesquisa geral
+app.get("/pesquisar", async (req, res) => {
+  try {
+    const { termo } = req.query;
+
+    if (!termo || termo.length < 3) {
+      return res.status(200).json({ resultados: [] });
+    }
+
+    console.log("Termo de pesquisa:", termo);
+
+    const resultados = await Pessoa.findAll({
+      where: {
+        [Op.or]: [
+          { nome: { [Op.like]: `%${termo}%` } },
+          { cpf: { [Op.like]: `%${termo}%` } },
+          { id: { [Op.eq]: termo } },
+        ],
+      },
+    });
+
+    res.status(200).json({ resultados });
+  } catch (err) {
+    console.error("Erro ao realizar pesquisa geral: ", err);
+    res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+  }
+});
+
 app.get("/listar", async (req, res) => {
   try {
-    const totalRegistros = await Pessoa.count();
     const pagina = parseInt(req.query.pagina) || 1;
-    const limitePorPagina = parseInt(req.query.limitePorPagina) || totalRegistros;
+    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
+    const showInactive = req.query.showInactive === 'true' || false;
+    const searchQuery = req.query.search || '';
+
+    let whereClause = showInactive ? {} : { ativo: 1 };
+
+    if (searchQuery) {
+      whereClause = {
+        ...whereClause,
+        [Op.or]: [
+          { nome: { [Op.like]: `%${searchQuery}%` } },
+          { cpf: { [Op.like]: `%${searchQuery}%` } },
+          { id: { [Op.eq]: searchQuery } },
+        ],
+      };
+    }
+
+    const totalRegistros = await Pessoa.count({ where: whereClause });
+
     const paginacao = (pagina - 1) * limitePorPagina;
-    const numeroDePaginas = Math.ceil(totalRegistros/limitePorPagina) || 1;
+    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+
     const registros = await Pessoa.findAll({
+      where: whereClause,
       limit: limitePorPagina,
       offset: paginacao,
     });
 
     res.status(200).json({
-      'registros' : registros,
-      'numerodepaginas' : numeroDePaginas ,
-      'totalregistros': totalRegistros
+      registros,
+      numerodepaginas: numeroDePaginas,
+      totalregistros: totalRegistros,
     });
-
   } catch (err) {
     console.error("Erro ao listar os dados: ", err);
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
-
 
 // Conexão com o banco de dados
 console.log("Tentando conectar ao banco de dados...");
@@ -138,7 +182,7 @@ app.put("/desativar/:id", async (req, res) => {
       return res.status(404).json({ error: "Registro não encontrado." });
     }
 
-    await pessoaExistente.update({ativo });
+    await pessoaExistente.update({ ativo });
 
     res.status(200).json(pessoaExistente);
   } catch (err) {
@@ -167,32 +211,7 @@ app.delete("/deletar/:id", async (req, res) => {
   }
 });
 
-// Rota para pesquisa geral
-app.get("/pesquisar", async (req, res) => {
-  try {
-    const { termo } = req.query;
 
-    if (!termo) {
-      return res.status(400).json({ error: "O parâmetro 'termo' de pesquisa é obrigatório." });
-    }
-
-    console.log("Termo de pesquisa:", termo);
-
-    const resultados = await Pessoa.findAll({
-      where: {
-        [Op.or]: [
-          { nome: { [Op.like]: `%${termo}%` } },
-          { cpf: { [Op.like]: `%${termo}%` } },
-          { id: { [Op.eq]: termo } },
-        ],
-      },
-    });
-    res.status(200).json({ resultados });
-  } catch (err) {
-    console.error("Erro ao realizar pesquisa geral: ", err);
-    res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
-  }
-});
 
 
 

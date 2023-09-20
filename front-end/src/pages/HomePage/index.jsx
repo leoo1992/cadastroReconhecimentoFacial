@@ -9,7 +9,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const HomePage = () => {
-  const [theme, setTheme] = useState("default");
+  const [theme, setTheme] = useState("dark");
 
   const toggleTheme = () => {
     if (theme === "dark") {
@@ -27,7 +27,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="text-end bg-fundo d-flex">
+      <div className="text-end bg-fundo d-flex sombra-baixo">
         <h5 className='text-start text-info m-0 p-2 col align-self-center fw-bold'>
           Face-ID
         </h5>

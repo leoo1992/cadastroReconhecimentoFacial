@@ -49,3 +49,6 @@
   box-shadow: -2px 2px 2000px cyan;
 }
 
+.sombra-baixo {
+  border-bottom: 1px solid cyan;
+}
