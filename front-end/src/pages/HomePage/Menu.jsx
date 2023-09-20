@@ -9,6 +9,8 @@ import './home.css';
 import { Transition } from 'react-transition-group';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList, faUserPlus, faMobileAlt } from "@fortawesome/free-solid-svg-icons";
 
 function Menu() {
   const [open, setOpen] = useState(false);
@@ -76,25 +78,25 @@ function Menu() {
               </Offcanvas.Header>
 
               <Offcanvas.Body className='bg-fundo d-flex justify-content-center'>
-                <ul className='p-1 m-0 list-unstyled d-flex-column'>
+                <ul className='p-1 m-0 list-unstyled d-flex-column text-start'>
                   <li className>
                     <OverlayTrigger placement="left" overlay={<Tooltip id="listas-tooltip">Listas</Tooltip>}>
-                      <Link to="/listas" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
-                        Listas
+                      <Link to="/listas" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6 text-start fw-bold">
+                        <FontAwesomeIcon icon={faList} className="me-2" /> Listas
                       </Link>
                     </OverlayTrigger>
                   </li>
                   <li className>
                     <OverlayTrigger placement="left" overlay={<Tooltip id="cadastro-tooltip">Cadastro</Tooltip>}>
-                      <Link to="/cadastro" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
-                        Cadastro
+                      <Link to="/cadastro" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6 fw-bold text-start">
+                        <FontAwesomeIcon icon={faUserPlus} className="me-2 text-start " /> Cadastro
                       </Link>
                     </OverlayTrigger>
                   </li>
                   <li className>
                     <OverlayTrigger placement="left" overlay={<Tooltip id="acessar-tooltip">Acessar</Tooltip>}>
-                      <Link to="/reconhecimento" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6">
-                        App
+                      <Link to="/reconhecimento" className="btn-menu-tamanho btn btn-info btn-sm mt-1 fs-6 fw-bold text-start">
+                        <FontAwesomeIcon icon={faMobileAlt} className="me-2 text-start" /> App
                       </Link>
                     </OverlayTrigger>
                   </li>
