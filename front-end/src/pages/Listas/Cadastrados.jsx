@@ -10,8 +10,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { SearchField } from '@aws-amplify/ui-react';
-import { toast } from 'react-hot-toast';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -106,19 +106,22 @@ const Cadastrados = () => {
   };
 
   const contextActions = React.useMemo(() => {
-    const handleDelete = () => {
+    const handleDelete = async () => {
       const selectedIds = selectedRows.map((r) => r.id);
       if (window.confirm(`Você tem certeza que deseja deletar o registro selecionado(s) com ID: ${selectedIds.join(', ')}?`)) {
-        selectedIds.forEach(async (id) => {
-          try {
+        try {
+          for (const id of selectedIds) {
             await api.delete(`/deletar/${id}`);
-            toast.success("Registro excluído com sucesso");
-            window.location.reload();
-          } catch (error) {
-            toast.error("Erro ao excluir registro");
           }
-        });
+          toast.success("Registro excluídos com sucesso! Recarregando Lista ...");
 
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
+
+        } catch (error) {
+          toast.error("Erro ao excluir registros");
+        }
         setToggleCleared(!toggleCleared);
       }
     };
@@ -126,16 +129,20 @@ const Cadastrados = () => {
     const handleDesativar = async () => {
       const selectedIds = selectedRows.map((r) => r.id);
       if (window.confirm(`Você tem certeza que deseja ${ativo === "1" ? "desativar" : "ativar"} o registro selecionado com ID: ${selectedIds.join(', ')}?`)) {
-        selectedIds.forEach(async (id) => {
-          try {
+        try {
+          for (const id of selectedIds) {
             await api.put(`/desativar/${id}`, { ativo: ativo === "1" ? 0 : 1 });
-            toast.success(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso`);
-            window.location.reload();
-          } catch (error) {
-            toast.error("Erro ao Ativar/Desativar registro");
           }
-        });
 
+          toast.success(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso! Recarregando Lista ...`);
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
+
+        } catch (error) {
+          toast.error("Erro ao Ativar/Desativar registro");
+        }
         setToggleCleared(!toggleCleared);
       }
     };
@@ -256,6 +263,18 @@ const Cadastrados = () => {
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme='dark'
+      />
       {loading ? (
         <div className='container-fluid text-center m-0 p-0 d-flex flex-column justify-content-center align-items-center align-self-center vh-100 vw-100 bg-fundo'>
           <Triangle
