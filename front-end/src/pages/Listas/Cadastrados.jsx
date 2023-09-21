@@ -10,6 +10,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { Link, useNavigate } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { SearchField } from '@aws-amplify/ui-react';
+import { toast } from 'react-hot-toast';
+
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -20,8 +22,6 @@ const Cadastrados = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
-  const [setPerPage] = useState(10);
-  // eslint-disable-next-line
   const [setNumerodepaginas] = useState(1);
   const [ativo, setAtivo] = useState("");
   const navigate = useNavigate();
@@ -82,7 +82,6 @@ const Cadastrados = () => {
   };
 
   const handlePerRowsChange = async (newPerPage) => {
-    setPerPage(newPerPage);
     setPaginationPerPage(newPerPage);
   };
 
@@ -113,10 +112,10 @@ const Cadastrados = () => {
         selectedIds.forEach(async (id) => {
           try {
             await api.delete(`/deletar/${id}`);
-            alert("Registro excluido com sucesso");
+            toast.success("Registro excluído com sucesso");
             window.location.reload();
           } catch (error) {
-            alert("Erro ao excluir registro");
+            toast.error("Erro ao excluir registro");
           }
         });
 
@@ -130,10 +129,10 @@ const Cadastrados = () => {
         selectedIds.forEach(async (id) => {
           try {
             await api.put(`/desativar/${id}`, { ativo: ativo === "1" ? 0 : 1 });
-            alert(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso`);
+            toast.success(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso`);
             window.location.reload();
           } catch (error) {
-            alert("Erro ao Ativar/Desativar registro");
+            toast.error("Erro ao Ativar/Desativar registro");
           }
         });
 
