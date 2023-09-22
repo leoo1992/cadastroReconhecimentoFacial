@@ -12,6 +12,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { SearchField } from '@aws-amplify/ui-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Modal, Button } from 'react-bootstrap';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -28,10 +29,50 @@ const Cadastrados = () => {
   const divElement = document.querySelector('.rdt_TableHeader > div > div');
   const [showInactive, setShowInactive] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
+  const [showModalDesativar, setShowModalDesativar] = useState(false);
+  const [idToDesativar, setIdToDesativar] = useState(null);
 
   // eslint-disable-next-line
   const toggleVisibility = () => {
     setShowInactive(!showInactive);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await api.delete(`/deletar/${idToDelete}`);
+      setShowModalDelete(false);
+      setToggleCleared(!toggleCleared);
+      toast.success("Registro excluído com sucesso!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 4000);
+    } catch (error) {
+      toast.error("Erro ao excluir o registro");
+    }
+  };
+
+  const handleConfirmDesativar = async () => {
+    try {
+      await api.put(`/desativar/${idToDesativar}`);
+      setShowModalDesativar(false);
+      setToggleCleared(!toggleCleared);
+      toast.success(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso! Recarregando Lista ...`);
+      setTimeout(() => {
+        window.location.reload();
+      }, 4000);
+    } catch (error) {
+      toast.error(`Erro ao ${ativo === "1" ? "desativado" : "ativado"} Registro`);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowModalDelete(false);
+  };
+
+  const handleCancelDesativar = () => {
+    setShowModalDesativar(false);
   };
 
   if (divElement) {
@@ -108,42 +149,18 @@ const Cadastrados = () => {
   const contextActions = React.useMemo(() => {
     const handleDelete = async () => {
       const selectedIds = selectedRows.map((r) => r.id);
-      if (window.confirm(`Você tem certeza que deseja deletar o registro selecionado(s) com ID: ${selectedIds.join(', ')}?`)) {
-        try {
-          for (const id of selectedIds) {
-            await api.delete(`/deletar/${id}`);
-          }
-          toast.success("Registro excluídos com sucesso! Recarregando Lista ...");
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 4000);
-
-        } catch (error) {
-          toast.error("Erro ao excluir registros");
-        }
-        setToggleCleared(!toggleCleared);
+      if (selectedIds.length > 0) {
+        setShowModalDelete(true);
+        setIdToDelete(selectedIds[0]);
       }
     };
 
+
     const handleDesativar = async () => {
       const selectedIds = selectedRows.map((r) => r.id);
-      if (window.confirm(`Você tem certeza que deseja ${ativo === "1" ? "desativar" : "ativar"} o registro selecionado com ID: ${selectedIds.join(', ')}?`)) {
-        try {
-          for (const id of selectedIds) {
-            await api.put(`/desativar/${id}`, { ativo: ativo === "1" ? 0 : 1 });
-          }
-
-          toast.success(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso! Recarregando Lista ...`);
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 4000);
-
-        } catch (error) {
-          toast.error("Erro ao Ativar/Desativar registro");
-        }
-        setToggleCleared(!toggleCleared);
+      if (selectedIds.length > 0) {
+        setShowModalDesativar(true);
+        setIdToDesativar(selectedIds[0]);
       }
     };
 
@@ -263,6 +280,45 @@ const Cadastrados = () => {
 
   return (
     <>
+      <Modal show={showModalDelete} onHide={handleCancelDelete}>
+        <div className={`modal-content text-center w-auto ${theme === "dark" ? "bg-dark text-white fw-bold" : "bg-light"}`}>
+          <Modal.Header>
+            <Modal.Title className='fs-5'>Exclusão</Modal.Title>
+            <Button className='btn btn-info btn-close bg-info btn-sm p-2' onClick={handleCancelDelete}></Button>
+          </Modal.Header>
+          <Modal.Body className='fs-6'>
+            Tem certeza que deseja excluir?
+          </Modal.Body>
+          <Modal.Footer className='justify-justify-content-evenly'>
+            <Button variant="info fw-bold" onClick={handleCancelDelete}>
+              Cancelar
+            </Button>
+            <Button variant="danger fw-bold" onClick={handleConfirmDelete}>
+              Confirmar
+            </Button>
+          </Modal.Footer>
+        </div>
+      </Modal>
+      <Modal show={showModalDesativar} onHide={handleCancelDesativar}>
+        <div className={`modal-content text-center w-auto ${theme === "dark" ? "bg-dark text-white fw-bold" : "bg-light"}`}>
+          <Modal.Header>
+            <Modal.Title className='fs-5'>{ativo === "1" ? "Desativar" : "Ativar"}</Modal.Title>
+            <Button className='btn btn-info btn-close bg-info btn-sm p-2' onClick={handleCancelDesativar}></Button>
+          </Modal.Header>
+          <Modal.Body className='fs-6'>
+            Tem certeza que deseja {ativo === "1" ? "desativar" : "ativar"}?
+          </Modal.Body>
+          <Modal.Footer className='justify-justify-content-evenly'>
+            <Button variant="info fw-bold" onClick={handleCancelDesativar}>
+              Cancelar
+            </Button>
+            <Button variant={ativo === "1" ? "danger" : "success"} onClick={handleConfirmDesativar}>
+              Confirmar
+            </Button>
+          </Modal.Footer>
+        </div>
+      </Modal>
+
       <ToastContainer
         position="top-center"
         autoClose={3000}
