@@ -2,11 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const sequelize = require("./config/sequelize");
 const cors = require("cors");
-const Pessoa = require("./models/Pessoa");
 const app = express();
 const port = 3000;
 const { validationResult } = require("express-validator");
 const { Op } = require('sequelize');
+
+const Pessoa = require("./models/Pessoa");
+const PessoaResponsabilidade = require("./models/PessoaResponsabilidade");
 
 app.use(express.json());
 app.use(cors());
@@ -202,6 +204,10 @@ app.delete("/deletar/:id", async (req, res) => {
       return res.status(404).json({ error: "Registro não encontrado." });
     }
 
+    await PessoaResponsabilidade.destroy({
+      where: { ResponsavelId: id },
+    });
+
     await pessoaExistente.destroy();
 
     res.status(204).send();
@@ -210,6 +216,7 @@ app.delete("/deletar/:id", async (req, res) => {
     res.status(500).json({ error: "Erro ao excluir registro." });
   }
 });
+
 
 
 
