@@ -1,14 +1,9 @@
 .cadastro {
-  background-color: #e8ecff8c;
-  background: #e8ecff8c;
-  border: 1px solid;
-  min-width: 320px;
+  background-color: #000000;
+  background: #0000008c;
+  min-width: 310px;
 }
 
 .error-message {
   color: red;
-}
-
-.form-control {
-  min-width: 275px;
 }
