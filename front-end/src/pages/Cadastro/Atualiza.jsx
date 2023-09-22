@@ -173,7 +173,7 @@ const Atualiza = () => {
                     Há campos acima para verificar.
                   </div>
                 )}
-                <Link to="/" className={`btn btn-warning fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                <Link to="/cadastrados" className={`btn btn-warning fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
                   Voltar
                 </Link>
                 <span> </span>
