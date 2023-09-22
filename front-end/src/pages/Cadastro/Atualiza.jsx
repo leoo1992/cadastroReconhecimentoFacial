@@ -4,6 +4,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import "./cadastro.css";
 import MenuIcon from '../HomePage/Menuicon';
+import { Form, Container, Row, Col, Button } from 'react-bootstrap';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Atualiza = () => {
   const navigate = useNavigate();
@@ -51,11 +54,13 @@ const Atualiza = () => {
       .put(`/atualizar/${id}`, formData)
       .then(() => {
         setFormErrors({});
-        alert("Atualizado com Sucesso");
-        navigate("/cadastrados");
+        toast.success("Atualizado com Sucesso");
+        setTimeout(() => {
+          navigate("/cadastrados");
+        }, 4000);
       })
       .catch((error) => {
-        alert("Erro ao cadastrar : " + error);
+        toast.error("Erro ao atualizar");
       });
   };
 
@@ -83,23 +88,34 @@ const Atualiza = () => {
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme='dark'
+      />
       <div className="text-end bg-fundo d-flex col">
-        <h4 className='text-start text-info m-0 p-1 col align-self-center' >Atualizar Cadastro</h4>
+        <h4 className='text-start text-info m-0 p-2 col align-self-center' >Atualizar</h4>
         <MenuIcon updateTheme={updateTheme} />
       </div>
 
-      <div className={`container-fluid mt-0 pt-5 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
+      <div className={`container-fluid mt-0 pt-4 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
 
-        <div className="p-0 m-0 bg-cadastro w-100 h-100">
-          <div className="d-flex justify-content-center align-items-center fw-bold pt-2">
-            <div className="cadastro w-25 border-info rounded-3 p-4">
-              <form onSubmit={handleSubmit}>
-                <div className="form-group pt-sm-1 pt-md-2 pt-lg-2 text-start">
-                  <label className="text-start pb-1">Nome:</label>
-                  <input
+        <Container className='d-flex justify-content-center fw-bold p-0 m-0'>
+          <Form onSubmit={handleSubmit} className={`cadastro p-3 rounded-3 border ${theme === "dark" ? "border-white" : "border-black"}`}>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Nome:</Form.Label>
+                  <Form.Control
                     type="text"
                     name="nome"
-                    className="rounded p-1 border-info cadastro"
                     value={formData.nome}
                     onChange={handleChange}
                     required
@@ -107,14 +123,16 @@ const Atualiza = () => {
                   {formErrors.nome && (
                     <div className="error-message">{formErrors.nome}</div>
                   )}
-                </div>
-
-                <div className="form-group pt-sm-1 pt-md-2 pt-lg-2 text-start">
-                  <label className="text-start pt-2 pb-1">CPF:</label>
-                  <input
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>CPF:</Form.Label>
+                  <Form.Control
                     type="text"
                     name="cpf"
-                    className="rounded p-1 border-info cadastro"
                     value={formData.cpf}
                     onChange={handleChange}
                     required
@@ -122,13 +140,16 @@ const Atualiza = () => {
                   {formErrors.cpf && (
                     <div className="error-message">{formErrors.cpf}</div>
                   )}
-                </div>
-
-                <div className="form-group pt-sm-1 pt-md-2 pt-lg-2 text-start">
-                  <label className="text-start pt-2 pb-1">Tipo:</label>
-                  <select
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Tipo:</Form.Label>
+                  <Form.Control
+                    as="select"
                     name="tipo"
-                    className="rounded p-1 border-info cadastro"
                     value={formData.tipo}
                     onChange={handleChange}
                     required
@@ -138,30 +159,31 @@ const Atualiza = () => {
                     <option value="1">Funcionário</option>
                     <option value="2">Responsável</option>
                     <option value="3">Terceiro</option>
-                  </select>
+                  </Form.Control>
                   {formErrors.tipo && (
                     <div className="error-message">{formErrors.tipo}</div>
                   )}
-                </div>
-
-                <div className="text-center pt-sm-1 pt-2 pt-lg-2">
-                  {!isFormValid && (
-                    <div className="error-message">
-                      Há campos acima para verificar.
-                    </div>
-                  )}
-                  <button type="submit" className="btn btn-info fw-bold">
-                    Cadastrar
-                  </button>
-                  <span> </span>
-                  <Link to="/" className="btn btn-warning fw-bold">
-                    Voltar
-                  </Link>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="text-center pt-2 ">
+                {!isFormValid && (
+                  <div className="error-message">
+                    Há campos acima para verificar.
+                  </div>
+                )}
+                <Link to="/" className={`btn btn-warning fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                  Voltar
+                </Link>
+                <span> </span>
+                <Button type="submit" variant="info" className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                  Cadastrar
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Container>
 
       </div>
     </>
