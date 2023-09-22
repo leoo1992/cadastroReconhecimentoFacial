@@ -5,11 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Função para exibir um aviso personalizado
 const exibirAviso = (mensagem) => {
   console.log(`Aviso: Alguma funcionalidade esta incapaz no momento!`);
 };
-
 
 console.error = () => {
   exibirAviso();
