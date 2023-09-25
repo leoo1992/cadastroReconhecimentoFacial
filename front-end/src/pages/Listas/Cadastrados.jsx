@@ -256,11 +256,11 @@ const Cadastrados = () => {
   ];
 
   useEffect(() => {
-    const timeoutId =setTimeout(() => {
-    search(searchQuery);
-    fetchUsers(page, paginationPerPage, searchQuery);
+    const timeoutId = setTimeout(() => {
+      search(searchQuery);
+      fetchUsers(page, paginationPerPage, searchQuery);
       setLoading(false);
-    }, 1500);
+    }, 1000);
     return () => clearTimeout(timeoutId);
   }, [page, paginationPerPage, fetchUsers, showInactive, searchQuery]);
 

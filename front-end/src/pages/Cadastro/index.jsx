@@ -55,7 +55,7 @@ const Cadastro = () => {
         setFormErrors({});
         toast.success("Cadastrado com Sucesso");
         setTimeout(() => {
-          navigate("/");
+          navigate("/home");
         }, 4000);
       })
       .catch((error) => {
@@ -162,7 +162,7 @@ const Cadastro = () => {
                     Há campos acima para verificar.
                   </div>
                 )}
-                <Link to="/" className={`btn btn-warning fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                <Link to="/home" className={`btn btn-warning fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
                   Voltar
                 </Link>
                 <span> </span>

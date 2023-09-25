@@ -12,7 +12,7 @@ function MenuIcon(props) {
   const [theme, setTheme] = useState("dark");
 
   const handleGoHome = () => {
-    window.location.href = '/';
+    window.location.href = '/home';
   };
 
   const handleGoBack = () => {
