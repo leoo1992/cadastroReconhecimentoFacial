@@ -256,11 +256,12 @@ const Cadastrados = () => {
   ];
 
   useEffect(() => {
+    const timeoutId =setTimeout(() => {
     search(searchQuery);
     fetchUsers(page, paginationPerPage, searchQuery);
-    setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 1500);
+    return () => clearTimeout(timeoutId);
   }, [page, paginationPerPage, fetchUsers, showInactive, searchQuery]);
 
 
@@ -400,7 +401,6 @@ const Cadastrados = () => {
                       </OverlayTrigger>
                     )}
                   </div>
-
                   <SearchField
                     placeholder="Procurar"
                     size="small"
@@ -417,8 +417,6 @@ const Cadastrados = () => {
                       lineHeight: "29px"
                     }}
                   />
-
-
                 </div>
               }
               subHeaderAlign="left"
