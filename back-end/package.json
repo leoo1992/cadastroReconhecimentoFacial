@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Leonardo Santos Custódio",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -28,6 +28,7 @@
     "http-errors": "~1.6.3",
     "ics": "^3.4.0",
     "jade": "^0.29.0",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.0",
@@ -40,9 +41,5 @@
   "devDependencies": {
     "sequelize-cli": "^6.6.1"
   },
-  "main": "app.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "main": "app.js"
 }
