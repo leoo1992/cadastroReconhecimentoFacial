@@ -22,6 +22,11 @@ const LoginPage = () => {
     senha: "",
   });
 
+  const [formErrors, setFormErrors] = useState({
+    usuario: "",
+    senha: "",
+  });
+
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -49,23 +54,24 @@ const LoginPage = () => {
     }
 
     api
-      .post("/cadastro", formData)
-      .then(() => {
+    .post("/login", formData)
+    .then((response) => {
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+
         setFormErrors({});
-        toast.success("Cadastrado com Sucesso");
+        toast.success("Login efetuado com sucesso...Redirecionando");
         setTimeout(() => {
           navigate("/home");
         }, 4000);
-      })
-      .catch((error) => {
-        toast.error("Erro ao cadastrar : " + error);
-      });
+      } else {
+        toast.error("Usuário ou senha incorretos");
+      }
+    })
+    .catch(() => {
+      toast.error("Ocorreu um erro ao fazer login. Tente novamente mais tarde.");
+    });
   };
-
-  const [formErrors, setFormErrors] = useState({
-    usuario: "",
-    senha: "",
-  });
 
   useEffect(() => {
     if (errorRef.current) {
@@ -119,61 +125,61 @@ const LoginPage = () => {
         </div>
       </div>
       <div className={`mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
-        <h3 className='text-info fw-bold pt-3 mt-3'>Login</h3>
-      <Container className='d-flex justify-content-center fw-bold p-0 mt-5'>
-        <Form onSubmit={handleSubmit} className={`cadastro p-4 rounded-3 border ${theme === "dark" ? "border-white" : "border-black"}`}>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Usuário:</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="usuario"
-                  value={formData.usuario}
-                  onChange={handleChange}
-                  required
-                />
-                {formErrors.usuario && (
-                  <div className="error-message">{formErrors.usuario}</div>
+        <h3 className='text-info fw-bold pt-2 mt-2'>Login</h3>
+        <Container className='d-flex justify-content-center fw-bold p-0 mt-2'>
+          <Form onSubmit={handleSubmit} className={`cadastro p-4 rounded-3 border ${theme === "dark" ? "border-white" : "border-black"}`}>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Usuário:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="usuario"
+                    value={formData.usuario}
+                    onChange={handleChange}
+                    required
+                  />
+                  {formErrors.usuario && (
+                    <div className="error-message">{formErrors.usuario}</div>
+                  )}
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Senha:</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="senha"
+                    value={formData.senha}
+                    onChange={handleChange}
+                    required
+                  />
+                  {formErrors.senha && (
+                    <div className="error-message">{formErrors.senha}</div>
+                  )}
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="text-center pt-4 ">
+                {!isFormValid && (
+                  <div className="error-message">
+                    Usuário ou senha incorretos.
+                  </div>
                 )}
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Senha:</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="senha"
-                  value={formData.senha}
-                  onChange={handleChange}
-                  required
-                />
-                {formErrors.senha && (
-                  <div className="error-message">{formErrors.senha}</div>
-                )}
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="text-center pt-4 ">
-              {!isFormValid && (
-                <div className="error-message">
-                  Há campos acima para verificar.
-                </div>
-              )}
-              <Link to="/home" className={`btn btn-warning fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
-                Teste
-              </Link>
-              <span> </span>
-              <Button type="submit" variant="info" className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
-                Cadastrar
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Container>
+                <Link to="/cadastrousers" className={`btn btn-warning fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                  Cadastrar
+                </Link>
+                <span> </span>
+                <Button type="submit" variant="info" className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                  Entrar
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Container>
       </div>
     </>
   );
