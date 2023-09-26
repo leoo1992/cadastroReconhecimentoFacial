@@ -9,4 +9,5 @@ const PrivateRoute = ({ element: Element, authenticated, ...rest }) => {
   );
 };
 
+
 export default PrivateRoute;

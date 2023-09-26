@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -57,7 +58,8 @@ const LoginPage = () => {
     .post("/login", formData)
     .then((response) => {
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.token)
+        Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });;
 
         setFormErrors({});
         toast.success("Login efetuado com sucesso...Redirecionando");
