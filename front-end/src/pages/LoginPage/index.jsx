@@ -151,7 +151,7 @@ const LoginPage = () => {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Senha:</Form.Label>
+                  <Form.Label className= {`mt-3 ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
                   <Form.Control
                     type="password"
                     name="senha"
