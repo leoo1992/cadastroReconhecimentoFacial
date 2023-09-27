@@ -140,6 +140,7 @@ const LoginPage = () => {
                     value={formData.usuario}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
                   />
                   {formErrors.usuario && (
                     <div className="error-message">{formErrors.usuario}</div>
@@ -157,6 +158,7 @@ const LoginPage = () => {
                     value={formData.senha}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
                   />
                   {formErrors.senha && (
                     <div className="error-message">{formErrors.senha}</div>
