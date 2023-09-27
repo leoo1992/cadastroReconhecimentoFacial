@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Cadastro from "./pages/Cadastro";
 import Listas from "./pages/Listas";
@@ -24,37 +23,14 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Login />} />
-        <Route exact path="/cadastrousers" element={<CadastrarUser />} />
-        <Route exact path="/reconhecimento" />
-        <Route exact path="/logs" />
+        <Route path="/" element={authenticated ? <Navigate to="/home" /> : <Login />} />
+        <Route path="/cadastrousers" element={authenticated ? <Navigate to="/cadastrousers" /> : <CadastrarUser />} />
+        <Route path="/home" element={authenticated ? <HomePage /> : <Navigate to="/" />} />
+        <Route path="/cadastro" element={authenticated ? <Cadastro /> : <Navigate to="/" />} />
+        <Route path="/listas" element={authenticated ? <Listas /> : <Navigate to="/" />} />
+        <Route path="/cadastrados" element={authenticated ? <Cadastrados /> : <Navigate to="/" />} />
+        <Route path="/atualiza/:id" element={authenticated ? <Atualiza /> : <Navigate to="/" />} />
       </Routes>
-
-      <PrivateRoute
-        path="/home"
-        element={<HomePage />}
-        authenticated={authenticated}
-      />
-      <PrivateRoute
-        path="/cadastro"
-        element={<Cadastro />}
-        authenticated={authenticated}
-      />
-      <PrivateRoute
-        path="/listas"
-        element={<Listas />}
-        authenticated={authenticated}
-      />
-      <PrivateRoute
-        path="/cadastrados"
-        element={<Cadastrados />}
-        authenticated={authenticated}
-      />
-      <PrivateRoute
-        path="/atualiza/:id"
-        element={<Atualiza />}
-        authenticated={authenticated}
-      />
     </Router>
   );
 };
