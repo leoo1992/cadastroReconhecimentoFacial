@@ -15,6 +15,16 @@ const bcrypt = require("bcrypt");
 app.use(express.json());
 app.use(cors());
 
+//TODO ROUTERS **********************************
+
+/*
+app.delete("/deletaruser", async (req, res) => {});
+app.get("/listaruser", async (req, res) => {});
+*/
+
+// app.get("/pesquisaruser", async (req, res) => {});
+
+//POSTS ROUTERS **********************************
 //rota login
 app.post("/login", async (req, res) => {
   const { usuario, senha } = req.body;
@@ -50,7 +60,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Erro ao fazer login." });
   }
 });
-
 //rota cadastro usuarios
 app.post("/cadastrousuarios", async (req, res) => {
   const { usuario, senha } = req.body;
@@ -74,216 +83,188 @@ app.post("/cadastrousuarios", async (req, res) => {
     res.status(500).json({ error: "Erro ao realizar o cadastro." });
   }
 });
-
-// Conexão com o banco de dados
-console.log("Tentando conectar ao banco de dados...");
-sequelize
-.authenticate()
-.then(() => {
-  console.log("Conexão com o banco de dados estabelecida.");
-})
-.catch((err) => {
-  console.error("Erro ao conectar ao banco de dados:", err);
-});
-console.log("Tentando sincronizar os modelos com o banco de dados...");
-sequelize
-.sync()
-.then(() => {
-  console.log("Modelos sincronizados com o banco de dados.");
-  app.listen(port, () => {
-    console.log(`Servidor em execução na porta ${port}`);
-  });
-})
-.catch((err) => {
-  console.error("Erro ao sincronizar os modelos com o banco de dados:", err);
-});
-
 // Rota para cadastro
-app.post(
-  "/cadastro",
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+app.post("/cadastro", async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
+  const { nome, cpf, tipo, ativo } = req.body;
+
+  try {
+    const createdUser = await Pessoa.create({
+      nome,
+      cpf,
+      tipo,
+      ativo,
+    });
+
+    res.status(200).json({ message: "Cadastro realizado com sucesso." });
+  } catch (err) {
+    console.error("Erro ao inserir os dados: ", err);
+    res.status(500).json({ error: "Erro ao realizar o cadastro." });
+  }
+});
+
+//PUTS ROUTERS **********************************
+// Rota para atualizar por id
+app.put("/atualizar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
     const { nome, cpf, tipo, ativo } = req.body;
 
-    try {
-      const createdUser = await Pessoa.create({
-        nome,
-        cpf,
-        tipo,
-        ativo,
-      });
+    const pessoaExistente = await Pessoa.findByPk(id);
 
-      res.status(200).json({ message: "Cadastro realizado com sucesso." });
-    } catch (err) {
-      console.error("Erro ao inserir os dados: ", err);
-      res.status(500).json({ error: "Erro ao realizar o cadastro." });
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
     }
+
+    await pessoaExistente.update({ nome, cpf, tipo, ativo });
+
+    res.status(200).json(pessoaExistente);
+  } catch (err) {
+    console.error("Erro ao atualizar registro: ", err);
+    res.status(500).json({ error: "Erro ao atualizar registro." });
   }
-  );
+});
+// Rota para desativar por id
+app.put("/desativar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { ativo } = req.body;
 
-  // Rota para atualizar por id
-  app.put("/atualizar/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { nome, cpf, tipo, ativo } = req.body;
+    const pessoaExistente = await Pessoa.findByPk(id);
 
-      const pessoaExistente = await Pessoa.findByPk(id);
-
-      if (!pessoaExistente) {
-        return res.status(404).json({ error: "Registro não encontrado." });
-      }
-
-      await pessoaExistente.update({ nome, cpf, tipo, ativo });
-
-      res.status(200).json(pessoaExistente);
-    } catch (err) {
-      console.error("Erro ao atualizar registro: ", err);
-      res.status(500).json({ error: "Erro ao atualizar registro." });
-    }
-  });
-
-  // Rota para buscar uma pessoa pelo id
-  app.get("/atualizar/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-
-      const pessoaExistente = await Pessoa.findByPk(id);
-
-      if (!pessoaExistente) {
-        return res.status(404).json({ error: "Registro não encontrado." });
-      }
-
-      res.status(200).json(pessoaExistente);
-    } catch (err) {
-      console.error("Erro ao buscar registro pelo id: ", err);
-      res.status(500).json({ error: "Erro ao buscar registro pelo id." });
-    }
-  });
-
-  // Rota para desativar por id
-  app.put("/desativar/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { ativo } = req.body;
-
-      const pessoaExistente = await Pessoa.findByPk(id);
-
-      if (!pessoaExistente) {
-        return res.status(404).json({ error: "Registro não encontrado." });
-      }
-
-      await pessoaExistente.update({ ativo });
-
-      res.status(200).json(pessoaExistente);
-    } catch (err) {
-      console.error("Erro ao atualizar registro: ", err);
-      res.status(500).json({ error: "Erro ao atualizar registro." });
-    }
-  });
-
-  //rota para deletar por id:
-  app.delete("/deletar/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-
-      const pessoaExistente = await Pessoa.findByPk(id);
-
-      if (!pessoaExistente) {
-        return res.status(404).json({ error: "Registro não encontrado." });
-      }
-
-      await PessoaResponsabilidade.destroy({
-        where: { ResponsavelId: id },
-      });
-
-      await pessoaExistente.destroy();
-
-      res.status(204).send();
-    } catch (err) {
-      console.error("Erro ao excluir registro: ", err);
-      res.status(500).json({ error: "Erro ao excluir registro." });
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
     }
 
-  });
+    await pessoaExistente.update({ ativo });
 
-  // Rota para pesquisa geral
-  app.get("/pesquisar", async (req, res) => {
-    try {
-      const { termo } = req.query;
+    res.status(200).json(pessoaExistente);
+  } catch (err) {
+    console.error("Erro ao atualizar registro: ", err);
+    res.status(500).json({ error: "Erro ao atualizar registro." });
+  }
+});
 
-      if (!termo || termo.length < 3) {
-        return res.status(200).json({ resultados: [] });
-      }
+//GETS ROUTERS **********************************
+// Rota para buscar uma pessoa pelo id
+app.get("/atualizar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
 
-      console.log("Termo de pesquisa:", termo);
+    const pessoaExistente = await Pessoa.findByPk(id);
 
-      const resultados = await Pessoa.findAll({
-        where: {
-          [Op.or]: [
-            { nome: { [Op.like]: `%${termo}%` } },
-            { cpf: { [Op.like]: `%${termo}%` } },
-            { id: { [Op.eq]: termo } },
-          ],
-        },
-      });
-
-      res.status(200).json({ resultados });
-    } catch (err) {
-      console.error("Erro ao realizar pesquisa geral: ", err);
-      res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
     }
-  });
 
-  // Rota Listar
-  app.get("/listar", async (req, res) => {
-    try {
-      const pagina = parseInt(req.query.pagina) || 1;
-      const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-      const showInactive = req.query.showInactive === 'true' || false;
-      const searchQuery = req.query.search || '';
+    res.status(200).json(pessoaExistente);
+  } catch (err) {
+    console.error("Erro ao buscar registro pelo id: ", err);
+    res.status(500).json({ error: "Erro ao buscar registro pelo id." });
+  }
+});
+// Rota para pesquisa geral
+app.get("/pesquisar", async (req, res) => {
+  try {
+    const { termo } = req.query;
 
-      let whereClause = showInactive ? {} : { ativo: 1 };
-
-      if (searchQuery) {
-        whereClause = {
-          ...whereClause,
-          [Op.or]: [
-            { nome: { [Op.like]: `%${searchQuery}%` } },
-            { cpf: { [Op.like]: `%${searchQuery}%` } },
-            { id: { [Op.eq]: searchQuery } },
-          ],
-        };
-      }
-
-      const totalRegistros = await Pessoa.count({ where: whereClause });
-
-      const paginacao = (pagina - 1) * limitePorPagina;
-      const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
-
-      const registros = await Pessoa.findAll({
-        where: whereClause,
-        limit: limitePorPagina,
-        offset: paginacao,
-      });
-
-      res.status(200).json({
-        registros,
-        numerodepaginas: numeroDePaginas,
-        totalregistros: totalRegistros,
-      });
-    } catch (err) {
-      console.error("Erro ao listar os dados: ", err);
-      res.status(500).json({ error: "Erro ao listar os dados." });
+    if (!termo || termo.length < 3) {
+      return res.status(200).json({ resultados: [] });
     }
-  });
 
+    console.log("Termo de pesquisa:", termo);
 
+    const resultados = await Pessoa.findAll({
+      where: {
+        [Op.or]: [
+          { nome: { [Op.like]: `%${termo}%` } },
+          { cpf: { [Op.like]: `%${termo}%` } },
+          { id: { [Op.eq]: termo } },
+        ],
+      },
+    });
 
+    res.status(200).json({ resultados });
+  } catch (err) {
+    console.error("Erro ao realizar pesquisa geral: ", err);
+    res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+  }
+});
+// Rota Listar
+app.get("/listar", async (req, res) => {
+  try {
+    const pagina = parseInt(req.query.pagina) || 1;
+    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
+    const showInactive = req.query.showInactive === 'true' || false;
+    const searchQuery = req.query.search || '';
 
+    let whereClause = showInactive ? {} : { ativo: 1 };
 
+    if (searchQuery) {
+      whereClause = {
+        ...whereClause,
+        [Op.or]: [
+          { nome: { [Op.like]: `%${searchQuery}%` } },
+          { cpf: { [Op.like]: `%${searchQuery}%` } },
+          { id: { [Op.eq]: searchQuery } },
+        ],
+      };
+    }
 
+    const totalRegistros = await Pessoa.count({ where: whereClause });
 
+    const paginacao = (pagina - 1) * limitePorPagina;
+    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+
+    const registros = await Pessoa.findAll({
+      where: whereClause,
+      limit: limitePorPagina,
+      offset: paginacao,
+    });
+
+    res.status(200).json({
+      registros,
+      numerodepaginas: numeroDePaginas,
+      totalregistros: totalRegistros,
+    });
+  } catch (err) {
+    console.error("Erro ao listar os dados: ", err);
+    res.status(500).json({ error: "Erro ao listar os dados." });
+  }
+});
+
+//DELETES ROUTERS **********************************
+//rota para deletar por id:
+app.delete("/deletar/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const pessoaExistente = await Pessoa.findByPk(id);
+
+    if (!pessoaExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
+    }
+
+    await PessoaResponsabilidade.destroy({
+      where: { ResponsavelId: id },
+    });
+
+    await pessoaExistente.destroy();
+
+    res.status(204).send();
+  } catch (err) {
+    console.error("Erro ao excluir registro: ", err);
+    res.status(500).json({ error: "Erro ao excluir registro." });
+  }
+
+});
+
+// CONEXÃO **********************************
+sequelize.authenticate()
+sequelize.sync().then(() => {
+  app.listen(port);
+});
