@@ -35,12 +35,12 @@ const Usuarios = () => {
       await api.delete(`/deletaruser/${idToDelete}`);
       setShowModalDelete(false);
       setToggleCleared(!toggleCleared);
-      toast.success("Registro excluído com sucesso!");
+      toast.success("Usuário excluído com sucesso!");
       setTimeout(() => {
         window.location.reload();
       }, 4000);
     } catch (error) {
-      toast.error("Erro ao excluir o registro");
+      toast.error("Erro ao excluir o usuário");
     }
   };
 
@@ -49,8 +49,8 @@ const Usuarios = () => {
   };
 
   if (divElement) {
-    const selectedNome = selectedRows.map((r) => r.nome);
-    divElement.textContent = selectedNome + '  -  Selecionado';
+    const selectedId = selectedRows.map((r) => r.id);
+    divElement.textContent = selectedId + '  -  Selecionado';
   }
 
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
