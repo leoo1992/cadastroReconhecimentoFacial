@@ -39,7 +39,7 @@ const Listas = () => {
       <div className={`container-fluid mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
         {createButtonWithTooltip("Cadastrados", "/cadastrados", "Faces Cadastradas")}
         {createButtonWithTooltip("Logs", "/logs", "Logs Entrada / Saida")}
-        {createButtonWithTooltip("Usuários", "/users", "Usuários Administradores")}
+        {createButtonWithTooltip("Usuários", "/usuarios", "Usuários Administradores")}
       </div>
     </>
   );
