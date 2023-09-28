@@ -2,16 +2,15 @@ require("dotenv").config();
 const express = require("express");
 const sequelize = require("./config/sequelize");
 const cors = require("cors");
+const Pessoa = require("./models/Pessoa");
+const Users = require("./models/Users");
+const PessoaResponsabilidade = require("./models/PessoaResponsabilidade");
 const app = express();
 const port = 3000;
 const { validationResult } = require("express-validator");
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
-
-const Pessoa = require("./models/Pessoa");
-const Users = require("./models/Users");
-const PessoaResponsabilidade = require("./models/PessoaResponsabilidade");
 
 app.use(express.json());
 app.use(cors());
@@ -209,77 +208,78 @@ app.post(
       res.status(500).json({ error: "Erro ao excluir registro." });
     }
 
-    // Rota para pesquisa geral
-    app.get("/pesquisar", async (req, res) => {
-      try {
-        const { termo } = req.query;
+  });
 
-        if (!termo || termo.length < 3) {
-          return res.status(200).json({ resultados: [] });
-        }
+  // Rota para pesquisa geral
+  app.get("/pesquisar", async (req, res) => {
+    try {
+      const { termo } = req.query;
 
-        console.log("Termo de pesquisa:", termo);
-
-        const resultados = await Pessoa.findAll({
-          where: {
-            [Op.or]: [
-              { nome: { [Op.like]: `%${termo}%` } },
-              { cpf: { [Op.like]: `%${termo}%` } },
-              { id: { [Op.eq]: termo } },
-            ],
-          },
-        });
-
-        res.status(200).json({ resultados });
-      } catch (err) {
-        console.error("Erro ao realizar pesquisa geral: ", err);
-        res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+      if (!termo || termo.length < 3) {
+        return res.status(200).json({ resultados: [] });
       }
-    });
 
-    app.get("/listar", async (req, res) => {
-      try {
-        const pagina = parseInt(req.query.pagina) || 1;
-        const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-        const showInactive = req.query.showInactive === 'true' || false;
-        const searchQuery = req.query.search || '';
+      console.log("Termo de pesquisa:", termo);
 
-        let whereClause = showInactive ? {} : { ativo: 1 };
+      const resultados = await Pessoa.findAll({
+        where: {
+          [Op.or]: [
+            { nome: { [Op.like]: `%${termo}%` } },
+            { cpf: { [Op.like]: `%${termo}%` } },
+            { id: { [Op.eq]: termo } },
+          ],
+        },
+      });
 
-        if (searchQuery) {
-          whereClause = {
-            ...whereClause,
-            [Op.or]: [
-              { nome: { [Op.like]: `%${searchQuery}%` } },
-              { cpf: { [Op.like]: `%${searchQuery}%` } },
-              { id: { [Op.eq]: searchQuery } },
-            ],
-          };
-        }
+      res.status(200).json({ resultados });
+    } catch (err) {
+      console.error("Erro ao realizar pesquisa geral: ", err);
+      res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+    }
+  });
 
-        const totalRegistros = await Pessoa.count({ where: whereClause });
+  // Rota Listar
+  app.get("/listar", async (req, res) => {
+    try {
+      const pagina = parseInt(req.query.pagina) || 1;
+      const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
+      const showInactive = req.query.showInactive === 'true' || false;
+      const searchQuery = req.query.search || '';
 
-        const paginacao = (pagina - 1) * limitePorPagina;
-        const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+      let whereClause = showInactive ? {} : { ativo: 1 };
 
-        const registros = await Pessoa.findAll({
-          where: whereClause,
-          limit: limitePorPagina,
-          offset: paginacao,
-        });
-
-        res.status(200).json({
-          registros,
-          numerodepaginas: numeroDePaginas,
-          totalregistros: totalRegistros,
-        });
-      } catch (err) {
-        console.error("Erro ao listar os dados: ", err);
-        res.status(500).json({ error: "Erro ao listar os dados." });
+      if (searchQuery) {
+        whereClause = {
+          ...whereClause,
+          [Op.or]: [
+            { nome: { [Op.like]: `%${searchQuery}%` } },
+            { cpf: { [Op.like]: `%${searchQuery}%` } },
+            { id: { [Op.eq]: searchQuery } },
+          ],
+        };
       }
-    });
-});
 
+      const totalRegistros = await Pessoa.count({ where: whereClause });
+
+      const paginacao = (pagina - 1) * limitePorPagina;
+      const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+
+      const registros = await Pessoa.findAll({
+        where: whereClause,
+        limit: limitePorPagina,
+        offset: paginacao,
+      });
+
+      res.status(200).json({
+        registros,
+        numerodepaginas: numeroDePaginas,
+        totalregistros: totalRegistros,
+      });
+    } catch (err) {
+      console.error("Erro ao listar os dados: ", err);
+      res.status(500).json({ error: "Erro ao listar os dados." });
+    }
+  });
 
 
 
