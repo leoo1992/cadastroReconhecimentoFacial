@@ -23,8 +23,8 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={authenticated ? <Navigate to="/home" /> : <Login />} />
-        <Route path="/cadastrousers" element={authenticated ? <Navigate to="/cadastrousers" /> : <CadastrarUser />} />
+        <Route path="/" element={authenticated ? <HomePage /> : <Login />} />
+        <Route path="/cadastrousers" element={authenticated ? <HomePage /> : <CadastrarUser />} />
         <Route path="/home" element={authenticated ? <HomePage /> : <Navigate to="/" />} />
         <Route path="/cadastro" element={authenticated ? <Cadastro /> : <Navigate to="/" />} />
         <Route path="/listas" element={authenticated ? <Listas /> : <Navigate to="/" />} />

@@ -6,14 +6,13 @@ import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 import 'react-toastify/dist/ReactToastify.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 
 const LoginPage = () => {
-  const navigate = useNavigate();
   const [isFormValid, setIsFormValid] = useState(true);
   const errorRef = useRef(null);
   const [theme, setTheme] = useState("dark");
@@ -62,10 +61,13 @@ const LoginPage = () => {
         Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });;
 
         setFormErrors({});
+
         toast.success("Login efetuado com sucesso...Redirecionando");
+
         setTimeout(() => {
-          navigate("/home");
-        }, 4000);
+          window.location.href = "/home";
+        }, 5000);
+
       } else {
         toast.error("Usuário ou senha incorretos");
       }

@@ -67,7 +67,6 @@ app.post("/cadastrousuarios", async (req, res) => {
     const createdUser = await Users.create({
       usuario,
       senha: hashedPassword,
-      token: process.env.JWT_SECRET
     });
 
     res.status(200).json({ message: "Cadastro realizado com sucesso." });
