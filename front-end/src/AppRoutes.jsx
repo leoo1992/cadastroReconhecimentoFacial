@@ -7,6 +7,7 @@ import Login from "./pages/LoginPage";
 import CadastrarUser from "./pages/LoginPage/CadastroUser";
 import Atualiza from "./pages/Cadastro/Atualiza";
 import Cadastrados from "./pages/Listas/Cadastrados";
+import Usuarios from "./pages/Listas/Usuarios";
 
 const AppRoutes = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -24,12 +25,16 @@ const AppRoutes = () => {
     <Router>
       <Routes>
         <Route path="/" element={authenticated ? <HomePage /> : <Login />} />
-        <Route path="/cadastrousers" element={authenticated ? <HomePage /> : <CadastrarUser />} />
         <Route path="/home" element={authenticated ? <HomePage /> : <Navigate to="/" />} />
+
         <Route path="/cadastro" element={authenticated ? <Cadastro /> : <Navigate to="/" />} />
+        <Route path="/cadastrousers" element={authenticated ? <CadastrarUser /> : <CadastrarUser />} />
+
         <Route path="/listas" element={authenticated ? <Listas /> : <Navigate to="/" />} />
         <Route path="/cadastrados" element={authenticated ? <Cadastrados /> : <Navigate to="/" />} />
         <Route path="/atualiza/:id" element={authenticated ? <Atualiza /> : <Navigate to="/" />} />
+        <Route path="/usuarios" element={authenticated ? <Usuarios /> : <Navigate to="/" />} />
+
       </Routes>
     </Router>
   );
