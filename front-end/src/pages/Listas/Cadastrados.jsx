@@ -23,6 +23,7 @@ const Cadastrados = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
+  // eslint-disable-next-line
   const [setNumerodepaginas] = useState(1);
   const [ativo, setAtivo] = useState("");
   const navigate = useNavigate();
@@ -107,6 +108,7 @@ const Cadastrados = () => {
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
+    // eslint-disable-next-line
   }, [paginationPerPage, showInactive]);
 
   const search = async (query) => {
@@ -195,7 +197,7 @@ const Cadastrados = () => {
         </div>
       </>
     );
-  }, [selectedRows, toggleCleared, ativo]);
+  }, [selectedRows, navigate]);
 
   const customText = {
     rowsPerPage: 'Linhas por página:',

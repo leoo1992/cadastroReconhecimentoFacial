@@ -23,6 +23,7 @@ const Usuarios = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
+  // eslint-disable-next-line
   const [setNumerodepaginas] = useState(1);
   const divElement = document.querySelector('.rdt_TableHeader > div > div');
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,7 +32,6 @@ const Usuarios = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      //TODO - criar a rota deletar usuario
       await api.delete(`/deletaruser/${idToDelete}`);
       setShowModalDelete(false);
       setToggleCleared(!toggleCleared);
@@ -56,7 +56,7 @@ const Usuarios = () => {
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
       let whereClause = {};
-      //TODO - criar a rota listar usuario
+
       const response = await api.get(`/listaruser?pagina=${page}&limitePorPagina=${paginationPerPage}&search=${searchQuery}`, {
         params: {
           where: whereClause,
@@ -71,11 +71,11 @@ const Usuarios = () => {
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
+    // eslint-disable-next-line
   }, [paginationPerPage]);
 
   const search = async (query) => {
     try {
-      //TODO - criar a rota pesquisar usuario
       const response = await api.get(`/pesquisaruser?termo=${query}`);
       setData(response.data.resultados);
     } catch (error) {
@@ -121,6 +121,7 @@ const Usuarios = () => {
         </div>
       </>
     );
+     // eslint-disable-next-line
   }, [selectedRows, toggleCleared]);
 
   const customText = {
@@ -153,8 +154,8 @@ const Usuarios = () => {
       width: '60px',
     },
     {
-      name: 'E-mail',
-      selector: (row) => row.email,
+      name: 'Usuario',
+      selector: (row) => row.usuario,
       sortable: true,
       reorder: true,
     }

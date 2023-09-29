@@ -15,17 +15,15 @@ const bcrypt = require("bcrypt");
 app.use(express.json());
 app.use(cors());
 
-//TODO ROUTERS **********************************
+// CONEXÃO **********************************
+sequelize.authenticate()
+sequelize.sync().then(() => {
+  app.listen(port);
+});
 
-/*
-app.delete("/deletaruser", async (req, res) => {});
-app.get("/listaruser", async (req, res) => {});
-*/
-
-// app.get("/pesquisaruser", async (req, res) => {});
 
 //POSTS ROUTERS **********************************
-//rota login
+// rota login
 app.post("/login", async (req, res) => {
   const { usuario, senha } = req.body;
 
@@ -60,7 +58,7 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Erro ao fazer login." });
   }
 });
-//rota cadastro usuarios
+// rota cadastro usuarios
 app.post("/cadastrousuarios", async (req, res) => {
   const { usuario, senha } = req.body;
 
@@ -83,7 +81,7 @@ app.post("/cadastrousuarios", async (req, res) => {
     res.status(500).json({ error: "Erro ao realizar o cadastro." });
   }
 });
-// Rota para cadastro
+// rota para cadastro
 app.post("/cadastro", async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -107,6 +105,7 @@ app.post("/cadastro", async (req, res) => {
   }
 });
 
+
 //PUTS ROUTERS **********************************
 // Rota para atualizar por id
 app.put("/atualizar/:id", async (req, res) => {
@@ -128,7 +127,7 @@ app.put("/atualizar/:id", async (req, res) => {
     res.status(500).json({ error: "Erro ao atualizar registro." });
   }
 });
-// Rota para desativar por id
+// rota para desativar por id
 app.put("/desativar/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -149,8 +148,9 @@ app.put("/desativar/:id", async (req, res) => {
   }
 });
 
+
 //GETS ROUTERS **********************************
-// Rota para buscar uma pessoa pelo id
+// rota para buscar uma pessoa pelo id
 app.get("/atualizar/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -167,7 +167,7 @@ app.get("/atualizar/:id", async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar registro pelo id." });
   }
 });
-// Rota para pesquisa geral
+// rota para pesquisa geral
 app.get("/pesquisar", async (req, res) => {
   try {
     const { termo } = req.query;
@@ -194,7 +194,7 @@ app.get("/pesquisar", async (req, res) => {
     res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
   }
 });
-// Rota Listar
+// rota Listar
 app.get("/listar", async (req, res) => {
   try {
     const pagina = parseInt(req.query.pagina) || 1;
@@ -236,6 +236,73 @@ app.get("/listar", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
+// rota pesquisar usuario
+app.get("/pesquisaruser", async (req, res) => {
+  try {
+    const { termo } = req.query;
+
+    if (!termo || termo.length < 3) {
+      return res.status(200).json({ resultados: [] });
+    }
+
+    console.log("Termo de pesquisa:", termo);
+
+    const resultados = await Users.findAll({
+      where: {
+        [Op.or]: [
+          { usuario: { [Op.like]: `%${termo}%` } },
+          { id: { [Op.eq]: termo } },
+        ],
+      },
+    });
+
+    res.status(200).json({ resultados });
+  } catch (err) {
+    console.error("Erro ao realizar pesquisa geral: ", err);
+    res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+  }
+});
+// rota listar usuario
+app.get("/listaruser", async (req, res) => {
+  try {
+    const pagina = parseInt(req.query.pagina) || 1;
+    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
+    const searchQuery = req.query.search || '';
+
+    let whereClause = {};
+
+    if (searchQuery) {
+      whereClause = {
+        ...whereClause,
+        [Op.or]: [
+          { usuario: { [Op.like]: `%${searchQuery}%` } },
+          { id: { [Op.eq]: searchQuery } },
+        ],
+      };
+    }
+
+    const totalRegistros = await Users.count({ where: whereClause });
+
+    const paginacao = (pagina - 1) * limitePorPagina;
+    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+
+    const registros = await Users.findAll({
+      where: whereClause,
+      limit: limitePorPagina,
+      offset: paginacao,
+    });
+
+    res.status(200).json({
+      registros,
+      numerodepaginas: numeroDePaginas,
+      totalregistros: totalRegistros,
+    });
+  } catch (err) {
+    console.error("Erro ao listar os dados: ", err);
+    res.status(500).json({ error: "Erro ao listar os dados." });
+  }
+});
+
 
 //DELETES ROUTERS **********************************
 //rota para deletar por id:
@@ -260,11 +327,25 @@ app.delete("/deletar/:id", async (req, res) => {
     console.error("Erro ao excluir registro: ", err);
     res.status(500).json({ error: "Erro ao excluir registro." });
   }
+});
+// rota deletar usuario por id
+app.delete("/deletaruser", async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const UserExistente = await Users.findByPk(id);
+
+    if (!UserExistente) {
+      return res.status(404).json({ error: "Registro não encontrado." });
+    }
+
+    await UserExistente.destroy();
+
+    res.status(204).send();
+  } catch (err) {
+    console.error("Erro ao excluir registro: ", err);
+    res.status(500).json({ error: "Erro ao excluir registro." });
+  }
 });
 
-// CONEXÃO **********************************
-sequelize.authenticate()
-sequelize.sync().then(() => {
-  app.listen(port);
-});
+
