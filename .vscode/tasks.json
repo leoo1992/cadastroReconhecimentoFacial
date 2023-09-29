@@ -28,7 +28,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Start Backend Server",
+            "label": "3y Start Backend Server",
             "type": "shell",
             "command": "node",
             "args": [
@@ -36,6 +36,10 @@
             ],
             "options": {
                 "cwd": "${workspaceFolder}\\back-end"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
             },
             "problemMatcher": [],
             "isBackground": true,
@@ -71,7 +75,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Start Frontend Server",
+            "label": "4 Start Frontend Server",
             "type": "shell",
             "command": "npm",
             "args": [
@@ -82,13 +86,17 @@
             },
             "problemMatcher": [],
             "isBackground": true,
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "presentation": {
                 "reveal": "always", 
                 "panel": "dedicated"
             }
         },
         {
-            "label": "Start Backend",
+            "label": "1 Update Backend and Start",
             "dependsOn": ["Update Backend", "Install Backend", "Start Backend Server"],
             "dependsOrder": "sequence",
             "group": {
@@ -109,7 +117,7 @@
             ]
         },
         {
-            "label": "Start Frontend",
+            "label": "2 Update Frontend and Start",
             "dependsOn": ["Update Frontend", "Install Frontend", "Start Frontend Server" ],
             "dependsOrder": "sequence",
             "group": {
