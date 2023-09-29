@@ -1,0 +1,133 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Update Backend",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "update",
+                "@latest"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\back-end"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install Backend",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "install",
+                "@latest"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\back-end"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Backend Server",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "app.js"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\back-end"
+            },
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always", 
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Update Frontend",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "update",
+                "@latest"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\front-end"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install Frontend",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "install",
+                "@latest"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\front-end"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Start Frontend Server",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "start"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\front-end"
+            },
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always", 
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Start Backend",
+            "dependsOn": ["Update Backend", "Install Backend", "Start Backend Server"],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "hidden": false,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "keybindings": [
+                {
+                    "key": "F2",
+                    "when": "editorTextFocus"
+                }
+            ]
+        },
+        {
+            "label": "Start Frontend",
+            "dependsOn": ["Update Frontend", "Install Frontend", "Start Frontend Server" ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "hidden": false,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "keybindings": [
+                {
+                    "key": "F10",
+                    "when": "editorTextFocus"
+                }
+            ]
+        }
+    ]
+}
