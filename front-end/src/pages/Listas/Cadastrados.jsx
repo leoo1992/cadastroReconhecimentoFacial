@@ -45,9 +45,9 @@ const Cadastrados = () => {
       await api.delete(`/deletar/${idToDelete}`);
       setShowModalDelete(false);
       setToggleCleared(!toggleCleared);
-      toast.success("Registro excluído com sucesso!");
+      toast.success("Registro excluído com sucesso! Recarregando Lista ...");
       setTimeout(() => {
-        window.location.reload();
+        fetchUsers(page, paginationPerPage, searchQuery);
       }, 4000);
     } catch (error) {
       toast.error("Erro ao excluir o registro");
@@ -56,12 +56,12 @@ const Cadastrados = () => {
 
   const handleConfirmDesativar = async () => {
     try {
-      await api.put(`/desativar/${idToDesativar}`);
+      await api.put(`/desativar/${idToDesativar}`, { ativo: ativo === "1" ? 0 : 1 });
       setShowModalDesativar(false);
       setToggleCleared(!toggleCleared);
       toast.success(`Registro ${ativo === "1" ? "desativado" : "ativado"} com sucesso! Recarregando Lista ...`);
       setTimeout(() => {
-        window.location.reload();
+        fetchUsers(page, paginationPerPage, searchQuery);
       }, 4000);
     } catch (error) {
       toast.error(`Erro ao ${ativo === "1" ? "desativado" : "ativado"} Registro`);
