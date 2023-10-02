@@ -2,6 +2,53 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Update App",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "update",
+                "@latest"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\reconhecimento"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install app",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "install",
+                "@latest"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\reconhecimento"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "6 Start App Server",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "app.js"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\reconhecimento"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
             "label": "Update Backend",
             "type": "shell",
             "command": "npm",
@@ -28,7 +75,7 @@
             "problemMatcher": []
         },
         {
-            "label": "3y Start Backend Server",
+            "label": "4 Start Backend Server",
             "type": "shell",
             "command": "node",
             "args": [
@@ -44,7 +91,7 @@
             "problemMatcher": [],
             "isBackground": true,
             "presentation": {
-                "reveal": "always", 
+                "reveal": "always",
                 "panel": "dedicated"
             }
         },
@@ -75,7 +122,7 @@
             "problemMatcher": []
         },
         {
-            "label": "4 Start Frontend Server",
+            "label": "5 Start Frontend Server",
             "type": "shell",
             "command": "npm",
             "args": [
@@ -91,13 +138,16 @@
                 "isDefault": true
             },
             "presentation": {
-                "reveal": "always", 
+                "reveal": "always",
                 "panel": "dedicated"
             }
         },
         {
             "label": "1 Update Backend",
-            "dependsOn": ["Update Backend", "Install Backend"],
+            "dependsOn": [
+                "Update Backend",
+                "Install Backend"
+            ],
             "dependsOrder": "sequence",
             "group": {
                 "kind": "build",
@@ -118,7 +168,10 @@
         },
         {
             "label": "2 Update Frontend",
-            "dependsOn": ["Update Frontend", "Install Frontend"],
+            "dependsOn": [
+                "Update Frontend",
+                "Install Frontend"
+            ],
             "dependsOrder": "sequence",
             "group": {
                 "kind": "build",
@@ -133,6 +186,30 @@
             "keybindings": [
                 {
                     "key": "F10",
+                    "when": "editorTextFocus"
+                }
+            ]
+        },
+        {
+            "label": "3 Update App",
+            "dependsOn": [
+                "Update App",
+                "Install App"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "hidden": false,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true
+            },
+            "keybindings": [
+                {
+                    "key": "F4",
                     "when": "editorTextFocus"
                 }
             ]
