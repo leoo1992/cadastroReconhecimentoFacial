@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
-import 'react-toastify/dist/ReactToastify.css';
 import './home.css';
 import { Transition } from 'react-transition-group';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';

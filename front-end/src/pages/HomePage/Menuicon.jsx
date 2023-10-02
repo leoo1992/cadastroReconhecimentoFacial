@@ -1,18 +1,28 @@
 import React, { useState } from 'react';
 import './home.css';
-import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faArrowLeft, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faArrowLeft, faHome, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import Menu from '../HomePage/Menu';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Cookies from 'js-cookie';
 
 function MenuIcon(props) {
   const [theme, setTheme] = useState("dark");
 
   const handleGoHome = () => {
     window.location.href = '/home';
+  };
+
+  const handlelogout = () => {
+    const cookies = Cookies.get();
+    for (const cookie in cookies) {
+      Cookies.remove(cookie);
+    }
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '/';
   };
 
   const handleGoBack = () => {
@@ -33,6 +43,10 @@ function MenuIcon(props) {
     <Tooltip id="go-back-tooltip">Voltar</Tooltip>
   );
 
+  const logoutTooltip = (
+    <Tooltip id="go-back-tooltip">Logout</Tooltip>
+  );
+
   const goHomeTooltip = (
     <Tooltip id="go-home-tooltip">Home</Tooltip>
   );
@@ -51,6 +65,9 @@ function MenuIcon(props) {
         </OverlayTrigger>
         <OverlayTrigger placement="bottom" overlay={goHomeTooltip}>
           <FontAwesomeIcon icon={faHome} onClick={handleGoHome} className='btn btn-info p-1 m-1' />
+        </OverlayTrigger>
+        <OverlayTrigger placement="bottom" overlay={logoutTooltip}>
+          <FontAwesomeIcon onClick={handlelogout} icon={faSignOutAlt} className='btn btn-warning p-1 m-1' />
         </OverlayTrigger>
         <OverlayTrigger placement="bottom" overlay={toggleThemeTooltip}>
           <Button onClick={toggleTheme} className='btn-tamanho btn btn-info p-0 m-1'>
