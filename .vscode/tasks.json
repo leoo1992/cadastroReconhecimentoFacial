@@ -96,8 +96,8 @@
             }
         },
         {
-            "label": "1 Update Backend and Start",
-            "dependsOn": ["Update Backend", "Install Backend", "Start Backend Server"],
+            "label": "1 Update Backend",
+            "dependsOn": ["Update Backend", "Install Backend"],
             "dependsOrder": "sequence",
             "group": {
                 "kind": "build",
@@ -117,8 +117,8 @@
             ]
         },
         {
-            "label": "2 Update Frontend and Start",
-            "dependsOn": ["Update Frontend", "Install Frontend", "Start Frontend Server" ],
+            "label": "2 Update Frontend",
+            "dependsOn": ["Update Frontend", "Install Frontend"],
             "dependsOrder": "sequence",
             "group": {
                 "kind": "build",
