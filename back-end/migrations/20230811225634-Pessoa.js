@@ -1,12 +1,9 @@
 "use strict";
 /** @type {import('sequelize-cli').Migration} */
 const { DataTypes } = require("sequelize");
-const seedPessoa = require("../seeders/pessoaSeeder");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    //alimentada
-    await seedPessoa(),
       await queryInterface.createTable("Pessoa", {
         id: {
           allowNull: false,
