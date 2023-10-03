@@ -1,8 +1,6 @@
 "use strict";
 const { DataTypes } = require('sequelize'),
-  sequelize = require('../config/sequelize'),
-  Controlador = require("./Controlador"),
-  Pessoa = require("./Pessoa");
+  sequelize = require('../config/sequelize');
 
 const Log = sequelize.define("Log", {
   id: {
@@ -20,9 +18,4 @@ const Log = sequelize.define("Log", {
   tableName: "Log"
 });
 
-Log.belongsTo(Pessoa, { foreignKey: "PessoaId" });
-Pessoa.hasMany(Log);
-
-Log.belongsTo(Controlador, { foreignKey: "ControladorId" });
-Controlador.hasMany(Log);
 module.exports = Log;

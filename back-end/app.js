@@ -4,7 +4,8 @@ const sequelize = require("./config/sequelize");
 const cors = require("cors");
 const Pessoa = require("./models/Pessoa");
 const Users = require("./models/Users");
-const PessoaResponsabilidade = require("./models/PessoaResponsabilidade");
+const Log = require("./models/Log");
+const Associations = require("./models/associations");
 const app = express();
 const port = 3000;
 const { validationResult } = require("express-validator");
@@ -287,6 +288,46 @@ app.get("/listaruser", async (req, res) => {
     const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
 
     const registros = await Users.findAll({
+      where: whereClause,
+      limit: limitePorPagina,
+      offset: paginacao,
+    });
+
+    res.status(200).json({
+      registros,
+      numerodepaginas: numeroDePaginas,
+      totalregistros: totalRegistros,
+    });
+  } catch (err) {
+    console.error("Erro ao listar os dados: ", err);
+    res.status(500).json({ error: "Erro ao listar os dados." });
+  }
+});
+// rota listar Logs
+app.get("/listarlogs", async (req, res) => {
+  try {
+    const pagina = parseInt(req.query.pagina) || 1;
+    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
+    const searchQuery = req.query.search || '';
+
+    let whereClause = {};
+
+    if (searchQuery) {
+      whereClause = {
+        ...whereClause,
+        [Op.or]: [
+          { data: { [Op.like]: `%${searchQuery}%` } },
+          { id: { [Op.eq]: searchQuery } },
+        ],
+      };
+    }
+
+    const totalRegistros = await Log.count({ where: whereClause });
+
+    const paginacao = (pagina - 1) * limitePorPagina;
+    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+
+    const registros = await Log.findAll({
       where: whereClause,
       limit: limitePorPagina,
       offset: paginacao,
