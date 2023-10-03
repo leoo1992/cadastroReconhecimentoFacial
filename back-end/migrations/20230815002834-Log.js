@@ -1,11 +1,8 @@
 "use strict";
 /** @type {import('sequelize-cli').Migration} */
 const { DataTypes } = require("sequelize");
-const seedLog = require("../seeders/LogSeeder");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    //alimentada
-    await seedLog(),
       await queryInterface.createTable("Log", {
         id: {
           allowNull: false,
@@ -13,28 +10,9 @@ module.exports = {
           autoIncrement: true,
           primaryKey: true,
         },
-        tokenAutorizacao: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        dataNascimento: {
+        data: {
           type: DataTypes.DATE,
           allowNull: false,
-          defaultValue: DataTypes.NOW,
-        },
-        ResponsavelId: {
-          type: DataTypes.INTEGER,
-          references: {
-            model: "Pessoa",
-            key: "id",
-          },
-        },
-        SubordinadoId: {
-          type: DataTypes.INTEGER,
-          references: {
-            model: "Pessoa",
-            key: "id",
-          },
         },
         createdAt: {
           allowNull: false,

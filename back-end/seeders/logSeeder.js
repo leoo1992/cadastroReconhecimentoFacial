@@ -1,7 +1,5 @@
 const sequelize = require("../config/sequelize");
-(Log = require("../models/Log")),
-  (Pessoa = require("../models/Pessoa")),
-  (Controlador = require("../models/Controlador"));
+(Log = require("../models/Log"));
 
 const seedLog = async () => {
   try {
@@ -11,13 +9,9 @@ const seedLog = async () => {
     const logData = [
       {
         data: new Date("2023-08-28 14:00:00"),
-        PessoaId: 1,
-        ControladorId: 1,
       },
       {
         data: new Date(),
-        PessoaId: 1,
-        ControladorId: 1,
       },
     ];
     await Log.bulkCreate(logData);
