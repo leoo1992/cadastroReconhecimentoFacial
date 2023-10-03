@@ -57,8 +57,9 @@ const LoginPage = () => {
     .post("/login", formData)
     .then((response) => {
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token)
-        Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });;
+
+        localStorage.setItem("token", response.data.token);
+        Cookies.set('token', response.data.token, { expires: 1/24, secure: true, sameSite: 'strict' });
 
         setFormErrors({});
 
