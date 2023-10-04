@@ -16,6 +16,4 @@ Log.belongsToMany(Pessoa, {
   otherKey: "pessoaId",
 });
 
-
-
 module.exports;

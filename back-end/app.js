@@ -389,4 +389,4 @@ app.delete("/deletaruser", async (req, res) => {
   }
 });
 
-
+module.exports = app;
