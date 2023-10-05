@@ -23,7 +23,7 @@ const Logs = () => {
     try {
       let whereClause = {};
 
-      const response = await api.get(`/logs?pagina=${page}&limitePorPagina=${paginationPerPage}&search=${searchQuery}`, {
+      const response = await api.get(`/listarlogs?pagina=${page}&limitePorPagina=${paginationPerPage}&search=${searchQuery}`, {
         params: {
           where: whereClause,
         },
@@ -81,7 +81,7 @@ const Logs = () => {
       width: '60px',
     },
     {
-      name: 'Usuario',
+      name: 'Data Entrada',
       selector: (row) => row.data,
       sortable: true,
       reorder: true,
@@ -123,7 +123,7 @@ const Logs = () => {
       ) : (
         <>
           <div className="top-0 text-end bg-fundo col d-flex sombra-baixo">
-            <h4 className='text-start text-info m-0 p-2 col align-self-center' >Logs</h4>
+            <h4 className='text-start text-info m-0 p-2 col align-self-center'>Logs</h4>
             <MenuIcon updateTheme={updateTheme} />
           </div>
           <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
