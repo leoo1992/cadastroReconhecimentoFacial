@@ -23,7 +23,7 @@ const Listas = () => {
       <Button
         to={link}
         as={Link}
-        className='btn btn-sm btn-info btn-menu border-black p-3 mt-3 fw-semibold'
+        className='btn btn-sm btn-info btn-menu border-black p-2 mt-5 fw-semibold'
       >
         {text}
       </Button>
@@ -40,6 +40,7 @@ const Listas = () => {
         {createButtonWithTooltip("Cadastrados", "/cadastrados", "Faces Cadastradas")}
         {createButtonWithTooltip("Logs", "/logs", "Logs Entrada / Saida")}
         {createButtonWithTooltip("Usuários", "/usuarios", "Usuários Administradores")}
+        {createButtonWithTooltip("Relatórios", "/relatorios", "Relatórios")}
       </div>
     </>
   );

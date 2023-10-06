@@ -9,6 +9,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Cookies from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const [theme, setTheme] = useState("dark");
@@ -20,6 +21,22 @@ const HomePage = () => {
       setTheme("dark");
     }
   };
+
+  const createButtonWithTooltip = (text, link, tooltipText) => (
+    <OverlayTrigger
+      key={text}
+      placement="top"
+      overlay={<Tooltip>{tooltipText}</Tooltip>}
+    >
+      <Button
+        to={link}
+        as={Link}
+        className='btn btn-sm btn-info btn-menu border-black p-2 mt-5 fw-semibold'
+      >
+        {text}
+      </Button>
+    </OverlayTrigger>
+  );
 
   const handlelogout = () => {
     const cookies = Cookies.get();
@@ -79,7 +96,11 @@ const HomePage = () => {
         <Menu />
       </div>
       <div className={`mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
-        <h3 className='text-info fw-bold pt-5 mt-5'>Reconhecimento Facial</h3>
+        <h3 className='text-info fw-bold pt-3 mt-1 text-start'>Home Page</h3>
+        {createButtonWithTooltip("Cadastrados", "/cadastrados", "Faces Cadastradas")}
+        {createButtonWithTooltip("Logs", "/logs", "Logs Entrada / Saida")}
+        {createButtonWithTooltip("Usuários", "/usuarios", "Usuários Administradores")}
+        {createButtonWithTooltip("Relatórios", "/relatorios", "Relatórios")}
       </div>
     </>
   );
