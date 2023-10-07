@@ -29,7 +29,7 @@ if (timeToken.getHours() < new Date().getHours()) {
 const render = () => {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <App />
+      <App className='w-100 h-100' />
     </React.StrictMode>
   );
 };

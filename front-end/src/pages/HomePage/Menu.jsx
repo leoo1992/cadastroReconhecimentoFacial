@@ -91,7 +91,7 @@ function Menu() {
                   </li>
                   <li className>
                     <OverlayTrigger placement="left" overlay={<Tooltip id="acessar-tooltip">Relatórios</Tooltip>}>
-                      <Link  to="/cadastro" className="btn-menu-tamanho btn btn-info btn-sm mt-3 fs-6 fw-bold text-start">
+                      <Link  to="/relatorios" className="btn-menu-tamanho btn btn-info btn-sm mt-3 fs-6 fw-bold text-start">
                         <FontAwesomeIcon icon={faChartBar} className="me-2 text-start" /> Relatórios
                       </Link>
                     </OverlayTrigger>

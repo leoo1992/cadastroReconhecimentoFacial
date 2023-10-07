@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import "./home.css";
 import Menu from './Menu';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faSignOutAlt, faList, faUserPlus, faMobileAlt, faChartBar } from "@fortawesome/free-solid-svg-icons";
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -22,7 +22,7 @@ const HomePage = () => {
     }
   };
 
-  const createButtonWithTooltip = (text, link, tooltipText) => (
+  const createButtonWithTooltip = (text, link, icon, tooltipText) => (
     <OverlayTrigger
       key={text}
       placement="top"
@@ -31,8 +31,9 @@ const HomePage = () => {
       <Button
         to={link}
         as={Link}
-        className='btn btn-sm btn-info btn-menu border-black p-2 mt-5 fw-semibold'
+        className='btn btn-sm btn-info border-black p-2 mt-3 fw-semibold'
       >
+        <FontAwesomeIcon icon={icon} className="me-2 text-start" />
         {text}
       </Button>
     </OverlayTrigger>
@@ -95,12 +96,19 @@ const HomePage = () => {
         </div>
         <Menu />
       </div>
-      <div className={`mt-0 p-0 d-flex flex-column align-items-center vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
-        <h3 className='text-info fw-bold pt-3 mt-1 text-start'>Home Page</h3>
-        {createButtonWithTooltip("Cadastrados", "/cadastrados", "Faces Cadastradas")}
-        {createButtonWithTooltip("Logs", "/logs", "Logs Entrada / Saida")}
-        {createButtonWithTooltip("Usuários", "/usuarios", "Usuários Administradores")}
-        {createButtonWithTooltip("Relatórios", "/relatorios", "Relatórios")}
+      <div className={`mt-0 p-0 d-flex vh-100 justify-content-center ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
+        <div className='container m-0 p-0 d-flex justify-content-center'>
+          <div className='row flex-column'>
+
+              <h4 className='text-info fw-bold pt-5 text-center'>Home Page</h4>
+
+              {createButtonWithTooltip("Listas", "/listas", faList, "Listas")}
+              {createButtonWithTooltip("Relatórios", "/relatorios", faChartBar, "Relatórios")}
+              {createButtonWithTooltip("Cadastro", "/cadastro", faUserPlus, "Cadastro")}
+              {createButtonWithTooltip("App", 'http://127.0.0.1:5500/reconhecimento/', faMobileAlt, "Reconhecimento")}
+
+          </div>
+        </div>
       </div>
     </>
   );

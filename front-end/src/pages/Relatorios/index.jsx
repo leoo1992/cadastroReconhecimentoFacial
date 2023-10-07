@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-const Listas = () => {
+const Relatorios = () => {
   const [theme, setTheme] = useState("dark");
 
   const updateTheme = (newTheme) => {
@@ -33,17 +33,16 @@ const Listas = () => {
   return (
     <>
       <div className="text-end bg-fundo d-flex col sombra-baixo">
-        <h4 className='text-start text-info m-0 p-2 col align-self-center'>Listas</h4>
+        <h4 className='text-start text-info m-0 p-2 col align-self-center'>Relatórios</h4>
         <MenuIcon updateTheme={updateTheme} />
       </div>
       <div className={`container-fluid mt-0 p-0 d-flex flex-column align-items-center justify-content-start vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
-        {createButtonWithTooltip("Cadastrados", "/cadastrados", "Faces Cadastradas")}
-        {createButtonWithTooltip("Logs", "/logs", "Logs Entrada / Saida")}
-        {createButtonWithTooltip("Usuários", "/usuarios", "Usuários Administradores")}
-        {createButtonWithTooltip("Relatórios", "/relatorios", "Relatórios")}
+        {createButtonWithTooltip("Logs", "/logsrelatorios", "Relatório de Logs Entrada / Saida")}
+        {createButtonWithTooltip("Cadastrados", "/cadastradosrelatorios", "Relatorio de Faces Cadastradas")}
+        {createButtonWithTooltip("Usuários", "/usuariosrelatorios", "Relatórios de Usuários")}
       </div>
     </>
   );
 };
 
-export default Listas;
+export default Relatorios;
