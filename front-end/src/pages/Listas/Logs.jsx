@@ -7,7 +7,6 @@ import MenuIcon from '../HomePage/Menuicon';
 import { SearchField } from '@aws-amplify/ui-react';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const Logs = () => {
   const [theme, setTheme] = useState("dark");
   const [paginationPerPage, setPaginationPerPage] = useState(10);
@@ -17,7 +16,7 @@ const Logs = () => {
   const [page, setPage] = useState(1);
   const [setNumerodepaginas] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const moment = require('moment-timezone');
 
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
@@ -37,7 +36,7 @@ const Logs = () => {
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [paginationPerPage]);
 
   const search = async (query) => {
@@ -72,19 +71,85 @@ const Logs = () => {
     of: 'de',
   };
 
+  const formattedData = data.flatMap(log => {
+    const ativoEnum = {
+      0: "Não",
+      1: "Sim",
+    };
+    const tipoEnum = {
+      0: "Aluno",
+      1: "Funcionário",
+      2: "Responsável",
+      3: "Terceiro",
+    };
+
+    return log.Pessoas.map(pessoa => {
+      const dataEntrada = new Date(log.data + 'Z');
+      const dataEntradaUTC = moment.utc(log.data);
+      const dataFormatada = dataEntradaUTC.tz('America/Sao_Paulo').format('MM/DD/YYYY');
+      const horaFormatada = dataEntrada.toLocaleTimeString('pt-BR', { timeZone: 'UTC' });
+
+      return {
+        id: pessoa.id,
+        pessoaNome: pessoa.nome,
+        pessoaTipo:  tipoEnum[pessoa.tipo],
+        pessoaCpf: pessoa.cpf,
+        data: dataFormatada,
+        hora: horaFormatada,
+        pessoaAtivo: ativoEnum[pessoa.ativo],
+      };
+    });
+  });
+
+
   const columns = [
     {
       name: 'Id',
       selector: (row) => row.id,
+      width: '65px',
       sortable: true,
       reorder: true,
-      width: '60px',
+    },
+    {
+      name: 'Nome',
+      selector: (row) => row.pessoaNome,
+      sortable: true,
+      reorder: true,
+    },
+    {
+      name: 'Tipo',
+      selector: (row) => row.pessoaTipo,
+      sortable: true,
+      reorder: true,
+      width: '115px',
+    },
+    {
+      name: 'CPF',
+      selector: (row) => row.pessoaCpf,
+      sortable: true,
+      reorder: true,
+      width: '115px',
     },
     {
       name: 'Data Entrada',
       selector: (row) => row.data,
       sortable: true,
       reorder: true,
+      width: '120px',
+    },
+    {
+      name: 'Hora Entrada',
+      selector: (row) => row.hora,
+      sortable: true,
+      reorder: true,
+      width: '120px',
+    },
+    {
+      name: 'Ativo',
+      selector: (row) => row.pessoaAtivo,
+      sortable: true,
+      reorder: true,
+      width: '75px',
     },
   ];
 
@@ -131,7 +196,7 @@ const Logs = () => {
               className=''
               columns={columns}
               striped
-              data={data}
+              data={formattedData}
               actions
               defaultSortField="id"
               defaultSortAsc
