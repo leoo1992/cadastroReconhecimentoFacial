@@ -317,13 +317,14 @@ app.get("/listarlogs", async (req, res) => {
         ...whereClause,
         [Op.or]: [
           { data: { [Op.like]: `%${searchQuery}%` } },
+          { nome: { [Op.like]: `%${termo}%` } },
+          { cpf: { [Op.like]: `%${termo}%` } },
           { id: { [Op.eq]: searchQuery } },
         ],
       };
     }
 
     const totalRegistros = await Log.count({ where: whereClause });
-
     const paginacao = (pagina - 1) * limitePorPagina;
     const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
 
@@ -331,6 +332,14 @@ app.get("/listarlogs", async (req, res) => {
       where: whereClause,
       limit: limitePorPagina,
       offset: paginacao,
+      include: [
+        {
+          model: Pessoa,
+          through: {
+            attributes: [],
+          },
+        },
+      ],
     });
 
     res.status(200).json({
