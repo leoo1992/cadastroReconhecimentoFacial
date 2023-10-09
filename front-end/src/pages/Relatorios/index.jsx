@@ -37,9 +37,10 @@ const Relatorios = () => {
         <MenuIcon updateTheme={updateTheme} />
       </div>
       <div className={`container-fluid mt-0 p-0 d-flex flex-column align-items-center justify-content-start vh-100 ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
-        {createButtonWithTooltip("Logs", "/logsrelatorios", "Relatório de Logs Entrada / Saida")}
         {createButtonWithTooltip("Cadastrados", "/cadastradosrelatorios", "Relatorio de Faces Cadastradas")}
+        {createButtonWithTooltip("Logs", "/logsrelatorios", "Relatório de Logs Entrada / Saida")}
         {createButtonWithTooltip("Usuários", "/usuariosrelatorios", "Relatórios de Usuários")}
+        {createButtonWithTooltip("Listas", "/listas", "Listas")}
       </div>
     </>
   );
