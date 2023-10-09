@@ -1,8 +1,7 @@
-"use strict";
+
 const sequelize = require("../config/sequelize");
 const Pessoa = require("./Pessoa");
 const Log = require("./Log");
-
 
 Pessoa.belongsToMany(Log, {
   through: "PessoaLog",
@@ -16,4 +15,4 @@ Log.belongsToMany(Pessoa, {
   otherKey: "pessoaId",
 });
 
-module.exports;
+module.exports = sequelize;
