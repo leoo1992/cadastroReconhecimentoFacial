@@ -9,6 +9,7 @@ const { DataTypes } = require('sequelize'),
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      unique: true,
     },
     data: {
       type: DataTypes.DATE,

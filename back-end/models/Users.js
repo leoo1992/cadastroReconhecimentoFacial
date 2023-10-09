@@ -10,10 +10,12 @@ const Users = sequelize.define(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      unique: true,
     },
     usuario: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     senha: {
       type: DataTypes.STRING,

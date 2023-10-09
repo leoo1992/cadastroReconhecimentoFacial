@@ -18,6 +18,8 @@ const Pessoa = sequelize.define(
     cpf: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      primaryKey: true,
     },
     tipo: {
       type: DataTypes.ENUM("0", "1", "2", "3"),
