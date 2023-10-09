@@ -99,14 +99,11 @@ const HomePage = () => {
       <div className={`mt-0 p-0 d-flex vh-100 justify-content-center ${theme === "dark" ? "bg-dark" : "bg-fundo2"}`}>
         <div className='container m-0 p-0 d-flex justify-content-center'>
           <div className='row flex-column'>
-
-              <h4 className='text-info fw-bold pt-5 text-center'>Home Page</h4>
-
-              {createButtonWithTooltip("Listas", "/listas", faList, "Listas")}
-              {createButtonWithTooltip("Relatórios", "/relatorios", faChartBar, "Relatórios")}
-              {createButtonWithTooltip("Cadastro", "/cadastro", faUserPlus, "Cadastro")}
-              {createButtonWithTooltip("App", 'http://127.0.0.1:5500/reconhecimento/', faMobileAlt, "Reconhecimento")}
-
+            <h4 className='text-info fw-bold pt-5 text-center'>Home Page</h4>
+            {createButtonWithTooltip("Listas", "/listas", faList, "Listas")}
+            {createButtonWithTooltip("Relatórios", "/relatorios", faChartBar, "Relatórios")}
+            {createButtonWithTooltip("Cadastro", "/cadastro", faUserPlus, "Cadastro")}
+            {createButtonWithTooltip("App", 'http://127.0.0.1:5500/reconhecimento/', faMobileAlt, "Reconhecimento")}
           </div>
         </div>
       </div>
