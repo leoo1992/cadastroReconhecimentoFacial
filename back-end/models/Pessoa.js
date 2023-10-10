@@ -36,7 +36,7 @@ const Pessoa = sequelize.define(
     tableName: "pessoa",
     timestamps: true,
     createdAt: false,
-    updatedAt: false
+    updatedAt: false,
   }
 );
 

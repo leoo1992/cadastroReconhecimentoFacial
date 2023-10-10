@@ -14,9 +14,8 @@ const Logs = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
-  const [setNumerodepaginas] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const moment = require('moment-timezone');
+
 
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
@@ -28,11 +27,10 @@ const Logs = () => {
         },
       });
 
-      const { registros, numerodepaginas, totalregistros } = response.data;
+      const { registros, totalregistros } = response.data;
 
       setData(registros);
       setTotalRows(totalregistros);
-      setNumerodepaginas(numerodepaginas);
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
@@ -40,12 +38,14 @@ const Logs = () => {
   }, [paginationPerPage]);
 
   const search = async (query) => {
+    if (query.length > 2) {
     try {
       const response = await api.get(`/pesquisarlogs?termo=${query}`);
       setData(response.data.resultados);
     } catch (error) {
       console.error("Erro ao realizar pesquisa: ", error);
     }
+  }
   };
 
   const handlePageChange = (newPage) => {
@@ -71,35 +71,38 @@ const Logs = () => {
     of: 'de',
   };
 
-  const formattedData = data.flatMap(log => {
-    const ativoEnum = {
-      0: "Não",
-      1: "Sim",
-    };
-    const tipoEnum = {
-      0: "Aluno",
-      1: "Funcionário",
-      2: "Responsável",
-      3: "Terceiro",
-    };
+  const ativoEnum = {
+    0: "Não",
+    1: "Sim",
+  };
+  const tipoEnum = {
+    0: "Aluno",
+    1: "Funcionário",
+    2: "Responsável",
+    3: "Terceiro",
+  };
+
+  const formattedData = data ? data.flatMap(log => {
+    if (!log.Pessoas || !Array.isArray(log.Pessoas)) {
+      return [];
+    }
 
     return log.Pessoas.map(pessoa => {
-      const dataEntrada = new Date(log.data + 'Z');
-      const dataEntradaUTC = moment.utc(log.data);
-      const dataFormatada = dataEntradaUTC.tz('America/Sao_Paulo').format('MM/DD/YYYY');
-      const horaFormatada = dataEntrada.toLocaleTimeString('pt-BR', { timeZone: 'UTC' });
-
+      const dataEntrada = new Date(log.data);
+      dataEntrada.setHours(dataEntrada.getHours() + 3);
+      const dataFormatada = `${dataEntrada.getDate().toString().padStart(2, '0')}-${(dataEntrada.getMonth() + 1).toString().padStart(2, '0')}-${dataEntrada.getFullYear()}`;
+      const horaFormatada = `${dataEntrada.getHours().toString().padStart(2, '0')}:${dataEntrada.getMinutes().toString().padStart(2, '0')}`;
       return {
         id: pessoa.id,
         pessoaNome: pessoa.nome,
-        pessoaTipo:  tipoEnum[pessoa.tipo],
+        pessoaTipo: tipoEnum[pessoa.tipo],
         pessoaCpf: pessoa.cpf,
-        data: log.data,
+        data: dataFormatada,
         hora: horaFormatada,
         pessoaAtivo: ativoEnum[pessoa.ativo],
       };
     });
-  });
+  }) : [];
 
 
   const columns = [
@@ -193,7 +196,7 @@ const Logs = () => {
           </div>
           <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
             <DataTable
-              className=''
+              className='pt-2'
               columns={columns}
               striped
               data={formattedData}
@@ -230,7 +233,7 @@ const Logs = () => {
                     onChange={(event) => onChange(event)}
                     onClear={onClear}
                     value={searchQuery}
-                    className='m-0 p-0 rounded border-0 text-center fw-bolder'
+                    className='m-0 p-0 rounded border-0 text-center fw-bolder mb-1'
                     style={{
                       textAlign: "center",
                       borderRadius: "8px",

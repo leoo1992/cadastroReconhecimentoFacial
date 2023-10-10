@@ -21,7 +21,7 @@ const { DataTypes } = require('sequelize'),
     tableName: "Log",
     timestamps: true,
     createdAt: false,
-    updatedAt: false
+    updatedAt: false,
   });
 
   module.exports = Log;

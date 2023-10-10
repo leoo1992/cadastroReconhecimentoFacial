@@ -16,6 +16,4 @@ Log.belongsToMany(Pessoa, {
   unique: true,
 });
 
-
-
 module.exports = sequelize;

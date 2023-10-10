@@ -314,6 +314,8 @@ app.get("/listarlogs", async (req, res) => {
 
     let whereClause = {};
 
+    console.log("Pesquisa 1:" ,  JSON.stringify(searchQuery) ,  JSON.stringify(whereClause));
+
     if (searchQuery) {
       whereClause = {
         ...whereClause,
@@ -344,6 +346,9 @@ app.get("/listarlogs", async (req, res) => {
       ],
     });
 
+    console.log(JSON.stringify(registros));
+    console.log("Pesquisa 4:"  ,  JSON.stringify(searchQuery) ,  JSON.stringify(whereClause));
+
     res.status(200).json({
       registros,
       numerodepaginas: numeroDePaginas,
@@ -355,6 +360,43 @@ app.get("/listarlogs", async (req, res) => {
   }
 });
 
+
+app.get("/pesquisarlogs", async (req, res) => {
+  try {
+    const { termo } = req.query;
+
+    if (!termo || termo.length < 3) {
+      return res.status(200).json({ resultados: [] });
+    }
+
+    console.log("Termo de pesquisa:", termo);
+
+    const registros = await Log.findAll({
+      where: {
+        [Op.or]: [
+          { '$Pessoas.nome$': { [Op.like]: `%${termo}%` } },
+          { '$Pessoas.cpf$': { [Op.like]: `%${termo}%` } },
+          { '$Pessoas.id$': { [Op.eq]: termo } },
+        ],
+      },
+      include: [
+        {
+          model: Pessoa,
+          as: 'Pessoas',
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+
+
+    res.status(200).json({ registros });
+  } catch (err) {
+    console.error("Erro ao realizar pesquisa geral: ", err);
+    res.status(500).json({ error: "Erro ao realizar pesquisa geral." });
+  }
+});
 
 //DELETES ROUTERS **********************************
 //rota para deletar por id:
