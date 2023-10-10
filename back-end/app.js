@@ -12,10 +12,12 @@ const { validationResult } = require("express-validator");
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
+const moment = require('moment-timezone');
 
 app.use(express.json());
 app.use(cors());
 
+console.log(moment());
 // CONEXÃO **********************************
 sequelize.authenticate()
 sequelize.sync().then(() => {

@@ -38,12 +38,6 @@ app.post('/salvar-imagem', (req, res) => {
     fs.appendFileSync(filePath, '\n' + nome);
 
     res.status(200).send('Imagem e nome salvos com sucesso.');
-
-    exec('npm start', (error, stdout, stderr) => {
-        if (error) {
-            console.error('Erro ao reiniciar o servidor:', error);
-        }
-    });
 });
 
 app.listen(port, () => {

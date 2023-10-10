@@ -94,7 +94,7 @@ const Logs = () => {
         pessoaNome: pessoa.nome,
         pessoaTipo:  tipoEnum[pessoa.tipo],
         pessoaCpf: pessoa.cpf,
-        data: dataFormatada,
+        data: log.data,
         hora: horaFormatada,
         pessoaAtivo: ativoEnum[pessoa.ativo],
       };
