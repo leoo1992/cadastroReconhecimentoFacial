@@ -8,6 +8,26 @@ gestaoBtn.addEventListener('click', async () => {
     window.location.href = "http://localhost:3001/";
 });
 
+function ocultaCadastro() {
+    const telaCadastro = document.getElementById('telaCadastro');
+    const botaoMostrarOcultarCadastro = document.getElementById('botaoMostrarOcultarCadastro');
+
+    if (telaCadastro.classList.contains('d-none')) {
+        telaCadastro.classList.remove('d-none');
+        telaCadastro.classList.add('d-flex');
+        botaoMostrarOcultarCadastro.textContent = 'Ocultar Cadastro';
+    } else {
+        telaCadastro.classList.remove('d-flex');
+        telaCadastro.classList.add('d-none');
+        botaoMostrarOcultarCadastro.textContent = 'Mostrar Cadastro';
+    }
+}
+
+window.onload = function () {
+    const botaoMostrarOcultarCadastro = document.getElementById('botaoMostrarOcultarCadastro');
+    botaoMostrarOcultarCadastro.addEventListener('click', ocultaCadastro);
+}
+
 async function carregarNomes() {
     try {
         const response = await fetch('http://localhost:3002/obter-nomes');
@@ -44,33 +64,31 @@ const startVideo = () => {
                                 window.camStream.getTracks().forEach(track => track.stop());
                             }
                             const canvas = document.getElementById('canvas');
-
-                            canvas.width = 640;
-                            canvas.height = 360;
-                            cam.videoWidth = 640;
-                            cam.videoHeight = 360;
-
                             window.camStream = stream;
 
+                            cam.videoWidth = '40em';
+                            cam.videoHeight = '22.5em';
                             cam.srcObject = stream;
                             cam.style.position = 'absolute';
-                            cam.style.top = '75%';
-                            cam.style.left = '1%';
-                            cam.style.marginTop = '20px';
-                            cam.style.display = 'flex';
+                            cam.style.margin = '0px';
+                            cam.style.padding = '0px';
                             cam.style.justifyContent = 'center';
                             cam.style.alignItems = 'center';
                             cam.style.alignContent = 'center';
+                            cam.style.alignSelf = 'center';
+                            cam.style.flexDirection = 'column';
 
+                            canvas.width = '40em';
+                            canvas.height = '22.5em';
                             canvas.style.position = 'absolute';
-                            canvas.style.top = '75%';
-                            canvas.style.left = '1%';
+                            canvas.style.margin = '0px';
+                            canvas.style.padding = '0px';
                             canvas.style.zIndex = '1';
-                            canvas.style.marginTop = '20px';
-                            canvas.style.display = 'flex';
                             canvas.style.justifyContent = 'center';
                             canvas.style.alignItems = 'center';
                             canvas.style.alignContent = 'center';
+                            canvas.style.alignSelf = 'center';
+                            canvas.style.flexDirection = 'column';
                         },
                         error => console.error(error)
                     );
