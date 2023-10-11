@@ -3,7 +3,7 @@ import "./listas.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, faImage  } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, faCameraRetro } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -13,7 +13,6 @@ import { SearchField } from '@aws-amplify/ui-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Modal, Button } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -150,6 +149,7 @@ const Cadastrados = () => {
   };
 
   const contextActions = React.useMemo(() => {
+
     const handleDelete = async () => {
       const selectedIds = selectedRows.map((r) => r.id);
       if (selectedIds.length > 0) {
@@ -157,7 +157,6 @@ const Cadastrados = () => {
         setIdToDelete(selectedIds[0]);
       }
     };
-
 
     const handleDesativar = async () => {
       const selectedIds = selectedRows.map((r) => r.id);
@@ -168,9 +167,58 @@ const Cadastrados = () => {
     };
 
     const handleEditar = async () => {
+      debugger
       if (selectedRows.length === 1) {
         const selectedId = selectedRows[0].id;
         navigate(`/atualiza/${selectedId}`);
+      }
+    };
+
+    const handleImageChange = async (event) => {
+      console.log("Entrou na função handleImageChange");
+      const file = event.target.files[0];
+
+      setTimeout(() => {
+        console.log("Entrou aqui");
+      }, 3000);
+      console.log("Arquivo selecionado:", file);
+
+      const selectedNome = selectedRows[0].nome;
+      console.log("Nome selecionado:", selectedNome);
+
+      if (selectedRows.length !== 1) {
+        toast.error('Selecione exatamente um item.');
+        return;
+      }
+
+      if (file && file.type === 'image/jpeg') {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+          const headers = new Headers();
+          headers.append('nome', selectedNome);
+
+          const response = await fetch('http://localhost:3002/salvar-imagem', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'image/jpeg',
+              'Nome': selectedNome,
+            },
+
+          });
+
+          if (response.ok) {
+            toast.success('Imagem inserida com Sucesso !');
+          } else {
+            toast.error('Erro ao salvar a imagem.');
+          }
+        } catch (error) {
+          console.error('Erro ao enviar a requisição:', error);
+          toast.error('Erro ao salvar a imagem.');
+        }
+      } else {
+        toast.error('Por favor, selecione um arquivo .jpg.');
       }
     };
 
@@ -178,22 +226,32 @@ const Cadastrados = () => {
       <>
         <div className='p-0 m-0 container-fluid d-flex justify-content-end align-items-center' >
 
-              <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-image-tooltip">Add Image</Tooltip>}>
-              <FontAwesomeIcon icon={faImage} className="btn text-bg-light p-1 m-1" />
-              </OverlayTrigger>
+          <label htmlFor="image-upload" className="btn text-bg-light m-1 p-0 btn">
+            <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-image-tooltip">Add Image</Tooltip>}>
+              <FontAwesomeIcon icon={faCameraRetro} className='m-0 p-0' />
+            </OverlayTrigger>
+            <input
+              type="file"
+              id="image-upload"
+              accept=".jpg"
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+              className='m-0 p-0 btn-sm btn'
+            />
+          </label>
 
-              <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
-                <FontAwesomeIcon icon={faEdit} className="btn text-bg-primary p-1 m-1" onClick={handleEditar} />
-              </OverlayTrigger>
+          <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
+            <FontAwesomeIcon icon={faEdit} className="btn text-bg-primary p-1 m-1" onClick={handleEditar} />
+          </OverlayTrigger>
 
-              <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
-                <FontAwesomeIcon icon={faTimesCircle} className="btn text-bg-warning p-1 m-1" onClick={handleDesativar} />
-              </OverlayTrigger>
+          <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
+            <FontAwesomeIcon icon={faTimesCircle} className="btn text-bg-warning p-1 m-1" onClick={handleDesativar} />
+          </OverlayTrigger>
 
-              <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
-                <FontAwesomeIcon icon={faTrash} className="btn p-1 m-1 text-bg-danger" key="delete" onClick={handleDelete} />
-              </OverlayTrigger>
-          </div>
+          <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
+            <FontAwesomeIcon icon={faTrash} className="btn p-1 m-1 text-bg-danger" key="delete" onClick={handleDelete} />
+          </OverlayTrigger>
+        </div>
       </>
     );
   }, [selectedRows, navigate]);
