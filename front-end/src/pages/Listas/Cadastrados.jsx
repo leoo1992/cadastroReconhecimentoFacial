@@ -3,7 +3,7 @@ import "./listas.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, faImage  } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -13,6 +13,7 @@ import { SearchField } from '@aws-amplify/ui-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Modal, Button } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -175,9 +176,11 @@ const Cadastrados = () => {
 
     return (
       <>
-        <div className='p-0 m-0 container d-flex justify-content-end' >
-          <div className='p-0 m-0 row align-items-center' >
-            <div className='p-0 m-0'>
+        <div className='p-0 m-0 container-fluid d-flex justify-content-end align-items-center' >
+
+              <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-image-tooltip">Add Image</Tooltip>}>
+              <FontAwesomeIcon icon={faImage} className="btn text-bg-light p-1 m-1" />
+              </OverlayTrigger>
 
               <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
                 <FontAwesomeIcon icon={faEdit} className="btn text-bg-primary p-1 m-1" onClick={handleEditar} />
@@ -190,11 +193,7 @@ const Cadastrados = () => {
               <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
                 <FontAwesomeIcon icon={faTrash} className="btn p-1 m-1 text-bg-danger" key="delete" onClick={handleDelete} />
               </OverlayTrigger>
-
-            </div>
-            <br />
           </div>
-        </div>
       </>
     );
   }, [selectedRows, navigate]);
