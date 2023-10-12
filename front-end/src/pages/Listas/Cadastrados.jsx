@@ -176,50 +176,47 @@ const Cadastrados = () => {
 
     const handleImageChange = async (event) => {
       console.log("Entrou na função handleImageChange");
-      const file = event.target.files[0];
+      let file = event.target.files[0];
 
-      setTimeout(() => {
-        console.log("Entrou aqui");
-      }, 3000);
       console.log("Arquivo selecionado:", file);
 
-      const selectedNome = selectedRows[0].nome;
+      let selectedNome = selectedRows[0].nome;
       console.log("Nome selecionado:", selectedNome);
 
-      if (selectedRows.length !== 1) {
-        toast.error('Selecione exatamente um item.');
-        return;
-      }
-
       if (file && file.type === 'image/jpeg') {
-        const formData = new FormData();
+        let formData = new FormData();
         formData.append('image', file);
 
         try {
-          const headers = new Headers();
+          let headers = new Headers();
           headers.append('nome', selectedNome);
 
-          const response = await fetch('http://localhost:3002/salvar-imagem', {
+          let response = await fetch('http://localhost:3002/salvar-imagem', {
             method: 'POST',
             headers: {
               'Content-Type': 'image/jpeg',
               'Nome': selectedNome,
             },
-
+            body: file
           });
 
           if (response.ok) {
+            event.target.value = '';
             toast.success('Imagem inserida com Sucesso !');
           } else {
+            event.target.value = '';
             toast.error('Erro ao salvar a imagem.');
           }
         } catch (error) {
           console.error('Erro ao enviar a requisição:', error);
+          event.target.value = '';
           toast.error('Erro ao salvar a imagem.');
         }
       } else {
-        toast.error('Por favor, selecione um arquivo .jpg.');
+        event.target.value = '';
+        toast.error('Por favor, selecione um arquivo .jpeg.');
       }
+      event.target.value = '';
     };
 
     return (
@@ -233,7 +230,7 @@ const Cadastrados = () => {
             <input
               type="file"
               id="image-upload"
-              accept=".jpg"
+              accept=".jpeg"
               style={{ display: 'none' }}
               onChange={handleImageChange}
               className='m-0 p-0 btn-sm btn'

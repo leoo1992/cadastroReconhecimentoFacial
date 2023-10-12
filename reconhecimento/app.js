@@ -61,7 +61,7 @@ app.post('/salvar-imagem', (req, res) => {
     }
 
     let contador = 1;
-    while (fs.existsSync(path.join(pastaDestino, `${contador}.jpg`)) && contador <= 5) {
+    while (fs.existsSync(path.join(pastaDestino, `${contador}.jpeg`)) && contador <= 5) {
         contador++;
     }
 
@@ -69,7 +69,7 @@ app.post('/salvar-imagem', (req, res) => {
         return res.status(400).send('A pasta está cheia (limite de 5 imagens).');
     }
 
-    const caminhoImagem = path.join(pastaDestino, `${contador}.jpg`);
+    const caminhoImagem = path.join(pastaDestino, `${contador}.jpeg`);
     fs.writeFileSync(caminhoImagem, imageData);
 
     if (!labels.includes(nome)) {

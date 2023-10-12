@@ -103,7 +103,7 @@ const loadLabels = () => {
     return Promise.all(labels.map(async label => {
         const descriptions = []
         for (let i = 1; i <= 1; i++) {
-            const img = await faceapi.fetchImage(`/reconhecimento/assets/lib/face-api/labels/${label}/${i}.jpg`)
+            const img = await faceapi.fetchImage(`/reconhecimento/assets/lib/face-api/labels/${label}/${i}.jpeg`)
             const detections = await faceapi
                 .detectSingleFace(img)
                 .withFaceLandmarks()
