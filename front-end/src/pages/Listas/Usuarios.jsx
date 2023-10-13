@@ -23,8 +23,6 @@ const Usuarios = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
-  // eslint-disable-next-line
-  const [setNumerodepaginas] = useState(1);
   const divElement = document.querySelector('.rdt_TableHeader > div > div');
   const [searchQuery, setSearchQuery] = useState('');
   const [showModalDelete, setShowModalDelete] = useState(false);
@@ -63,15 +61,13 @@ const Usuarios = () => {
         },
       });
 
-      const { registros, numerodepaginas, totalregistros } = response.data;
+      const { registros, totalregistros } = response.data;
 
       setData(registros);
       setTotalRows(totalregistros);
-      setNumerodepaginas(numerodepaginas);
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
-    // eslint-disable-next-line
   }, [paginationPerPage]);
 
   const search = async (query) => {
@@ -121,8 +117,7 @@ const Usuarios = () => {
         </div>
       </>
     );
-     // eslint-disable-next-line
-  }, [selectedRows, toggleCleared]);
+  }, [selectedRows]);
 
   const customText = {
     rowsPerPage: 'Linhas por página:',
@@ -243,7 +238,6 @@ const Usuarios = () => {
               data={data}
               actions
               defaultSortField="id"
-              defaultSortAsc
               contextActions={contextActions}
               onSelectedRowsChange={handleRowSelected}
               clearSelectedRows={toggleCleared}

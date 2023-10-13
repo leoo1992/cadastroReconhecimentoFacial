@@ -166,7 +166,6 @@ const Logs = () => {
               striped
               data={formattedData}
               defaultSortField="id"
-              defaultSortAsc
               pagination
               paginationServer
               progressPending={loading}
