@@ -4,7 +4,6 @@ import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
-import { SearchField } from '@aws-amplify/ui-react';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Logs = () => {
@@ -14,17 +13,10 @@ const Logs = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
 
-
-  const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
+  const fetchUsers = useCallback(async (page) => {
     try {
-      let whereClause = {};
-
-      const response = await api.get(`/listarlogs?pagina=${page}&limitePorPagina=${paginationPerPage}&search=${searchQuery}`, {
-        params: {
-          where: whereClause,
-        },
+      const response = await api.get(`/listarlogs?pagina=${page}&limitePorPagina=${paginationPerPage}`, {
       });
 
       const { registros, totalregistros } = response.data;
@@ -34,19 +26,12 @@ const Logs = () => {
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
-    // eslint-disable-next-line
   }, [paginationPerPage]);
 
-  const search = async (query) => {
-    if (query.length > 2) {
-    try {
-      const response = await api.get(`/pesquisarlogs?termo=${query}`);
-      setData(response.data.resultados);
-    } catch (error) {
-      console.error("Erro ao realizar pesquisa: ", error);
-    }
-  }
-  };
+  useEffect(() => {
+    fetchUsers(page, paginationPerPage);
+    setLoading(false);
+  }, [page, paginationPerPage, fetchUsers]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -156,26 +141,6 @@ const Logs = () => {
     },
   ];
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      search(searchQuery);
-      fetchUsers(page, paginationPerPage, searchQuery);
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [page, paginationPerPage, fetchUsers, searchQuery]);
-
-
-  const onClear = () => {
-    setSearchQuery('');
-    search('');
-  };
-
-  const onChange = (event) => {
-    const newValue = event.target.value;
-    setSearchQuery(newValue);
-  };
-
   return (
     <>
       {loading ? (
@@ -196,11 +161,10 @@ const Logs = () => {
           </div>
           <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
             <DataTable
-              className='pt-2'
+              className='pt-4'
               columns={columns}
               striped
               data={formattedData}
-              actions
               defaultSortField="id"
               defaultSortAsc
               pagination
@@ -220,30 +184,6 @@ const Logs = () => {
               highlightOnHover
               pointerOnHover
               theme={theme}
-              dense
-              subHeader
-              subHeaderComponent={
-                <div className='container-fluid d-flex m-0 p-0 justify-content-end'>
-                  <SearchField
-                    placeholder="Procurar"
-                    size="small"
-                    hasSearchButton={false}
-                    hasSearchIcon={false}
-                    labelHidden={false}
-                    onChange={(event) => onChange(event)}
-                    onClear={onClear}
-                    value={searchQuery}
-                    className='m-0 p-0 rounded border-0 text-center fw-bolder mb-1'
-                    style={{
-                      textAlign: "center",
-                      borderRadius: "8px",
-                      lineHeight: "29px"
-                    }}
-                  />
-                </div>
-              }
-              subHeaderAlign="left"
-              style={{ width: '100%', height: '100%' }}
             />
           </div>
         </>
