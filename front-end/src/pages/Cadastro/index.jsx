@@ -13,6 +13,10 @@ const Cadastro = () => {
   const [isFormValid, setIsFormValid] = useState(true);
   const errorRef = useRef(null);
   const [theme, setTheme] = useState("dark");
+  const [isImageUploaded, setIsImageUploaded] = useState(false);
+  const [isNameEntered, setIsNameEntered] = useState(false);
+  const [isSelfieButtonDisabled, setIsSelfieButtonDisabled] = useState(false);
+
 
   const updateTheme = (newTheme) => {
     setTheme(newTheme);
@@ -27,6 +31,8 @@ const Cadastro = () => {
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    setIsNameEntered(!!value);
 
     const hasErrors = Object.values(formErrors).some((error) => error !== "");
     setIsFormValid(!hasErrors);
@@ -44,6 +50,12 @@ const Cadastro = () => {
       }
     });
 
+    if (!isImageUploaded) {
+      toast.error('Uma selfie é requerida');
+      setIsImageUploaded(false);
+      return;
+    }
+
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) {
       return;
@@ -57,6 +69,7 @@ const Cadastro = () => {
         setTimeout(() => {
           navigate("/home");
         }, 4000);
+        setIsImageUploaded(false);
       })
       .catch((error) => {
         toast.error("Erro ao cadastrar : " + error);
@@ -74,6 +87,63 @@ const Cadastro = () => {
       errorRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [formErrors]);
+
+  const handleImageChange = async (event) => {
+    console.log("Entrou na função handleImageChange");
+    let file = event.target.files[0];
+
+    if (!formData.nome.trim()) {
+      toast.error('O nome é requerido antes da imagem');
+      setIsImageUploaded(false);
+      return;
+    }
+
+    console.log("Arquivo selecionado:", file);
+
+    let selectedNome = formData.nome.trim();
+    console.log("Nome selecionado:", selectedNome.trim());
+
+    if (file && file.type === 'image/jpeg') {
+      let formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        let headers = new Headers();
+        headers.append('nome'.trim(), selectedNome.trim());
+
+        let response = await fetch('http://localhost:3002/salvar-imagem', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'image/jpeg',
+            'Nome': selectedNome.trim(),
+          },
+          body: file
+        });
+
+        if (response.ok) {
+          event.target.value = '';
+          toast.success('Imagem inserida com Sucesso !');
+          setIsImageUploaded(true);
+          setIsSelfieButtonDisabled(true);
+        } else {
+          event.target.value = '';
+          toast.error('Erro ao salvar a imagem.');
+          setIsImageUploaded(false);
+        }
+      } catch (error) {
+        console.error('Erro ao enviar a requisição:', error);
+        event.target.value = '';
+        toast.error('Erro ao salvar a imagem.');
+        setIsImageUploaded(false);
+      }
+    } else {
+      event.target.value = '';
+      toast.error('Por favor, selecione um arquivo .jpeg.');
+      setIsImageUploaded(false);
+    }
+    event.target.value = '';
+  };
+
 
   return (
     <>
@@ -101,8 +171,9 @@ const Cadastro = () => {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Nome:</Form.Label>
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"} htmlFor="nome">Nome:</Form.Label>
                   <Form.Control
+                    id="nome"
                     type="text"
                     name="nome"
                     value={formData.nome}
@@ -117,10 +188,11 @@ const Cadastro = () => {
             </Row>
             <Row>
               <Col>
-                <Form.Group>
-                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>CPF:</Form.Label>
+              <Form.Group className="pt-2">
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"} htmlFor="cpf">CPF:</Form.Label>
                   <Form.Control
                     type="text"
+                    id="cpf"
                     name="cpf"
                     value={formData.cpf}
                     onChange={handleChange}
@@ -134,9 +206,10 @@ const Cadastro = () => {
             </Row>
             <Row>
               <Col>
-                <Form.Group>
-                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Tipo:</Form.Label>
+                <Form.Group className="pt-2">
+                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"} htmlFor="tipo">Tipo:</Form.Label>
                   <Form.Control
+                    id="tipo"
                     as="select"
                     name="tipo"
                     value={formData.tipo}
@@ -156,6 +229,31 @@ const Cadastro = () => {
               </Col>
             </Row>
             <Row>
+              <Col >
+              <Button
+               disabled={!isNameEntered || isSelfieButtonDisabled}
+              className="btn btn-warning mt-4 mb-3">
+                <label htmlFor="foto"
+                 disabled={!isNameEntered || isSelfieButtonDisabled}
+                >
+                  Insira uma Selfie
+                  <input
+                    type="file"
+                    id="foto"
+                    name="foto"
+                    accept="image/jpeg"
+                    onChange={handleImageChange}
+                    style={{ display: 'none' }}
+                    disabled={!isNameEntered || isSelfieButtonDisabled}
+                  />
+                </label>
+                </Button>
+                {formErrors.tipo && (
+                  <div className="error-message">{formErrors.foto}</div>
+                )}
+              </Col>
+            </Row>
+            <Row>
               <Col className="text-center pt-2 ">
                 {!isFormValid && (
                   <div className="error-message">
@@ -166,7 +264,11 @@ const Cadastro = () => {
                   Voltar
                 </Link>
                 <span> </span>
-                <Button type="submit" variant="info" className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                <Button
+                  type="submit"
+                  disabled={!isNameEntered || !formData.cpf || !formData.tipo || !isImageUploaded || !isFormValid}
+                  variant="info"
+                  className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
                   Cadastrar
                 </Button>
               </Col>
@@ -174,7 +276,7 @@ const Cadastro = () => {
           </Form>
         </Container>
 
-      </div>
+      </div >
     </>
   );
 };
