@@ -23,8 +23,6 @@ const Cadastrados = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
-  // eslint-disable-next-line
-  const [setNumerodepaginas] = useState(1);
   const [ativo, setAtivo] = useState("");
   const navigate = useNavigate();
   const divElement = document.querySelector('.rdt_TableHeader > div > div');
@@ -34,11 +32,6 @@ const Cadastrados = () => {
   const [idToDelete, setIdToDelete] = useState(null);
   const [showModalDesativar, setShowModalDesativar] = useState(false);
   const [idToDesativar, setIdToDesativar] = useState(null);
-
-  // eslint-disable-next-line
-  const toggleVisibility = () => {
-    setShowInactive(!showInactive);
-  };
 
   const handleConfirmDelete = async () => {
     try {
@@ -100,15 +93,14 @@ const Cadastrados = () => {
       });
 
 
-      const { registros, numerodepaginas, totalregistros } = response.data;
+      const { registros, totalregistros } = response.data;
 
       setData(registros);
       setTotalRows(totalregistros);
-      setNumerodepaginas(numerodepaginas);
     } catch (error) {
       console.error("Erro ao buscar dados do servidor: ", error);
     }
-    // eslint-disable-next-line
+
   }, [paginationPerPage, showInactive]);
 
   const search = async (query) => {
@@ -412,7 +404,6 @@ const Cadastrados = () => {
               data={data}
               actions
               defaultSortField="id"
-              defaultSortAsc
               contextActions={contextActions}
               onSelectedRowsChange={handleRowSelected}
               clearSelectedRows={toggleCleared}
