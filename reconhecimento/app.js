@@ -18,7 +18,7 @@ app.listen(port, () => {
 });
 
 app.get('/obter-nomes', (req, res) => {
-    res.json(labels);
+    res.json(labels.trim());
 });
 
 app.use(bodyParser.raw({
@@ -53,9 +53,10 @@ app.post('/salvar-imagem', (req, res) => {
         return res.status(400).send('Nome não fornecido.');
     }
 
-    const imageData = req.body;
+    const nomeSemEspacos = nome.trim().replace(/\s+/g, '');
 
-    const pastaDestino = path.join(__dirname, 'assets', 'lib', 'face-api', 'labels', nome);
+    const pastaDestino = path.join(__dirname, 'assets', 'lib', 'face-api', 'labels', nomeSemEspacos);
+
     if (!fs.existsSync(pastaDestino)) {
         fs.mkdirSync(pastaDestino, { recursive: true });
     }
@@ -70,15 +71,19 @@ app.post('/salvar-imagem', (req, res) => {
     }
 
     const caminhoImagem = path.join(pastaDestino, `${contador}.jpeg`);
-    fs.writeFileSync(caminhoImagem, imageData);
+    fs.writeFileSync(caminhoImagem, req.body);
 
-    if (!labels.includes(nome)) {
-        labels.push(nome);
-        fs.appendFileSync(filePath, '\n' + nome);
+    if (!labels.includes(nomeSemEspacos)) {
+        labels.push(nomeSemEspacos);
+        fs.appendFileSync(filePath, '\n' + nomeSemEspacos);
     }
-
+    console.log("Op salvar img realizada com sucesso");
     res.status(200).send('Imagem e nome salvos com sucesso.');
+    console.log('Nomes carregados:', labels);
 });
+
+
+
 
 
 
