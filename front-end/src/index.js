@@ -26,11 +26,20 @@ if (timeToken.getHours() < new Date().getHours()) {
   sessionStorage.clear();
 };
 
+const actionsExecuted = localStorage.getItem('actionsExecuted');
+if (!actionsExecuted) {
+  const cookies = Cookies.get();
+  for (const cookie in cookies) {
+    Cookies.remove(cookie);
+  }
+  localStorage.clear();
+  sessionStorage.clear();
+  localStorage.setItem('actionsExecuted', 'true');
+}
+
 const render = () => {
   ReactDOM.createRoot(root).render(
-    <React.StrictMode>
-      <App className='w-100 h-100' />
-    </React.StrictMode>
+      <App />
   );
 };
 
