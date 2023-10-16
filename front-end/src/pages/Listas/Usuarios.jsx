@@ -294,28 +294,18 @@ const Usuarios = () => {
               dense
               subHeader
               subHeaderComponent={
-                <div className='flex-container m-0 p-0 col align-items-center'>
-                  <div className='text-start m-0 p-0 col'>
+                <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
+                  <div className='m-0 p-0 d-flex nowrap'>
                     <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
                       <Link to="/cadastrousers">
-                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
                       </Link>
                     </OverlayTrigger>
                     <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
-                      <Button
-                        className='btn btn-sm btn-light text-bg-primary p-1 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle'
-                        onClick={exportToPDF}
-                      >
-                        <FontAwesomeIcon icon={faFilePdf} className='p-1 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
-                      </Button>
+                      <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
                     </OverlayTrigger>
                     <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
-                      <Button
-                        className='btn btn-sm btn-light text-bg-primary p-1 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle'
-                        onClick={exportToExcel}
-                      >
-                        <FontAwesomeIcon icon={faFileExcel} className='p-1 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
-                      </Button>
+                      <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
                     </OverlayTrigger>
                   </div>
                   <SearchField
@@ -327,11 +317,12 @@ const Usuarios = () => {
                     onChange={(event) => onChange(event)}
                     onClear={onClear}
                     value={searchQuery}
-                    className='m-0 p-0 d-flex rounded border-0 text-center fw-bolder'
+                    className='m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap d-flex'
                     style={{
                       textAlign: "center",
                       borderRadius: "8px",
-                      lineHeight: "29px"
+                      lineHeight: "29px",
+                      width: '150px'
                     }}
                   />
                 </div>
