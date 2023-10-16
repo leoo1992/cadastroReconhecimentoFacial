@@ -3,7 +3,7 @@ import "./listas.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, faCameraRetro } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, faCameraRetro, faFilePdf, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -13,6 +13,9 @@ import { SearchField } from '@aws-amplify/ui-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Modal, Button } from 'react-bootstrap';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -45,6 +48,30 @@ const Cadastrados = () => {
     } catch (error) {
       toast.error("Erro ao excluir o registro");
     }
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    const tableData = data.map((row) => [row.id, row.nome, row.cpf, tipoEnum[row.tipo], ativoEnum[row.ativo]]);
+    doc.autoTable({
+      head: [{ id: 'ID', nome: 'Nome', cpf: 'CPF', tipo: 'Tipo', ativo: 'Ativo' }],
+      body: tableData,
+    });
+    doc.save('Cadastrados.pdf');
+  };
+
+  const exportToExcel = () => {
+    const tableData = data.map((row) => ({
+      ID: row.id,
+      Nome: row.nome,
+      CPF: row.cpf,
+      Tipo: tipoEnum[row.tipo],
+      Ativo: ativoEnum[row.ativo],
+    }));
+    const ws = XLSX.utils.json_to_sheet(tableData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Cadastrados');
+    XLSX.writeFile(wb, 'Cadastrados.xlsx');
   };
 
   const handleConfirmDesativar = async () => {
@@ -317,6 +344,13 @@ const Cadastrados = () => {
     <Tooltip id="add-button-tooltip">Novo</Tooltip>
   );
 
+  const printButtonTooltipPDF = (
+    <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>
+  );
+  const printButtonTooltipExcel = (
+    <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
+  );
+
   const onClear = () => {
     setSearchQuery('');
     search('');
@@ -393,7 +427,7 @@ const Cadastrados = () => {
       ) : (
         <>
           <div className="top-0 text-end bg-fundo col d-flex sombra-baixo">
-            <h4 className='text-start text-info m-0 p-2 col align-self-center' >Cadastrados</h4>
+            <h4 className='text-start text-info m-0 p-2 col align-self-center'>Cadastrados</h4>
             <MenuIcon updateTheme={updateTheme} />
           </div>
           <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
@@ -430,24 +464,31 @@ const Cadastrados = () => {
               dense
               subHeader
               subHeaderComponent={
-                <div className='flex-container m-0 p-0 col align-items-center'>
-                  <div className='text-start m-0 p-0 col'>
+                <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
+
+                  <div className='m-0 p-0 d-flex nowrap'>
                     <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
                       <Link to="/cadastro">
-                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
                       </Link>
                     </OverlayTrigger>
-
                     {showInactive ? (
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id="ocultar-button-tooltip">Ocultar Inativos</Tooltip>}>
-                        <FontAwesomeIcon icon={faEyeSlash} onClick={() => setShowInactive(false)} className='eye-icon btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                        <FontAwesomeIcon icon={faEyeSlash} onClick={() => setShowInactive(false)} className='eye-icon btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
                       </OverlayTrigger>
                     ) : (
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id="exibir-button-tooltip">Exibir Inativos</Tooltip>}>
-                        <FontAwesomeIcon icon={faEye} onClick={() => setShowInactive(true)} className='eye-icon btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                        <FontAwesomeIcon icon={faEye} onClick={() => setShowInactive(true)} className='eye-icon btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
                       </OverlayTrigger>
                     )}
+                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
+                      <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
+                    </OverlayTrigger>
+                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
+                      <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
+                    </OverlayTrigger>
                   </div>
+
                   <SearchField
                     placeholder="Procurar"
                     size="small"
@@ -457,13 +498,15 @@ const Cadastrados = () => {
                     onChange={(event) => onChange(event)}
                     onClear={onClear}
                     value={searchQuery}
-                    className='m-0 p-0 d-flex rounded border-0 text-center fw-bolder'
+                    className='m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap d-flex'
                     style={{
                       textAlign: "center",
                       borderRadius: "8px",
-                      lineHeight: "29px"
+                      lineHeight: "29px",
+                      width: '150px'
                     }}
                   />
+
                 </div>
               }
               subHeaderAlign="left"

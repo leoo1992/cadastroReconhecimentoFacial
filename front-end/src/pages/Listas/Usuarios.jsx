@@ -3,7 +3,7 @@ import "./listas.css";
 import api from "./axiosConfig";
 import DataTable from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faPlus} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPlus, faFilePdf, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -13,6 +13,10 @@ import { SearchField } from '@aws-amplify/ui-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Modal, Button } from 'react-bootstrap';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+
 
 const Usuarios = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -28,6 +32,7 @@ const Usuarios = () => {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
 
+
   const handleConfirmDelete = async () => {
     try {
       await api.delete(`/deletaruser/${idToDelete}`);
@@ -41,6 +46,24 @@ const Usuarios = () => {
       toast.error("Erro ao excluir o usuário");
     }
   };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [{ id: 'ID', usuario: 'Usuário' }],
+      body: data.map((row) => [row.id, row.usuario]),
+    });
+    doc.save('usuarios.pdf');
+  };
+
+  const exportToExcel = () => {
+    const dataWithoutPassword = data.map(({ senha, ...rest }) => rest);
+    const ws = XLSX.utils.json_to_sheet(dataWithoutPassword);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Usuarios');
+    XLSX.writeFile(wb, 'usuarios.xlsx');
+  };
+
 
   const handleCancelDelete = () => {
     setShowModalDelete(false);
@@ -170,6 +193,13 @@ const Usuarios = () => {
     <Tooltip id="add-button-tooltip">Novo</Tooltip>
   );
 
+  const printButtonTooltipPDF = (
+    <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>
+  );
+  const printButtonTooltipExcel = (
+    <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
+  );
+
   const onClear = () => {
     setSearchQuery('');
     search('');
@@ -271,7 +301,22 @@ const Usuarios = () => {
                         <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-2 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
                       </Link>
                     </OverlayTrigger>
-
+                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
+                      <Button
+                        className='btn btn-sm btn-light text-bg-primary p-1 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle'
+                        onClick={exportToPDF}
+                      >
+                        <FontAwesomeIcon icon={faFilePdf} className='p-1 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                      </Button>
+                    </OverlayTrigger>
+                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
+                      <Button
+                        className='btn btn-sm btn-light text-bg-primary p-1 m-1 align-items-center text-center align-self-center justify-content-center align-content-center align-middle'
+                        onClick={exportToExcel}
+                      >
+                        <FontAwesomeIcon icon={faFileExcel} className='p-1 m-0 align-items-center text-center align-self-center justify-content-center align-content-center align-middle' />
+                      </Button>
+                    </OverlayTrigger>
                   </div>
                   <SearchField
                     placeholder="Procurar"
@@ -296,9 +341,9 @@ const Usuarios = () => {
             />
           </div>
         </>
-      )}
+      )
+      }
     </>
   );
 };
-
 export default Usuarios;
