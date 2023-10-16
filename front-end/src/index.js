@@ -5,15 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
-// const exibirAviso = (mensagem) => {
-//   console.log(`Aviso: Alguma funcionalidade esta incapaz no momento!`);
-// };
-// console.error = () => {
-//   exibirAviso();
-// };
-// console.warn = () => {
-//   exibirAviso();
-// };
+const exibirAviso = (mensagem) => {
+  console.log(``);
+};
+console.error = () => {
+  exibirAviso();
+};
+console.warn = () => {
+  exibirAviso();
+};
 const root = document.getElementById('root');
 
 const timeToken= new Date();

@@ -18,7 +18,7 @@ app.listen(port, () => {
 });
 
 app.get('/obter-nomes', (req, res) => {
-    res.json(labels.trim());
+    res.json(labels);
 });
 
 app.use(bodyParser.raw({
