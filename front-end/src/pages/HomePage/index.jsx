@@ -22,7 +22,7 @@ const HomePage = () => {
     }
   };
 
-  const createButtonWithTooltip = (text, link, icon, tooltipText) => (
+  const createButtonWithTooltip = (text, link, icon, tooltipText,target) => (
     <OverlayTrigger
       key={text}
       placement="top"
@@ -31,6 +31,7 @@ const HomePage = () => {
       <Button
         to={link}
         as={Link}
+        target={target}
         className='btn btn-sm btn-info border-black p-2 mt-3 fw-semibold'
       >
         <FontAwesomeIcon icon={icon} className="me-2 text-start" />
@@ -102,7 +103,7 @@ const HomePage = () => {
             <h4 className='text-info fw-bold pt-5 text-center'>Home Page</h4>
             {createButtonWithTooltip("Listas", "/listas", faList, "Listas")}
             {createButtonWithTooltip("Cadastro", "/cadastro", faUserPlus, "Cadastro")}
-            {createButtonWithTooltip("App", 'http://127.0.0.1:5500/reconhecimento/', faMobileAlt, "Reconhecimento")}
+            {createButtonWithTooltip("App", 'http://127.0.0.1:5500/reconhecimento/', faMobileAlt, "Reconhecimento", "_blank")}
           </div>
         </div>
       </div>

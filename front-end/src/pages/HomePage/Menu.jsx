@@ -25,8 +25,9 @@ function Menu() {
   };
 
   const redirectToExternalURL = () => {
-    window.location.href = "http://127.0.0.1:5500/reconhecimento/";
+    window.open("http://127.0.0.1:5500/reconhecimento/", "_blank");
   };
+
 
   const transitionStyles = {
     entering: { opacity: 0, display: 'block' },
@@ -98,7 +99,10 @@ function Menu() {
                   </li>
                   <li className>
                     <OverlayTrigger placement="left" overlay={<Tooltip id="acessar-tooltip">Acessar</Tooltip>}>
-                      <Button  onClick={() => redirectToExternalURL()} className="btn-menu-tamanho btn btn-info btn-sm mt-3 fs-6 fw-bold text-start">
+                      <Button
+                        onClick={() => redirectToExternalURL()}
+                        target="_blank"
+                        className="btn-menu-tamanho btn btn-info btn-sm mt-3 fs-6 fw-bold text-start">
                         <FontAwesomeIcon icon={faMobileAlt} className="me-2 text-start" /> App
                       </Button>
                     </OverlayTrigger>
