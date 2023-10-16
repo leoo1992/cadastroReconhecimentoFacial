@@ -40,7 +40,6 @@ const Listas = () => {
         {createButtonWithTooltip("Cadastrados", "/cadastrados", "Faces Cadastradas")}
         {createButtonWithTooltip("Logs", "/logs", "Logs Entrada / Saida")}
         {createButtonWithTooltip("Usuários", "/usuarios", "Usuários Administradores")}
-        {createButtonWithTooltip("Relatórios", "/relatorios", "Relatórios")}
       </div>
     </>
   );
