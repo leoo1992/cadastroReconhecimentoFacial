@@ -465,7 +465,6 @@ const Cadastrados = () => {
               subHeader
               subHeaderComponent={
                 <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
-
                   <div className='m-0 p-0 d-flex nowrap'>
                     <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
                       <Link to="/cadastro">
@@ -506,7 +505,6 @@ const Cadastrados = () => {
                       width: '150px'
                     }}
                   />
-
                 </div>
               }
               subHeaderAlign="left"
