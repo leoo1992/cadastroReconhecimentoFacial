@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import "./home.css";
 import Menu from './Menu';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faSignOutAlt, faList, faUserPlus, faMobileAlt, faChartBar } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faSignOutAlt, faList, faUserPlus, faMobileAlt } from "@fortawesome/free-solid-svg-icons";
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -101,7 +101,6 @@ const HomePage = () => {
           <div className='row flex-column'>
             <h4 className='text-info fw-bold pt-5 text-center'>Home Page</h4>
             {createButtonWithTooltip("Listas", "/listas", faList, "Listas")}
-            {createButtonWithTooltip("Relatórios", "/relatorios", faChartBar, "Relatórios")}
             {createButtonWithTooltip("Cadastro", "/cadastro", faUserPlus, "Cadastro")}
             {createButtonWithTooltip("App", 'http://127.0.0.1:5500/reconhecimento/', faMobileAlt, "Reconhecimento")}
           </div>
