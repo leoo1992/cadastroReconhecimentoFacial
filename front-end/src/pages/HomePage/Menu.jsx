@@ -9,7 +9,7 @@ import { Transition } from 'react-transition-group';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList, faUserPlus, faMobileAlt, faChartBar } from "@fortawesome/free-solid-svg-icons";
+import { faList, faUserPlus, faMobileAlt } from "@fortawesome/free-solid-svg-icons";
 
 function Menu() {
   const [open, setOpen] = useState(false);
@@ -86,13 +86,6 @@ function Menu() {
                     <OverlayTrigger placement="left" overlay={<Tooltip id="listas-tooltip">Listas</Tooltip>}>
                       <Link to="/listas" className="btn-menu-tamanho btn btn-info btn-sm mt-3 fs-6 text-start fw-bold">
                         <FontAwesomeIcon icon={faList} className="me-2" /> Listas
-                      </Link>
-                    </OverlayTrigger>
-                  </li>
-                  <li className>
-                    <OverlayTrigger placement="left" overlay={<Tooltip id="acessar-tooltip">Relatórios</Tooltip>}>
-                      <Link  to="/relatorios" className="btn-menu-tamanho btn btn-info btn-sm mt-3 fs-6 fw-bold text-start">
-                        <FontAwesomeIcon icon={faChartBar} className="me-2 text-start" /> Relatórios
                       </Link>
                     </OverlayTrigger>
                   </li>
