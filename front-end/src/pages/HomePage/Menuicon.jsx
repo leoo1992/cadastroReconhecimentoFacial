@@ -22,6 +22,7 @@ function MenuIcon(props) {
     }
     localStorage.clear();
     sessionStorage.clear();
+    localStorage.setItem('actionsExecuted', 'false');
     window.location.href = '/';
   };
 
