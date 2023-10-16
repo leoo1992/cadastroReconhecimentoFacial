@@ -5,6 +5,13 @@ import DataTable from 'react-data-table-component';
 import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import 'react-toastify/dist/ReactToastify.css';
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePdf, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 const Logs = () => {
   const [theme, setTheme] = useState("dark");
@@ -13,6 +20,48 @@ const Logs = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [
+        { id: 'ID', nome: 'Nome', tipo: 'Tipo', cpf: 'CPF', data: 'Data', hora: 'Hora', ativo: 'Ativo' },
+      ],
+      body: formattedData.map((row) => [
+        row.id,
+        row.pessoaNome,
+        row.pessoaTipo,
+        row.pessoaCpf,
+        row.data,
+        row.hora,
+        row.pessoaAtivo,
+      ]),
+    });
+    doc.save('Logs.pdf');
+  };
+
+  const exportToExcel = () => {
+    const tableData = formattedData.map((row) => ({
+      ID: row.id,
+      Nome: row.pessoaNome,
+      Tipo: row.pessoaTipo,
+      CPF: row.pessoaCpf,
+      Data: row.data,
+      Hora: row.hora,
+      Ativo: row.pessoaAtivo,
+    }));
+    const ws = XLSX.utils.json_to_sheet(tableData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Logs');
+    XLSX.writeFile(wb, 'Logs.xlsx');
+  };
+
+  const printButtonTooltipPDF = (
+    <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>
+  );
+  const printButtonTooltipExcel = (
+    <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
+  );
 
   const fetchUsers = useCallback(async (page) => {
     try {
@@ -161,7 +210,7 @@ const Logs = () => {
           </div>
           <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
             <DataTable
-              className='pt-4'
+              className=''
               columns={columns}
               striped
               data={formattedData}
@@ -183,6 +232,20 @@ const Logs = () => {
               highlightOnHover
               pointerOnHover
               theme={theme}
+              dense
+              subHeader
+              subHeaderComponent={
+                <div className='d-flex flex-row w-100  justify-content-start nowrap'>
+                  <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
+                    <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
+                  </OverlayTrigger>
+                  <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
+                    <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
+                  </OverlayTrigger>
+                </div>
+              }
+              subHeaderAlign="left"
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
         </>
