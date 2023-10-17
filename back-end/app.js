@@ -204,16 +204,10 @@ app.get("/listar", async (req, res) => {
     const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
     const showInactive = req.query.showInactive === 'true' || false;
     const searchQuery = req.query.search || '';
+    let whereClause = showInactive ? {} : { ativo: 1 };
     const totalRegistros = await Pessoa.count({ where: whereClause });
     const paginacao = (pagina - 1) * limitePorPagina;
     const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
-    const registros = await Pessoa.findAll({
-      where: whereClause,
-      limit: limitePorPagina,
-      offset: paginacao,
-    });
-
-    let whereClause = showInactive ? {} : { ativo: 1 };
 
     if (searchQuery) {
       whereClause = {
@@ -226,10 +220,27 @@ app.get("/listar", async (req, res) => {
       };
     }
 
+    const registros = await Pessoa.findAll({
+      where: whereClause,
+      limit: limitePorPagina,
+      offset: paginacao,
+    });
+
     res.status(200).json({
       registros,
       numerodepaginas: numeroDePaginas,
       totalregistros: totalRegistros,
+    });
+  } catch (err) {
+    console.error("Erro ao listar os dados: ", err);
+    res.status(500).json({ error: "Erro ao listar os dados." });
+  }
+});
+app.get("/imprimir", async (req, res) => {
+  try {
+    const registros = await Pessoa.findAll();
+    res.status(200).json({
+      registros,
     });
   } catch (err) {
     console.error("Erro ao listar os dados: ", err);
@@ -348,7 +359,6 @@ app.get("/imprimirlogs", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
-
 app.get("/pesquisarlogs", async (req, res) => {
   try {
     const { termo } = req.query;
@@ -377,7 +387,6 @@ app.get("/pesquisarlogs", async (req, res) => {
         },
       ],
     });
-
 
     res.status(200).json({ registros });
   } catch (err) {

@@ -50,18 +50,34 @@ const Cadastrados = () => {
     }
   };
 
-  const exportToPDF = () => {
+
+  const fetchAllData = async () => {
+    try {
+      const response = await api.get('/imprimir', {
+      });
+
+      return response.data.registros;
+    } catch (error) {
+      console.error('Error fetching all data: ', error);
+      return [];
+    }
+  };
+
+  const exportToPDF = async () => {
+    const allData = await fetchAllData();
     const doc = new jsPDF();
-    const tableData = data.map((row) => [row.id, row.nome, row.cpf, tipoEnum[row.tipo], ativoEnum[row.ativo]]);
+    const tableData = allData.map((row) => [row.id, row.nome, row.cpf, tipoEnum[row.tipo], ativoEnum[row.ativo]]);
     doc.autoTable({
       head: [{ id: 'ID', nome: 'Nome', cpf: 'CPF', tipo: 'Tipo', ativo: 'Ativo' }],
       body: tableData,
     });
     doc.save('Cadastrados.pdf');
+    toast.info("Download Iniciado");
   };
 
-  const exportToExcel = () => {
-    const tableData = data.map((row) => ({
+  const exportToExcel = async () => {
+    const allData = await fetchAllData();
+    const tableData = allData.map((row) => ({
       ID: row.id,
       Nome: row.nome,
       CPF: row.cpf,
@@ -72,6 +88,7 @@ const Cadastrados = () => {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Cadastrados');
     XLSX.writeFile(wb, 'Cadastrados.xlsx');
+    toast.info("Download Iniciado");
   };
 
   const handleConfirmDesativar = async () => {

@@ -9,6 +9,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from 'react-toastify';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -42,6 +43,7 @@ const Logs = () => {
         ]),
       });
       doc.save('Logs.pdf');
+      toast.info("Download Iniciado");
     } catch (error) {
       console.error('Error exporting to PDF: ', error);
     }
@@ -65,6 +67,7 @@ const Logs = () => {
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Logs');
       XLSX.writeFile(wb, 'Logs.xlsx');
+      toast.info("Download Iniciado");
     } catch (error) {
       console.error('Error exporting to Excel: ', error);
     }
@@ -254,6 +257,18 @@ const Logs = () => {
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme='dark'
+      />
       {loading ? (
         <div className='container-fluid text-center m-0 p-0 d-flex flex-column justify-content-center align-items-center align-self-center vh-100 vw-100 bg-fundo'>
           <Triangle
