@@ -5,15 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
-const exibirAviso = (mensagem) => {
-  console.log(``);
-};
-console.error = () => {
-  exibirAviso();
-};
-console.warn = () => {
-  exibirAviso();
-};
+
+console.error = () => {};
+console.warn = () => {};
+console.info = () => {};
+console.log = () => {};
+console.trace = () => {};
+console.debug = () => {};
+
 const root = document.getElementById('root');
 
 const timeToken= new Date();
