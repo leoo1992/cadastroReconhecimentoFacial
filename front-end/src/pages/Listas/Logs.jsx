@@ -65,7 +65,12 @@ const Logs = () => {
 
   const fetchUsers = useCallback(async (page) => {
     try {
+      setData([]);
+      let whereClause = {};
       const response = await api.get(`/listarlogs?pagina=${page}&limitePorPagina=${paginationPerPage}`, {
+        params: {
+          where: whereClause,
+        },
       });
 
       const { registros, totalregistros } = response.data;
@@ -77,10 +82,6 @@ const Logs = () => {
     }
   }, [paginationPerPage]);
 
-  useEffect(() => {
-    fetchUsers(page, paginationPerPage);
-    setLoading(false);
-  }, [page, paginationPerPage, fetchUsers]);
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -189,6 +190,14 @@ const Logs = () => {
       width: '75px',
     },
   ];
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchUsers(page, paginationPerPage);
+      setLoading(false);
+    }, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [page, paginationPerPage, fetchUsers]);
 
   return (
     <>

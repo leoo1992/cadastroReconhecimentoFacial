@@ -204,6 +204,14 @@ app.get("/listar", async (req, res) => {
     const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
     const showInactive = req.query.showInactive === 'true' || false;
     const searchQuery = req.query.search || '';
+    const totalRegistros = await Pessoa.count({ where: whereClause });
+    const paginacao = (pagina - 1) * limitePorPagina;
+    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+    const registros = await Pessoa.findAll({
+      where: whereClause,
+      limit: limitePorPagina,
+      offset: paginacao,
+    });
 
     let whereClause = showInactive ? {} : { ativo: 1 };
 
@@ -217,17 +225,6 @@ app.get("/listar", async (req, res) => {
         ],
       };
     }
-
-    const totalRegistros = await Pessoa.count({ where: whereClause });
-
-    const paginacao = (pagina - 1) * limitePorPagina;
-    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
-
-    const registros = await Pessoa.findAll({
-      where: whereClause,
-      limit: limitePorPagina,
-      offset: paginacao,
-    });
 
     res.status(200).json({
       registros,
@@ -310,44 +307,18 @@ app.get("/listarlogs", async (req, res) => {
   try {
     const pagina = parseInt(req.query.pagina) || 1;
     const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-    const searchQuery = req.query.search || '';
-
-    let whereClause = {};
-
-    console.log("Pesquisa 1:" ,  JSON.stringify(searchQuery) ,  JSON.stringify(whereClause));
-
-    if (searchQuery) {
-      whereClause = {
-        ...whereClause,
-        [Op.or]: [
-          { data: { [Op.like]: `%${searchQuery}%` } },
-          { nome: { [Op.like]: `%${termo}%` } },
-          { cpf: { [Op.like]: `%${termo}%` } },
-          { id: { [Op.eq]: searchQuery } },
-        ],
-      };
-    }
-
-    const totalRegistros = await Log.count({ where: whereClause });
+    const totalRegistros = await Log.count();
     const paginacao = (pagina - 1) * limitePorPagina;
     const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
-
     const registros = await Log.findAll({
-      where: whereClause,
       limit: limitePorPagina,
       offset: paginacao,
       include: [
         {
           model: Pessoa,
-          through: {
-            attributes: [],
-          },
         },
       ],
     });
-
-    console.log(JSON.stringify(registros));
-    console.log("Pesquisa 4:"  ,  JSON.stringify(searchQuery) ,  JSON.stringify(whereClause));
 
     res.status(200).json({
       registros,
