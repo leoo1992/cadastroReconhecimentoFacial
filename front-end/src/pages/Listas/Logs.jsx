@@ -6,6 +6,7 @@ import { Triangle } from 'react-loader-spinner'
 import MenuIcon from '../HomePage/Menuicon';
 import 'react-toastify/dist/ReactToastify.css';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { SearchField } from '@aws-amplify/ui-react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilePdf, faFileExcel } from "@fortawesome/free-solid-svg-icons";
@@ -21,6 +22,7 @@ const Logs = () => {
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const exportToPDF = async () => {
     try {
@@ -119,11 +121,11 @@ const Logs = () => {
     <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
   );
 
-  const fetchUsers = useCallback(async (page) => {
+  const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
       setData([]);
       let whereClause = {};
-      const response = await api.get(`/listarlogs?pagina=${page}&limitePorPagina=${paginationPerPage}`, {
+      const response = await api.get(`/listarlogs?pagina=${page}&limitePorPagina=${paginationPerPage}&search=${searchQuery}`, {
         params: {
           where: whereClause,
         },
@@ -138,6 +140,14 @@ const Logs = () => {
     }
   }, [paginationPerPage]);
 
+  const search = async (query) => {
+    try {
+      const response = await api.get(`/pesquisarlogs?termo=${query}`);
+      setData(response.data.resultados);
+    } catch (error) {
+      console.error("Erro ao realizar pesquisa: ", error);
+    }
+  };
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -249,11 +259,22 @@ const Logs = () => {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchUsers(page, paginationPerPage);
+      search(searchQuery);
+      fetchUsers(page, paginationPerPage, searchQuery);
       setLoading(false);
     }, 1000);
     return () => clearTimeout(timeoutId);
-  }, [page, paginationPerPage, fetchUsers]);
+  }, [page, paginationPerPage, fetchUsers, searchQuery]);
+
+  const onClear = () => {
+    setSearchQuery('');
+    search('');
+  };
+
+  const onChange = (event) => {
+    const newValue = event.target.value;
+    setSearchQuery(newValue);
+  };
 
   return (
     <>
@@ -312,13 +333,32 @@ const Logs = () => {
               dense
               subHeader
               subHeaderComponent={
-                <div className='d-flex flex-row w-100  justify-content-start nowrap'>
-                  <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
-                    <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                  </OverlayTrigger>
-                  <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
-                    <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
-                  </OverlayTrigger>
+                <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
+                  <div className='m-0 p-0 d-flex nowrap'>
+                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
+                      <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
+                    </OverlayTrigger>
+                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
+                      <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
+                    </OverlayTrigger>
+                  </div>
+                  <SearchField
+                    placeholder="Procurar"
+                    size="small"
+                    hasSearchButton={false}
+                    hasSearchIcon={false}
+                    labelHidden={false}
+                    onChange={(event) => onChange(event)}
+                    onClear={onClear}
+                    value={searchQuery}
+                    className='m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap d-flex'
+                    style={{
+                      textAlign: "center",
+                      borderRadius: "8px",
+                      lineHeight: "29px",
+                      width: '150px'
+                    }}
+                  />
                 </div>
               }
               subHeaderAlign="left"

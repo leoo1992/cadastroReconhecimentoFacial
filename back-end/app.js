@@ -333,10 +333,23 @@ app.get("/listarlogs", async (req, res) => {
   try {
     const pagina = parseInt(req.query.pagina) || 1;
     const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-    const totalRegistros = await Log.count();
+    const searchQuery = req.query.search || '';
+    let whereClause ={};
+    const totalRegistros = await Log.count({ where: whereClause });
     const paginacao = (pagina - 1) * limitePorPagina;
     const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+
+    if (searchQuery) {
+      whereClause = {
+        ...whereClause,
+        [Op.or]: [
+          { 'id': { [Op.like]: `%${searchQuery}%` } },
+        ],
+      };
+    }
+
     const registros = await Log.findAll({
+      where: whereClause,
       limit: limitePorPagina,
       offset: paginacao,
       include: [
@@ -388,8 +401,6 @@ app.get("/pesquisarlogs", async (req, res) => {
       where: {
         [Op.or]: [
           { '$Pessoas.nome$': { [Op.like]: `%${termo}%` } },
-          { '$Pessoas.cpf$': { [Op.like]: `%${termo}%` } },
-          { '$Pessoas.id$': { [Op.eq]: termo } },
         ],
       },
       include: [
