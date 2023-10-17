@@ -47,21 +47,40 @@ const Usuarios = () => {
     }
   };
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.autoTable({
-      head: [{ id: 'ID', usuario: 'Usuário' }],
-      body: data.map((row) => [row.id, row.usuario]),
-    });
-    doc.save('usuarios.pdf');
+  const fetchAllData = async () => {
+    try {
+      const response = await api.get('/imprimiruser', {
+      });
+      return response.data.registros;
+    } catch (error) {
+      console.error('Error fetching all data: ', error);
+      return [];
+    }
   };
 
-  const exportToExcel = () => {
-    const dataWithoutPassword = data.map(({ senha, ...rest }) => rest);
-    const ws = XLSX.utils.json_to_sheet(dataWithoutPassword);
+  const exportToPDF = async () => {
+    const allData = await fetchAllData();
+    const doc = new jsPDF();
+    const tableData = allData.map((row) => [row.id, row.usuario]);
+    doc.autoTable({
+      head: [{ id: 'ID', usuario: 'Usuario' }],
+      body: tableData,
+    });
+    doc.save('usuarios.pdf');
+    toast.info("Download Iniciado");
+  };
+
+  const exportToExcel = async () => {
+    const allData = await fetchAllData();
+    const tableData = allData.map((row) => ({
+      ID: row.id,
+      Usuario: row.usuario,
+    }));
+    const ws = XLSX.utils.json_to_sheet(tableData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Usuarios');
-    XLSX.writeFile(wb, 'usuarios.xlsx');
+    XLSX.writeFile(wb, 'Usuarios.xlsx');
+    toast.info("Download Iniciado");
   };
 
 
