@@ -4,6 +4,13 @@ const gestaoBtn = document.getElementById('irGestao');
 const canvas = document.getElementById('canvas');
 const labels = [];
 
+console.error = () => {};
+console.warn = () => {};
+console.info = () => {};
+console.log = () => {};
+console.trace = () => {};
+console.debug = () => {};
+
 gestaoBtn.addEventListener('click', async () => {
     window.location.href = "http://localhost:3001/";
 });
@@ -27,6 +34,28 @@ window.onload = function () {
     const botaoMostrarOcultarCadastro = document.getElementById('botaoMostrarOcultarCadastro');
     botaoMostrarOcultarCadastro.addEventListener('click', ocultaCadastro);
 }
+
+async function registrarLogSeNecessario(nome) {
+    try {
+        const response = await fetch('http://localhost:3002/salvar-ou-atualizar-log', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nome }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data.message);
+        } else {
+            console.error('Erro ao registrar o log:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+    }
+}
+
 
 async function carregarNomes() {
     try {
@@ -121,6 +150,14 @@ Promise.all([
     faceapi.nets.ssdMobilenetv1.loadFromUri('/reconhecimento/assets/lib/face-api/models'),
 ]).then(startVideo);
 
+const recognizedPeople = new Set();
+let lastRecognitionTime = 0;
+
+function resetRecognizedPeople() {
+    recognizedPeople.clear();
+    lastRecognitionTime = 0;
+}
+
 cam.addEventListener('play', async () => {
     const canvasSize = {
         width: cam.videoWidth,
@@ -136,11 +173,15 @@ cam.addEventListener('play', async () => {
     videoLayer.appendChild(cam);
     videoLayer.appendChild(canvas);
     setInterval(async () => {
+        const currentTime = Date.now();
+        const elapsedTimeSinceLastRecognition = currentTime - lastRecognitionTime;
+
+        if (elapsedTimeSinceLastRecognition >= 60000) {
+            resetRecognizedPeople();
+        }
+
         const detections = await faceapi
-            .detectAllFaces(
-                cam,
-                new faceapi.TinyFaceDetectorOptions()
-            )
+            .detectAllFaces(cam, new faceapi.TinyFaceDetectorOptions())
             .withFaceLandmarks()
             .withFaceDescriptors()
         const resizedDetections = faceapi.resizeResults(detections, canvasSize)
@@ -153,9 +194,16 @@ cam.addEventListener('play', async () => {
         results.forEach((result, index) => {
             const box = resizedDetections[index].detection.box
             const { label } = result
-            new faceapi.draw.DrawTextField([
-                `${label}`
-            ], box.topLeft).draw(canvas)
+
+            if (!recognizedPeople.has(label)) {
+                if (elapsedTimeSinceLastRecognition >= 6001) {
+                    registrarLogSeNecessario(label);
+                    recognizedPeople.add(label);
+                    lastRecognitionTime = currentTime;
+                }
+            }
+
+            new faceapi.draw.DrawTextField([`${label}`], box.topLeft).draw(canvas)
         })
     }, 100)
 })
