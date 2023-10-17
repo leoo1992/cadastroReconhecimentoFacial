@@ -21,39 +21,92 @@ const Logs = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.autoTable({
-      head: [
-        { id: 'ID', nome: 'Nome', tipo: 'Tipo', cpf: 'CPF', data: 'Data', hora: 'Hora', ativo: 'Ativo' },
-      ],
-      body: formattedData.map((row) => [
-        row.id,
-        row.pessoaNome,
-        row.pessoaTipo,
-        row.pessoaCpf,
-        row.data,
-        row.hora,
-        row.pessoaAtivo,
-      ]),
-    });
-    doc.save('Logs.pdf');
+  const exportToPDF = async () => {
+    try {
+      const allData = await fetchAllData();
+      const formattedData = formatData(allData);
+
+      const doc = new jsPDF();
+      doc.autoTable({
+        head: [
+          { id: 'ID', nome: 'Nome', tipo: 'Tipo', cpf: 'CPF', data: 'Data', hora: 'Hora', ativo: 'Ativo' },
+        ],
+        body: formattedData.map((row) => [
+          row.id,
+          row.pessoaNome,
+          row.pessoaTipo,
+          row.pessoaCpf,
+          row.data,
+          row.hora,
+          row.pessoaAtivo,
+        ]),
+      });
+      doc.save('Logs.pdf');
+    } catch (error) {
+      console.error('Error exporting to PDF: ', error);
+    }
   };
 
-  const exportToExcel = () => {
-    const tableData = formattedData.map((row) => ({
-      ID: row.id,
-      Nome: row.pessoaNome,
-      Tipo: row.pessoaTipo,
-      CPF: row.pessoaCpf,
-      Data: row.data,
-      Hora: row.hora,
-      Ativo: row.pessoaAtivo,
-    }));
-    const ws = XLSX.utils.json_to_sheet(tableData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Logs');
-    XLSX.writeFile(wb, 'Logs.xlsx');
+  const exportToExcel = async () => {
+    try {
+      const allData = await fetchAllData();
+      const formattedData = formatData(allData);
+
+      const tableData = formattedData.map((row) => ({
+        ID: row.id,
+        Nome: row.pessoaNome,
+        Tipo: row.pessoaTipo,
+        CPF: row.pessoaCpf,
+        Data: row.data,
+        Hora: row.hora,
+        Ativo: row.pessoaAtivo,
+      }));
+      const ws = XLSX.utils.json_to_sheet(tableData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Logs');
+      XLSX.writeFile(wb, 'Logs.xlsx');
+    } catch (error) {
+      console.error('Error exporting to Excel: ', error);
+    }
+  };
+
+  const fetchAllData = async () => {
+    try {
+      const response = await api.get('/imprimirlogs', {
+        params: {
+          where: {},
+        },
+      });
+
+      return response.data.registros;
+    } catch (error) {
+      console.error('Error fetching all data: ', error);
+      return [];
+    }
+  };
+
+  const formatData = (data) => {
+    return data.flatMap((log) => {
+      if (!log.Pessoas || !Array.isArray(log.Pessoas)) {
+        return [];
+      }
+
+      return log.Pessoas.map((pessoa) => {
+        const dataEntrada = new Date(log.data);
+        dataEntrada.setHours(dataEntrada.getHours() + 3);
+        const dataFormatada = `${dataEntrada.getDate().toString().padStart(2, '0')}-${(dataEntrada.getMonth() + 1).toString().padStart(2, '0')}-${dataEntrada.getFullYear()}`;
+        const horaFormatada = `${dataEntrada.getHours().toString().padStart(2, '0')}:${dataEntrada.getMinutes().toString().padStart(2, '0')}`;
+        return {
+          id: pessoa.id,
+          pessoaNome: pessoa.nome,
+          pessoaTipo: tipoEnum[pessoa.tipo],
+          pessoaCpf: pessoa.cpf,
+          data: dataFormatada,
+          hora: horaFormatada,
+          pessoaAtivo: ativoEnum[pessoa.ativo],
+        };
+      });
+    });
   };
 
   const printButtonTooltipPDF = (

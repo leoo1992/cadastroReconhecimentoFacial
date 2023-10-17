@@ -330,7 +330,24 @@ app.get("/listarlogs", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
+app.get("/imprimirlogs", async (req, res) => {
+  try {
+    const registros = await Log.findAll({
+      include: [
+        {
+          model: Pessoa,
+        },
+      ],
+    });
 
+    res.status(200).json({
+      registros,
+    });
+  } catch (err) {
+    console.error("Erro ao listar os dados: ", err);
+    res.status(500).json({ error: "Erro ao listar os dados." });
+  }
+});
 
 app.get("/pesquisarlogs", async (req, res) => {
   try {
