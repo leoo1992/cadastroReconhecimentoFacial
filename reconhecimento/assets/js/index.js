@@ -291,7 +291,9 @@ cadastroBtn.addEventListener('click', async () => {
     if (responses.ok) {
         console.log('Cadastro realizado com sucesso.');
     } else{
-        alert('ERRO');
+        console.log('Erro ou CPF existente.');
+        alert('Erro ou CPF Existente')
+        return
     }
 
     canvasElement.toBlob(async blob => {
@@ -308,7 +310,7 @@ cadastroBtn.addEventListener('click', async () => {
             if (response.ok) {
                 alert('Foto salva com sucesso.');
                 setTimeout(() => {
-                    //location.reload();
+                    location.reload();
                 }, 3002);
             } else {
                 alert('Erro ao salvar a imagem.');

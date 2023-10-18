@@ -1,7 +1,5 @@
 require("dotenv").config();
 const express = require('express');
-const router = express.Router();
-const { Op } = require('sequelize');
 const sequelize = require("./config/sequelize");
 const cors = require('cors');
 const app = express();
@@ -12,7 +10,6 @@ const moment = require('moment-timezone');
 const port = 3002;
 const Pessoa = require("../back-end/models/Pessoa");
 const Log = require("../back-end/models/Log");
-const Associations = require("../back-end/models/associations");
 const filePath = path.join(__dirname, 'RostosConhecidos.txt');
 const labels = [];
 console.log(moment());
@@ -128,7 +125,7 @@ app.post('/salvar-ou-atualizar-log', async (req, res) => {
     }
 });
 
-router.post('/criar-pessoa', async (req, res) => {
+app.post('/criar-pessoa', async (req, res) => {
     try {
 
         const { nome, cpf, tipo } = req.body;
@@ -137,9 +134,12 @@ router.post('/criar-pessoa', async (req, res) => {
             return res.status(400).json({ message: 'Campos obrigatórios ausentes' });
         }
 
-        const newPerson = await Pessoa.create({ nome, cpf, tipo });
+        const existingPerson = await Pessoa.findOne({ where: { nome, cpf } });
+        if (existingPerson) {
+            return res.status(400).json({ message: 'Uma pessoa com o mesmo Nome ou CPF já existem' });
+        }
 
-        return res.status(201).json(newPerson);
+        return res.status(201).json({ message: 'Pessoa criada com sucesso' });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Erro ao criar pessoa' });
