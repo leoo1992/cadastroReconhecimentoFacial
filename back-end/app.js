@@ -21,7 +21,8 @@ console.log(moment());
 // CONEXÃO **********************************
 sequelize.authenticate()
 sequelize.sync().then(() => {
-  app.listen(port);
+    app.listen(port);
+    console.log('Servidor rodando na porta ' + port);
 });
 
 
@@ -61,6 +62,7 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Erro ao fazer login." });
   }
 });
+
 // rota cadastro usuarios
 app.post("/cadastrousuarios", async (req, res) => {
   const { usuario, senha } = req.body;
@@ -81,7 +83,7 @@ app.post("/cadastrousuarios", async (req, res) => {
     res.status(200).json({ message: "Cadastro realizado com sucesso." });
   } catch (err) {
     console.error("Erro ao inserir os dados: ", err);
-    res.status(500).json({ error: "Erro ao realizar o cadastro." });
+    res.status(500).json({ error: "Erro ao realizar o cadastro.", err });
   }
 });
 // rota para cadastro
@@ -107,7 +109,6 @@ app.post("/cadastro", async (req, res) => {
     res.status(500).json({ error: "Erro ao realizar o cadastro." });
   }
 });
-
 
 //PUTS ROUTERS **********************************
 // Rota para atualizar por id
@@ -150,7 +151,6 @@ app.put("/desativar/:id", async (req, res) => {
     res.status(500).json({ error: "Erro ao atualizar registro." });
   }
 });
-
 
 //GETS ROUTERS **********************************
 // rota para buscar uma pessoa pelo id
@@ -369,6 +369,7 @@ app.get("/listarlogs", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
+
 app.get("/imprimirlogs", async (req, res) => {
   try {
     const registros = await Log.findAll({
@@ -387,6 +388,7 @@ app.get("/imprimirlogs", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
+
 app.get("/pesquisarlogs", async (req, res) => {
   try {
     const { termo } = req.query;

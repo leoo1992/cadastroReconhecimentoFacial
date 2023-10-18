@@ -128,6 +128,24 @@ app.post('/salvar-ou-atualizar-log', async (req, res) => {
     }
 });
 
+router.post('/criar-pessoa', async (req, res) => {
+    try {
+
+        const { nome, cpf, tipo } = req.body;
+
+        if (!nome || !cpf || !tipo) {
+            return res.status(400).json({ message: 'Campos obrigatórios ausentes' });
+        }
+
+        const newPerson = await Pessoa.create({ nome, cpf, tipo });
+
+        return res.status(201).json(newPerson);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Erro ao criar pessoa' });
+    }
+});
+
 module.exports = app;
 
 

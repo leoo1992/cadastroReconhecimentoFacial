@@ -4,12 +4,12 @@ const gestaoBtn = document.getElementById('irGestao');
 const canvas = document.getElementById('canvas');
 const labels = [];
 
-console.error = () => {};
-console.warn = () => {};
-console.info = () => {};
-console.log = () => {};
-console.trace = () => {};
-console.debug = () => {};
+console.error = () => { };
+console.warn = () => { };
+console.info = () => { };
+console.log = () => { };
+console.trace = () => { };
+console.debug = () => { };
 
 gestaoBtn.addEventListener('click', async () => {
     window.location.href = "http://localhost:3001/";
@@ -274,13 +274,25 @@ cadastroBtn.addEventListener('click', async () => {
         return;
     }
 
-
     const canvasElement = document.createElement('canvas');
     canvasElement.width = cam.videoWidth;
     canvasElement.height = cam.videoHeight;
 
     const context = canvasElement.getContext('2d');
     context.drawImage(cam, 0, 0, canvasElement.width, canvasElement.height);
+
+    const responses = await fetch('http://localhost:3002/criar-pessoa', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nome, cpf, tipo }),
+    });
+    if (responses.ok) {
+        console.log('Cadastro realizado com sucesso.');
+    } else{
+        alert('ERRO');
+    }
 
     canvasElement.toBlob(async blob => {
         try {
@@ -296,7 +308,7 @@ cadastroBtn.addEventListener('click', async () => {
             if (response.ok) {
                 alert('Foto salva com sucesso.');
                 setTimeout(() => {
-                    location.reload();
+                    //location.reload();
                 }, 3002);
             } else {
                 alert('Erro ao salvar a imagem.');
@@ -307,4 +319,6 @@ cadastroBtn.addEventListener('click', async () => {
             alert('Erro ao se comunicar com o servidor.');
         }
     }, 'image/jpeg');
+
+
 });
