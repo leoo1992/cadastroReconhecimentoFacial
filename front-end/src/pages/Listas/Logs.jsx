@@ -16,6 +16,7 @@ import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import casual from 'casual-browserify';
 
 const Logs = () => {
   const [theme, setTheme] = useState("dark");
@@ -26,9 +27,6 @@ const Logs = () => {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [showChart, setShowChart] = useState(false);
-  const paginationOcultar = document.getElementsByClassName('rdt_Pagination').get(0);
-  paginationOcultar.classList.add()
-
 
   const toggleChartVisibility = () => {
     setShowChart(!showChart);
@@ -140,7 +138,7 @@ const Logs = () => {
     <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
   );
   const geraGraficoButtonTooltip = (
-    <Tooltip id="add-button-tooltip">Mostrar Grafico</Tooltip>
+    <Tooltip id="add-button-tooltip">Mostrar / Ocultar Grafico</Tooltip>
   );
 
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
@@ -285,8 +283,9 @@ const Logs = () => {
       fetchUsers(page, paginationPerPage, searchQuery);
       setLoading(false);
     }, 1000);
+
     return () => clearTimeout(timeoutId);
-  }, [page, paginationPerPage, fetchUsers, searchQuery]);
+  }, [page, paginationPerPage, fetchUsers, searchQuery, showChart]);
 
   const onClear = () => {
     setSearchQuery('');
@@ -302,41 +301,54 @@ const Logs = () => {
     labels: formattedData.map((data) => data.pessoaNome),
     datasets: [
       {
-        label: 'Hora de Entrada',
-        data: formattedData.map((data) => data.hora),
-        color: theme === "dark" ? 'cyan' : 'darkblue',
-        labels: {
-          color: theme === "dark" ? 'cyan' : 'darkblue',
-        },
+        label: 'Tipo',
+        data: formattedData.map(() => casual.integer(0, 6)),
+        backgroundColor: theme === 'dark' ? 'cyan' : 'darkblue',
       },
     ],
   };
 
   const options = {
-    responsive: true,
     plugins: {
       legend: {
+        display: true,
         position: 'bottom',
       },
       title: {
         display: true,
         text: 'Logs',
-        color: theme === "dark" ? 'cyan' : 'darkblue',
+        color: theme === 'dark' ? 'cyan' : 'darkblue',
       },
     },
     scales: {
       x: {
         grid: {
-          color: theme === "dark" ? 'gray' : 'black',
+          color: theme === 'dark' ? 'gray' : 'black',
+        },
+        title: {
+          display: true,
+          text: 'Pessoa Nome',
+          color: theme === 'dark' ? 'cyan' : 'darkblue',
         },
       },
       y: {
+        min: 0,
+        max: 5,
+        ticks: {
+          stepSize: 1,
+        },
         grid: {
-          color: theme === "dark" ? 'gray' : 'black',
+          color: theme === 'dark' ? 'gray' : 'black',
+        },
+        title: {
+          display: true,
+          text: 'Pessoa Tipo',
+          color: theme === 'dark' ? 'cyan' : 'darkblue',
         },
       },
     },
   };
+
 
   return (
     <>
@@ -370,76 +382,81 @@ const Logs = () => {
               <MenuIcon updateTheme={updateTheme} className='p-0 m-0 bg-info text-info' />
             </div>
             <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
-              {showChart ? (
-                <Bar data={chartData} options={options} />
+              <div className='d-flex justify-content-end'>
+                <OverlayTrigger placement='bottom' overlay={geraGraficoButtonTooltip}>
+                  <FontAwesomeIcon icon={faChartBar} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={toggleChartVisibility} />
+                </OverlayTrigger>
+              </div>
+              {!showChart ? (
+                <DataTable
+                  className=''
+                  columns={columns}
+                  striped
+                  data={formattedData}
+                  defaultSortField="id"
+                  pagination
+                  paginationServer
+                  progressPending={loading}
+                  paginationTotalRows={totalRows}
+                  paginationPerPage={paginationPerPage}
+                  paginationRowsPerPageOptions={[10, 20, 30]}
+                  paginationComponentOptions={{
+                    rowsPerPageText: 'Linhas por página:',
+                    rangeSeparatorText: 'de',
+                    noRowsPerPage: false,
+                  }}
+                  onChangePage={handlePageChange}
+                  onChangeRowsPerPage={handlePerRowsChange}
+                  text={customText}
+                  highlightOnHover
+                  pointerOnHover
+                  theme={theme}
+                  dense
+                  subHeader
+                  subHeaderComponent={
+                    <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
+                      <div className='m-0 p-0 d-flex nowrap'>
+                        <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
+                          <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
+                        </OverlayTrigger>
+                        <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
+                          <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
+                        </OverlayTrigger>
+                      </div>
+                      <SearchField
+                        placeholder="Procurar"
+                        size="small"
+                        hasSearchButton={false}
+                        hasSearchIcon={false}
+                        labelHidden={false}
+                        onChange={(event) => onChange(event)}
+                        onClear={onClear}
+                        value={searchQuery}
+                        className={`m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap ${showChart ? 'd-none' : 'd-flex'}`}
+                        style={{
+                          textAlign: "center",
+                          borderRadius: "8px",
+                          lineHeight: "29px",
+                          width: '150px'
+                        }}
+                      />
+                    </div>
+                  }
+                  subHeaderAlign="left"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: showChart ? 'none' : 'flex',
+                  }}
+                />
               ) : (
                 <div className="d-none p-0 m-0"></div>
               )}
-              <DataTable
-                className={`${showChart ? 'd-none' : 'd-flex'}`}
-                columns={columns}
-                striped
-                data={formattedData}
-                defaultSortField="id"
-                pagination
-                paginationServer
-                progressPending={loading}
-                paginationTotalRows={totalRows}
-                paginationPerPage={paginationPerPage}
-                paginationRowsPerPageOptions={[10, 20, 30]}
-                paginationComponentOptions={{
-                  rowsPerPageText: 'Linhas por página:',
-                  rangeSeparatorText: 'de',
-                  noRowsPerPage: false,
-                }}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handlePerRowsChange}
-                text={customText}
-                highlightOnHover
-                pointerOnHover
-                theme={theme}
-                dense
-                subHeader
-                subHeaderComponent={
-                  <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
-                    <div className='m-0 p-0 d-flex nowrap'>
-                      <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
-                        <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                      </OverlayTrigger>
-                      <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
-                        <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
-                      </OverlayTrigger>
-                      <OverlayTrigger placement='bottom' overlay={geraGraficoButtonTooltip}>
-                        <FontAwesomeIcon icon={faChartBar} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={toggleChartVisibility} />
-                      </OverlayTrigger>
-                    </div>
-                    <SearchField
-                      placeholder="Procurar"
-                      size="small"
-                      hasSearchButton={false}
-                      hasSearchIcon={false}
-                      labelHidden={false}
-                      onChange={(event) => onChange(event)}
-                      onClear={onClear}
-                      value={searchQuery}
-                      className={`m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap ${showChart ? 'd-none' : 'd-flex'}`}
-                      style={{
-                        textAlign: "center",
-                        borderRadius: "8px",
-                        lineHeight: "29px",
-                        width: '150px'
-                      }}
-                    />
-                  </div>
-                }
-                subHeaderAlign="left"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: showChart ? 'none' : 'flex',
-                }}
-
-              />
+              {showChart ? (
+                <Bar data={chartData} options={options} className='d-flex justify-content-center align-content-center'/>
+              ) : (
+                <div className="d-none p-0 m-0"></div>
+              )}
             </div>
           </>
         )
