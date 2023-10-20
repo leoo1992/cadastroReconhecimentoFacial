@@ -12,6 +12,9 @@ const Pessoa = require("../back-end/models/Pessoa");
 const Log = require("../back-end/models/Log");
 const filePath = path.join(__dirname, 'RostosConhecidos.txt');
 const labels = [];
+const { Op } = require("sequelize");
+const Associations = require("../back-end/models/associations");
+
 console.log(moment());
 
 app.use(express.json());
