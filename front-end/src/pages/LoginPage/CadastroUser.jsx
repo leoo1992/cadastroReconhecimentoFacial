@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '../Footer';
 
 const CadastroUsers = () => {
   const navigate = useNavigate();
@@ -178,6 +179,7 @@ const CadastroUsers = () => {
             </Row>
           </Form>
         </Container>
+        <Footer />
       </div>
     </>
   );
