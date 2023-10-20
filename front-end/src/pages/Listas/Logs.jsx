@@ -558,7 +558,14 @@ const Logs = () => {
                         <Button
                           className={`m-1 btn ${activeButton === 'pie' ? 'btn-primary' : 'btn-info'} btn-sm`}
                           onClick={() => handleButtonClick('pie')}
-                        >Rosca
+                        >Pizza
+                        </Button>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Button
+                          className={`m-1 btn ${activeButton === 'doughnut' ? 'btn-primary' : 'btn-info'} btn-sm`}
+                          onClick={() => handleButtonClick('doughnut')}
+                        >Doughnut
                         </Button>
                       </Nav.Item>
                       <Nav.Item>
