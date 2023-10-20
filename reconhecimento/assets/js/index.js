@@ -4,12 +4,12 @@ const gestaoBtn = document.getElementById('irGestao');
 const canvas = document.getElementById('canvas');
 const labels = [];
 
-console.error = () => { };
-console.warn = () => { };
-console.info = () => { };
-console.log = () => { };
-console.trace = () => { };
-console.debug = () => { };
+// console.error = () => { };
+// console.warn = () => { };
+// console.info = () => { };
+// console.log = () => { };
+// console.trace = () => { };
+// console.debug = () => { };
 
 gestaoBtn.addEventListener('click', async () => {
     window.location.href = "http://localhost:3001/";
@@ -48,6 +48,9 @@ async function registrarLogSeNecessario(nome) {
         if (response.ok) {
             const data = await response.json();
             console.log(data.message);
+            if (nome && nome !== 'unknown') {
+                mostrarToast(`${nome} Liberado`);
+            }
         } else {
             console.error('Erro ao registrar o log:', response.statusText);
         }
@@ -55,6 +58,21 @@ async function registrarLogSeNecessario(nome) {
         console.error('Erro na requisição:', error);
     }
 }
+
+function mostrarToast(texto) {
+    const toast = document.getElementById("toast");
+    toast.textContent = texto;
+
+    toast.classList.remove("d-none");
+    toast.classList.add("d-flex");
+
+    setTimeout(() => {
+        toast.classList.remove("d-flex");
+        toast.classList.add("d-none");
+    }, 4000);
+}
+
+
 
 
 async function carregarNomes() {
@@ -290,7 +308,7 @@ cadastroBtn.addEventListener('click', async () => {
     });
     if (responses.ok) {
         console.log('Cadastro realizado com sucesso.');
-    } else{
+    } else {
         console.log('Erro ou CPF existente.');
         alert('Erro ou CPF Existente')
         return
