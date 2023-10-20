@@ -43,7 +43,13 @@ const Logs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showChart, setShowChart] = useState(false);
   const [activeChart, setActiveChart] = useState('bar');
+  const [activeButton, setActiveButton] = useState('bar');
 
+  const handleButtonClick = (chartType) => {
+    setActiveButton(chartType);
+  };
+
+  // eslint-disable-next-line
   const toggleChart = (chartType) => {
     setActiveChart(chartType);
   };
@@ -336,6 +342,19 @@ const Logs = () => {
           'rgba(75, 192, 192, 0.75)',
           'rgba(153, 102, 255, 0.75)',
           'rgba(255, 159, 64, 0.75)',
+          'rgba(128, 0, 128, 0.75)',
+          'rgba(0, 128, 128, 0.75)',
+          'rgba(255, 69, 0, 0.75)',
+          'rgba(46, 139, 87, 0.75)',
+          'rgba(255, 215, 0, 0.75)',
+          'rgba(0, 255, 0, 0.75)',
+          'rgba(255, 0, 0, 0.75)',
+          'rgba(0, 0, 255, 0.75)',
+          'rgba(255, 165, 0, 0.75)',
+          'rgba(75, 0, 130, 0.75)',
+          'rgba(255, 192, 203, 0.75)',
+          'rgba(0, 255, 255, 0.75)',
+          'rgba(255, 255, 0, 0.75)',
         ],
         borderColor: [
           theme === 'dark' ? 'white' : 'black',
@@ -351,18 +370,25 @@ const Logs = () => {
       legend: {
         display: true,
         position: 'bottom',
-        color: theme === 'dark' ? 'cyan' : 'gray',
         labels: {
           color: theme === 'dark' ? 'cyan' : 'gray',
         },
-        background: 'cyan'
       },
       title: {
-        display: true,
-        text: 'Logs',
+        display: false,
         color: theme === 'dark' ? 'cyan' : 'gray',
       },
-      color: theme === 'dark' ? 'cyan' : 'gray',
+      tooltips: {
+        enabled: true,
+        mode: 'index',
+        callbacks: {
+          label: (tooltipItem, data) => {
+            const label = data.labels[tooltipItem.index];
+            const value = data.datasets[0].data[tooltipItem.index];
+            return `${label}: ${value}`;
+          },
+        },
+      },
     },
     scales: {
       x: {
@@ -374,7 +400,6 @@ const Logs = () => {
           text: 'Pessoa Nome',
           color: theme === 'dark' ? 'cyan' : 'gray',
         },
-        color: theme === 'dark' ? 'gray' : 'gray',
       },
       y: {
         min: 0,
@@ -390,12 +415,20 @@ const Logs = () => {
           text: 'Pessoa Tipo',
           color: theme === 'dark' ? 'cyan' : 'gray',
         },
-        color: theme === 'dark' ? 'gray' : 'gray',
       },
-      color: theme === 'dark' ? 'gray' : 'gray',
+    },
+    tooltips: {
+      enabled: true,
+      mode: 'index',
+      callbacks: {
+        label: (tooltipItem, data) => {
+          const label = data.labels[tooltipItem.index];
+          const value = data.datasets[0].data[tooltipItem.index];
+          return `${label}: ${value}`;
+        },
+      },
     },
   };
-
 
   return (
     <>
@@ -502,30 +535,73 @@ const Logs = () => {
               {showChart ? (
                 <>
                   <div className='d-flex flex-column justify-content-center align-content-center align-items-center p-0 m-0 h-75 w-100'>
+                    <h5 className={`text-${theme === 'dark' ? 'light' : 'dark'}`}>Gráficos de Logs</h5>
                     <Nav variant="pills" defaultActiveKey="/home">
                       <Nav.Item className='mb-4'>
-                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'bar' ? 'active' : ''}`} onClick={() => toggleChart('bar')}>Barras</Button>
+                        <Button
+                          className={`m-1 btn ${activeButton === 'bar' ? 'btn-primary' : 'btn-info'} btn-sm`}
+                          onClick={() => handleButtonClick('bar')}
+                        >Barras
+                        </Button>
                       </Nav.Item>
                       <Nav.Item>
-                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'line' ? 'active' : ''}`} onClick={() => toggleChart('line')}>Linha</Button>
+                        <Button
+                          className={`m-1 btn ${activeButton === 'line' ? 'btn-primary' : 'btn-info'} btn-sm`}
+                          onClick={() => handleButtonClick('line')}
+                        >Linha
+                        </Button>
                       </Nav.Item>
                       <Nav.Item>
-                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'pie' ? 'active' : ''}`} onClick={() => toggleChart('pie')}>Rosca</Button>
+                        <Button
+                          className={`m-1 btn ${activeButton === 'pie' ? 'btn-primary' : 'btn-info'} btn-sm`}
+                          onClick={() => handleButtonClick('pie')}
+                        >Rosca
+                        </Button>
                       </Nav.Item>
                       <Nav.Item>
-                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'polar' ? 'active' : ''}`} onClick={() => toggleChart('polar')}>Polar</Button>
+                        <Button
+                          className={`m-1 btn ${activeButton === 'polar' ? 'btn-primary' : 'btn-info'} btn-sm`}
+                          onClick={() => handleButtonClick('polar')}
+                        >Polar
+                        </Button>
                       </Nav.Item>
                       <Nav.Item>
-                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'area' ? 'active' : ''}`} onClick={() => toggleChart('area')}>Area</Button>
+                        <Button
+                          className={`m-1 btn ${activeButton === 'area' ? 'btn-primary' : 'btn-info'} btn-sm`}
+                          onClick={() => handleButtonClick('area')}
+                        >Area
+                        </Button>
                       </Nav.Item>
                     </Nav>
-
-                    <Bar data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'bar' ? 'd-flex' : 'd-none'}`} />
-                    <Line data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'line' ? 'd-flex' : 'd-none'}`} />
-                    <Pie data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'pie' ? 'd-flex' : 'd-none'}`} />
-                    <Doughnut data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'doughnut' ? 'd-flex' : 'd-none'}`} />
-                    <PolarArea data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'polar' ? 'd-flex' : 'd-none'}`} />
-                    <Radar data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'area' ? 'd-flex' : 'd-none'}`} />
+                    <Bar
+                      data={chartData}
+                      options={options}
+                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'bar' ? 'd-flex' : 'd-none'}`}
+                    />
+                    <Line
+                      data={chartData} options={options}
+                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'line' ? 'd-flex' : 'd-none'}`}
+                    />
+                    <Pie
+                      data={chartData}
+                      options={options}
+                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'pie' ? 'd-flex' : 'd-none'}`}
+                    />
+                    <Doughnut
+                      data={chartData}
+                      options={options}
+                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'doughnut' ? 'd-flex' : 'd-none'}`}
+                    />
+                    <PolarArea
+                      data={chartData}
+                      options={options}
+                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'polar' ? 'd-flex' : 'd-none'}`}
+                    />
+                    <Radar
+                      data={chartData}
+                      options={options}
+                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'area' ? 'd-flex' : 'd-none'}`}
+                    />
                   </div>
                 </>
               ) : (
