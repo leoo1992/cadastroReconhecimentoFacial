@@ -46,7 +46,8 @@ const Logs = () => {
   const [activeButton, setActiveButton] = useState('bar');
 
   const handleButtonClick = (chartType) => {
-    setActiveButton(chartType);
+    setActiveChart(chartType);
+    setActiveButton(chartType)
   };
 
   // eslint-disable-next-line
@@ -169,7 +170,7 @@ const Logs = () => {
     <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
   );
   const geraGraficoButtonTooltip = (
-    <Tooltip id="add-button-tooltip">Mostrar / Ocultar Grafico</Tooltip>
+    <Tooltip id="add-button-tooltip">Mostrar / Ocultar Gráfico</Tooltip>
   );
 
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
@@ -357,9 +358,11 @@ const Logs = () => {
           'rgba(255, 255, 0, 0.75)',
         ],
         borderColor: [
-          theme === 'dark' ? 'white' : 'black',
+          theme === 'dark' ? 'cyan' : 'black',
         ],
         borderWidth: 1,
+        pointBackgroundColor: "rgba(0, 255, 255)",
+        pointBorderColor: "rgba(0, 0, 255)",
         color: theme === 'dark' ? 'cyan' : 'gray',
       },
     ],
@@ -535,7 +538,7 @@ const Logs = () => {
               {showChart ? (
                 <>
                   <div className='d-flex flex-column justify-content-center align-content-center align-items-center p-0 m-0 h-75 w-100'>
-                    <h5 className={`text-${theme === 'dark' ? 'light' : 'dark'}`}>Gráficos de Logs</h5>
+                    <h5 className={`mt-5 text-${theme === 'dark' ? 'light' : 'dark'}`}>Gráficos de Logs</h5>
                     <Nav variant="pills" defaultActiveKey="/home">
                       <Nav.Item className='mb-4'>
                         <Button
