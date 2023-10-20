@@ -14,9 +14,24 @@ import { toast, ToastContainer } from 'react-toastify';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Legend } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 import casual from 'casual-browserify';
+import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
+
+import {
+  Chart as ChartJS,
+  LinearScale,
+  RadialLinearScale,
+  CategoryScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Legend,
+  Title,
+  Filler,
+} from 'chart.js';
+import { Line, Bar, Pie, Doughnut, PolarArea, Radar } from 'react-chartjs-2';
 
 const Logs = () => {
   const [theme, setTheme] = useState("dark");
@@ -27,6 +42,11 @@ const Logs = () => {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [showChart, setShowChart] = useState(false);
+  const [activeChart, setActiveChart] = useState('bar');
+
+  const toggleChart = (chartType) => {
+    setActiveChart(chartType);
+  };
 
   const toggleChartVisibility = () => {
     setShowChart(!showChart);
@@ -35,9 +55,14 @@ const Logs = () => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
+    RadialLinearScale,
     BarElement,
+    PointElement,
+    LineElement,
     Title,
-    Legend
+    Filler,
+    Legend,
+    ArcElement
   );
 
 
@@ -453,7 +478,34 @@ const Logs = () => {
                 <div className="d-none p-0 m-0"></div>
               )}
               {showChart ? (
-                <Bar data={chartData} options={options} className='d-flex justify-content-center align-content-center'/>
+                <>
+                  <div className='d-flex flex-column justify-content-center align-content-center align-items-center p-0 m-0 h-75 w-100'>
+                    <Nav variant="pills" defaultActiveKey="/home">
+                      <Nav.Item className='mb-4'>
+                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'bar' ? 'active' : ''}`} onClick={() => toggleChart('bar')}>Barras</Button>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'line' ? 'active' : ''}`} onClick={() => toggleChart('line')}>Linha</Button>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'pie' ? 'active' : ''}`} onClick={() => toggleChart('pie')}>Rosca</Button>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'polar' ? 'active' : ''}`} onClick={() => toggleChart('polar')}>Polar</Button>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Button className={`m-1 btn-info btn btn-sm ${activeChart === 'area' ? 'active' : ''}`} onClick={() => toggleChart('area')}>Area</Button>
+                      </Nav.Item>
+                    </Nav>
+
+                    <Bar data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'bar' ? 'd-flex' : 'd-none'}`} />
+                    <Line data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'line' ? 'd-flex' : 'd-none'}`} />
+                    <Pie data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'pie' ? 'd-flex' : 'd-none'}`} />
+                    <Doughnut data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'doughnut' ? 'd-flex' : 'd-none'}`} />
+                    <PolarArea data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'polar' ? 'd-flex' : 'd-none'}`} />
+                    <Radar data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'area' ? 'd-flex' : 'd-none'}`} />
+                  </div>
+                </>
               ) : (
                 <div className="d-none p-0 m-0"></div>
               )}
