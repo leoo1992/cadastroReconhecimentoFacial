@@ -6,7 +6,7 @@ import MenuIcon from '../HomePage/Menuicon';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-
+import Footer from '../Footer';
 const Listas = () => {
   const [theme, setTheme] = useState("dark");
 
@@ -41,6 +41,7 @@ const Listas = () => {
         {createButtonWithTooltip("Logs", "/logs", "Logs Entrada / Saida")}
         {createButtonWithTooltip("Usuários", "/usuarios", "Usuários Administradores")}
       </div>
+      <Footer />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "./home.css";
 import Menu from './Menu';
+import Footer from '../Footer';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faSignOutAlt, faList, faUserPlus, faMobileAlt } from "@fortawesome/free-solid-svg-icons";
 import Button from 'react-bootstrap/Button';
@@ -22,7 +23,7 @@ const HomePage = () => {
     }
   };
 
-  const createButtonWithTooltip = (text, link, icon, tooltipText,target) => (
+  const createButtonWithTooltip = (text, link, icon, tooltipText, target) => (
     <OverlayTrigger
       key={text}
       placement="top"
@@ -107,6 +108,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

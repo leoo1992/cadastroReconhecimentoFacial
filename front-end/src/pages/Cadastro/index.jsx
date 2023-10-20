@@ -7,6 +7,7 @@ import MenuIcon from '../HomePage/Menuicon';
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '../Footer';
 
 const Cadastro = () => {
   const navigate = useNavigate();
@@ -275,7 +276,7 @@ const Cadastro = () => {
             </Row>
           </Form>
         </Container>
-
+        <Footer />
       </div >
     </>
   );
