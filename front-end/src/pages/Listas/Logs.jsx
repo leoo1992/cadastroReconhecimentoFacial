@@ -324,11 +324,24 @@ const Logs = () => {
 
   const chartData = {
     labels: formattedData.map((data) => data.pessoaNome),
+    color: theme === 'dark' ? 'cyan' : 'gray',
     datasets: [
       {
         label: 'Tipo',
         data: formattedData.map(() => casual.integer(0, 6)),
-        backgroundColor: theme === 'dark' ? 'cyan' : 'darkblue',
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.75)',
+          'rgba(54, 162, 235, 0.75)',
+          'rgba(255, 206, 86, 0.75)',
+          'rgba(75, 192, 192, 0.75)',
+          'rgba(153, 102, 255, 0.75)',
+          'rgba(255, 159, 64, 0.75)',
+        ],
+        borderColor: [
+          theme === 'dark' ? 'white' : 'black',
+        ],
+        borderWidth: 1,
+        color: theme === 'dark' ? 'cyan' : 'gray',
       },
     ],
   };
@@ -338,39 +351,48 @@ const Logs = () => {
       legend: {
         display: true,
         position: 'bottom',
+        color: theme === 'dark' ? 'cyan' : 'gray',
+        labels: {
+          color: theme === 'dark' ? 'cyan' : 'gray',
+        },
+        background: 'cyan'
       },
       title: {
         display: true,
         text: 'Logs',
-        color: theme === 'dark' ? 'cyan' : 'darkblue',
+        color: theme === 'dark' ? 'cyan' : 'gray',
       },
+      color: theme === 'dark' ? 'cyan' : 'gray',
     },
     scales: {
       x: {
         grid: {
-          color: theme === 'dark' ? 'gray' : 'black',
+          color: theme === 'dark' ? 'gray' : 'gray',
         },
         title: {
           display: true,
           text: 'Pessoa Nome',
-          color: theme === 'dark' ? 'cyan' : 'darkblue',
+          color: theme === 'dark' ? 'cyan' : 'gray',
         },
+        color: theme === 'dark' ? 'gray' : 'gray',
       },
       y: {
         min: 0,
-        max: 5,
+        max: 6,
         ticks: {
           stepSize: 1,
         },
         grid: {
-          color: theme === 'dark' ? 'gray' : 'black',
+          color: theme === 'dark' ? 'gray' : 'gray',
         },
         title: {
           display: true,
           text: 'Pessoa Tipo',
-          color: theme === 'dark' ? 'cyan' : 'darkblue',
+          color: theme === 'dark' ? 'cyan' : 'gray',
         },
+        color: theme === 'dark' ? 'gray' : 'gray',
       },
+      color: theme === 'dark' ? 'gray' : 'gray',
     },
   };
 
@@ -498,12 +520,12 @@ const Logs = () => {
                       </Nav.Item>
                     </Nav>
 
-                    <Bar data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'bar' ? 'd-flex' : 'd-none'}`} />
-                    <Line data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'line' ? 'd-flex' : 'd-none'}`} />
-                    <Pie data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'pie' ? 'd-flex' : 'd-none'}`} />
-                    <Doughnut data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'doughnut' ? 'd-flex' : 'd-none'}`} />
-                    <PolarArea data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'polar' ? 'd-flex' : 'd-none'}`} />
-                    <Radar data={chartData} options={options} className={`border border-1 border-black ${activeChart === 'area' ? 'd-flex' : 'd-none'}`} />
+                    <Bar data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'bar' ? 'd-flex' : 'd-none'}`} />
+                    <Line data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'line' ? 'd-flex' : 'd-none'}`} />
+                    <Pie data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'pie' ? 'd-flex' : 'd-none'}`} />
+                    <Doughnut data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'doughnut' ? 'd-flex' : 'd-none'}`} />
+                    <PolarArea data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'polar' ? 'd-flex' : 'd-none'}`} />
+                    <Radar data={chartData} options={options} className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'area' ? 'd-flex' : 'd-none'}`} />
                   </div>
                 </>
               ) : (
