@@ -11,7 +11,7 @@ import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
-
+import Footer from '../Footer';
 const LoginPage = () => {
   const [isFormValid, setIsFormValid] = useState(true);
   const errorRef = useRef(null);
@@ -54,28 +54,28 @@ const LoginPage = () => {
     }
 
     api
-    .post("/login", formData)
-    .then((response) => {
-      if (response.data.token) {
+      .post("/login", formData)
+      .then((response) => {
+        if (response.data.token) {
 
-        localStorage.setItem("token", response.data.token);
-        Cookies.set('token', response.data.token, { expires: 1/24, secure: true, sameSite: 'strict' });
+          localStorage.setItem("token", response.data.token);
+          Cookies.set('token', response.data.token, { expires: 1 / 24, secure: true, sameSite: 'strict' });
 
-        setFormErrors({});
+          setFormErrors({});
 
-        toast.success("Login efetuado com sucesso...Redirecionando");
+          toast.success("Login efetuado com sucesso...Redirecionando");
 
-        setTimeout(() => {
-          window.location.href = "/home";
-        }, 5000);
+          setTimeout(() => {
+            window.location.href = "/home";
+          }, 5000);
 
-      } else {
-        toast.error("Usuário ou senha incorretos");
-      }
-    })
-    .catch(() => {
-      toast.error("Ocorreu um erro ao fazer login. Tente novamente mais tarde.");
-    });
+        } else {
+          toast.error("Usuário ou senha incorretos");
+        }
+      })
+      .catch(() => {
+        toast.error("Ocorreu um erro ao fazer login. Tente novamente mais tarde.");
+      });
   };
 
   useEffect(() => {
@@ -154,7 +154,7 @@ const LoginPage = () => {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label className= {`mt-3 ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
+                  <Form.Label className={`mt-3 ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
                   <Form.Control
                     type="password"
                     name="senha"
@@ -187,6 +187,7 @@ const LoginPage = () => {
             </Row>
           </Form>
         </Container>
+        <Footer />
       </div>
     </>
   );
