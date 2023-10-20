@@ -23,7 +23,7 @@
     "babel-plugin-module-resolver": "^5.0.0",
     "bootstrap": "^5.3.2",
     "casual": "^1.6.2",
-    "casual-browserify": "^1.5.19-2",
+    "casual-browserify": "^1.5.19",
     "chart.js": "^4.4.0",
     "css-select": "^5.1.0",
     "datatable": "^0.0.6",
