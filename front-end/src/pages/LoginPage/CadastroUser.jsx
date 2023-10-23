@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./login.css";
 import api from "./axiosConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import 'react-toastify/dist/ReactToastify.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -14,9 +14,19 @@ import Footer from '../Footer';
 
 const CadastroUsers = () => {
   const navigate = useNavigate();
-  const [isFormValid, setIsFormValid] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
   const errorRef = useRef(null);
   const [theme, setTheme] = useState("dark");
+  const [showInactive, setShowInactive] = useState(true);
+  const [passwordType, setPasswordType] = useState("password");
+  const [isUserFilled, setIsUserFilled] = useState(false);
+  const [isPasswordFilled, setIsPasswordFilled] = useState(false);
+  const [isConfirmPasswordFilled, setIsConfirmPasswordFilled] = useState(false);
+  const [confirmSenha, setConfirmSenha] = useState("");
+
+  useEffect(() => {
+    setPasswordType(showInactive ? "password" : "text");
+  }, [showInactive]);
 
   const [formData, setFormData] = useState({
     usuario: "",
@@ -26,36 +36,79 @@ const CadastroUsers = () => {
   const [formErrors, setFormErrors] = useState({
     usuario: "",
     senha: "",
+    confirmSenha: ''
   });
-
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
 
     const hasErrors = Object.values(formErrors).some((error) => error !== "");
-    setIsFormValid(!hasErrors);
+
+    if (name === "usuario") {
+      setIsUserFilled(!!value);
+    }
+
+    if (name === "senha") {
+      setIsPasswordFilled(!!value);
+      if (value !== formData.confirmSenha) {
+        setFormErrors({ ...formErrors, confirmSenha: "As senhas não coincidem" });
+        setIsFormValid(false);
+      } else {
+        setFormErrors({ ...formErrors, confirmSenha: "" });
+        setIsFormValid(true);
+      }
+    }
+
+    if (name === "confirmSenha") {
+      setIsConfirmPasswordFilled(!!value);
+      setConfirmSenha(value);
+
+      if (value !== formData.senha) {
+        setFormErrors({ ...formErrors, confirmSenha: "As senhas não coincidem" });
+        setIsFormValid(false);
+      } else {
+        setFormErrors({ ...formErrors, confirmSenha: "" });
+        setIsFormValid(true);
+      }
+    }
+
+    setIsFormValid(!hasErrors && isUserFilled && isPasswordFilled && isConfirmPasswordFilled);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const requiredFields = ["usuario", "senha"];
-
+    const requiredFields = ["usuario", "senha", "confirmSenha"];
     const errors = {};
+
     requiredFields.forEach((field) => {
       if (!formData[field]) {
         errors[field] = "Campo obrigatório";
+      } else {
+        errors[field] = "";
       }
     });
 
+    if (formData.senha !== confirmSenha) {
+      errors.confirmSenha = "As senhas não coincidem";
+    } else {
+      errors.confirmSenha = "";
+    }
+
     setFormErrors(errors);
-    if (Object.keys(errors).length > 0) {
+
+    const hasErrors = Object.keys(errors).some((key) => key !== "confirmSenha" && errors[key] !== "");
+
+    if (hasErrors) {
       return;
     }
 
+    const cleanFormData = { ...formData };
+    delete cleanFormData.confirmSenha;
+
     api
-      .post("/cadastrousuarios", formData)
+      .post("/cadastrousuarios", cleanFormData)
       .then((response) => {
         if (response.data.message) {
           setFormErrors({});
@@ -71,6 +124,7 @@ const CadastroUsers = () => {
         toast.error("Ocorreu um erro ao cadastrar. Tente novamente mais tarde.");
       });
   };
+
 
   useEffect(() => {
     if (errorRef.current) {
@@ -130,13 +184,15 @@ const CadastroUsers = () => {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Usuário:</Form.Label>
+                  <Form.Label className={`d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Usuário:</Form.Label>
                   <Form.Control
                     type="text"
                     name="usuario"
                     value={formData.usuario}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
+                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
                   />
                   {formErrors.usuario && (
                     <div className="error-message">{formErrors.usuario}</div>
@@ -147,13 +203,15 @@ const CadastroUsers = () => {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Senha:</Form.Label>
+                  <Form.Label className={`mt-3 d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
                   <Form.Control
-                    type="password"
+                    type={passwordType}
                     name="senha"
                     value={formData.senha}
                     onChange={handleChange}
                     required
+                    autoComplete="off"
+                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
                   />
                   {formErrors.senha && (
                     <div className="error-message">{formErrors.senha}</div>
@@ -162,17 +220,46 @@ const CadastroUsers = () => {
               </Col>
             </Row>
             <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Label className={`mt-3 d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Confirmar Senha:</Form.Label>
+                  <Form.Control
+                    type={passwordType}
+                    name="confirmSenha"
+                    value={confirmSenha}
+                    onChange={handleChange}
+                    required
+                    autoComplete="off"
+                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
+                  />
+                  {formErrors.confirmSenha && (
+                    <div className="error-message">{formErrors.confirmSenha}</div>
+                  )}
+                </Form.Group>
+              </Col>
+            </Row>
+            <div className="container d-flex m-0 p-0 justify-content-end">
+              <OverlayTrigger placement="bottom" overlay={<Tooltip id="ocultar-button-tooltip">Mostrar / Ocultar Senha</Tooltip>}>
+                <FontAwesomeIcon
+                  icon={showInactive ? faEye : faEyeSlash}
+                  onClick={() => setShowInactive(!showInactive)}
+                  className={`p-1 mt-3 d-flex btn btn-info fw-bold border-1 ${theme === "dark" ? "border-white" : "border-black"}`}
+                />
+              </OverlayTrigger>
+            </div>
+            <Row>
               <Col className="text-center pt-4 ">
-                {!isFormValid && (
-                  <div className="error-message">
-                    Campos Requeridos.
-                  </div>
-                )}
-                <Link to="/" className={`btn btn-warning p-1 m-0 fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+
+                <Link to="/" className={`btn btn-warning p-2 m-0 fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
                   Voltar
                 </Link>
                 <span> </span>
-                <Button type="submit" variant="info" className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                <Button
+                  type="submit"
+                  variant="info"
+                  className={`fw-bold p-2 ${theme === "dark" ? "border-white" : "border-black"}`}
+                  disabled={!isUserFilled || !isPasswordFilled || !isConfirmPasswordFilled}
+                >
                   Cadastrar
                 </Button>
               </Col>

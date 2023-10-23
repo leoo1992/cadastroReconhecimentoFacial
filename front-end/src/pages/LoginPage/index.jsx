@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./login.css";
 import api from "./axiosConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import 'react-toastify/dist/ReactToastify.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -12,10 +12,20 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 import Footer from '../Footer';
+
 const LoginPage = () => {
   const [isFormValid, setIsFormValid] = useState(true);
   const errorRef = useRef(null);
   const [theme, setTheme] = useState("dark");
+  const [showInactive, setShowInactive] = useState(true);
+  const [passwordType, setPasswordType] = useState("password");
+  const [isUserFilled, setIsUserFilled] = useState(false);
+  const [isPasswordFilled, setIsPasswordFilled] = useState(false);
+
+
+  useEffect(() => {
+    setPasswordType(showInactive ? "password" : "text");
+  }, [showInactive]);
 
   const [formData, setFormData] = useState({
     usuario: "",
@@ -34,6 +44,14 @@ const LoginPage = () => {
 
     const hasErrors = Object.values(formErrors).some((error) => error !== "");
     setIsFormValid(!hasErrors);
+
+    if (name === "usuario") {
+      setIsUserFilled(!!value);
+    }
+
+    if (name === "senha") {
+      setIsPasswordFilled(!!value);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -136,7 +154,7 @@ const LoginPage = () => {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Usuário:</Form.Label>
+                  <Form.Label className={`d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Usuário:</Form.Label>
                   <Form.Control
                     type="text"
                     name="usuario"
@@ -144,6 +162,7 @@ const LoginPage = () => {
                     onChange={handleChange}
                     required
                     autoComplete="off"
+                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
                   />
                   {formErrors.usuario && (
                     <div className="error-message">{formErrors.usuario}</div>
@@ -154,15 +173,25 @@ const LoginPage = () => {
             <Row>
               <Col>
                 <Form.Group>
-                  <Form.Label className={`mt-3 ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
+                  <Form.Label className={`mt-3 d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
                   <Form.Control
-                    type="password"
+                    type={passwordType}
                     name="senha"
                     value={formData.senha}
                     onChange={handleChange}
                     required
                     autoComplete="off"
+                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
                   />
+                  <div className="container d-flex m-0 p-0 justify-content-end">
+                  <OverlayTrigger placement="bottom" overlay={<Tooltip id="ocultar-button-tooltip">Mostrar / Ocultar Senha</Tooltip>}>
+                      <FontAwesomeIcon
+                        icon={showInactive ? faEye : faEyeSlash}
+                        onClick={() => setShowInactive(!showInactive)}
+                        className={`p-1 mt-3 d-flex btn btn-info fw-bold border-1 ${theme === "dark" ? "border-white" : "border-black"}`}
+                      />
+                    </OverlayTrigger>
+                  </div>
                   {formErrors.senha && (
                     <div className="error-message">{formErrors.senha}</div>
                   )}
@@ -180,9 +209,15 @@ const LoginPage = () => {
                   Cadastrar
                 </Link>
                 <span> </span>
-                <Button type="submit" variant="info" className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                <Button
+                  type="submit"
+                  variant="info"
+                  className={`fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}
+                  disabled={!isUserFilled || !isPasswordFilled}
+                >
                   Entrar
                 </Button>
+
               </Col>
             </Row>
           </Form>
