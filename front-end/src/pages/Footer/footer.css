@@ -1,94 +1,57 @@
 body {
-  --col-deepblue:  rgba(11, 34, 98, 0.356);
+  --col-deepblue: rgba(11, 34, 98, 0.356);
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
+
 footer {
-  width:100%;
+  width: 100%;
+  max-height: 105px;
   position:fixed;
-  bottom:0px
+  bottom: 0;
+  z-index: 0;
+  clear: both;
 }
+
 footer div {
   background-color: var(--col-deepblue);
-  margin: 0px 0px 0px 0px;
-  padding:0px;
-  text-align:center;
-  border: 2px solid cyan
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  border: 2px solid cyan;
 }
+
 svg {
-  overflow:visible;
+  overflow: visible;
 }
 
 .wave {
   animation: wave 3s linear;
-  animation-iteration-count:infinite;
+  animation-iteration-count: infinite;
   fill: var(--col-deepblue);
-  border: 2px solid cyan
-}
-.drop {
-  fill: var(--col-deepblue);
-  xfill: var(--col-deepblue);
-  animation: drop 3.2s linear infinite normal;
-  stroke: var(--col-deepblue);
-  stroke-width:0.5;
-  transform: translateY(25px) ;
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
   border: 2px solid cyan;
 }
-.drop1 {
-  border: 2px solid cyan
-}
-.drop2 {
-  animation-delay: 3s;
-  animation-duration:3s;
-  border: 2px solid cyan
-}
-.drop3 {
-  animation-delay: -2s;
-  animation-duration:3.4s;
-}
-.drop4 {
-  animation-delay: 1.7s;
-}
-.drop5 {
-  animation-delay: 2.7s;
-  animation-duration:3.1s;
-}
-.drop6 {
-  animation-delay: -2.1s;
-  animation-duration:3.2s;
-}
+
 .gooeff {
-    filter: url(#goo);
-    border: 2px solid cyan
-}
-#wave2 {
-  animation-duration:5s;
-  animation-direction: reverse;
-  opacity: .6;
+  filter: url(#goo);
   border: 2px solid cyan;
+}
+
+#wave2 {
+  animation-duration: 5s;
+  animation-direction: reverse;
+  border: 2px solid cyan;
+  fill: rgba(255, 255, 0, 0.144);
 }
 #wave3 {
   animation-duration: 7s;
-  opacity:.3;
-  border: 2px solid cyan
+  border: 2px solid cyan;
+  fill: rgba(0, 255, 255, 0.178);
 }
-@keyframes drop {
-  0% {
-    transform: translateY(25px);
-  }
-  30% {
-    transform: translateY(-10px) scale(.1);
-  }
-  30.001% {
-    transform: translateY(25px) scale(1);
-  }
-  70% {
-    transform: translateY(25px);
-  }
-  100% {
-    transform: translateY(-10px) scale(.1);
-  }
-}
+
 @keyframes wave {
-  to {transform: translateX(-100%);}
+  to {
+    transform: translateX(-100%);
+  }
 }

@@ -14,6 +14,7 @@ import Footer from '../Footer';
 
 const CadastroUsers = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line
   const [isFormValid, setIsFormValid] = useState(false);
   const errorRef = useRef(null);
   const [theme, setTheme] = useState("dark");
