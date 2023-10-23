@@ -162,10 +162,14 @@ const loadLabels = () => {
 }
 
 Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('/reconhecimento/assets/lib/face-api/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('/reconhecimento/assets/lib/face-api/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('/reconhecimento/assets/lib/face-api/models'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('/reconhecimento/assets/lib/face-api/models'),
+    faceapi.nets.tinyFaceDetector.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
+    faceapi.nets.faceLandmark68Net.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
+    faceapi.nets.faceRecognitionNet.loadFromUri(
+      "/reconhecimento/assets/lib/face-api/models"
+    ),
+    faceapi.nets.faceExpressionNet.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
+    faceapi.nets.ageGenderNet.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
+    faceapi.nets.ssdMobilenetv1.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
 ]).then(startVideo);
 
 const recognizedPeople = new Set();
@@ -208,7 +212,8 @@ cam.addEventListener('play', async () => {
             faceMatcher.findBestMatch(d.descriptor)
         )
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-        faceapi.draw.drawDetections(canvas, resizedDetections)
+        faceapi.draw.drawDetections(canvas, resizedDetections);
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
         results.forEach((result, index) => {
             const box = resizedDetections[index].detection.box
             const { label } = result
