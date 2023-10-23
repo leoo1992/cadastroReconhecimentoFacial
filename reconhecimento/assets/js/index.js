@@ -4,12 +4,12 @@ const gestaoBtn = document.getElementById('irGestao');
 const canvas = document.getElementById('canvas');
 const labels = [];
 
-// console.error = () => { };
-// console.warn = () => { };
-// console.info = () => { };
-// console.log = () => { };
-// console.trace = () => { };
-// console.debug = () => { };
+console.error = () => { };
+console.warn = () => { };
+console.info = () => { };
+console.log = () => { };
+console.trace = () => { };
+console.debug = () => { };
 
 gestaoBtn.addEventListener('click', async () => {
     window.location.href = "http://localhost:3001/";
