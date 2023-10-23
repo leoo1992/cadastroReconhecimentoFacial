@@ -7,7 +7,6 @@ body {
 
 footer {
   width: 100%;
-  max-height: 105px;
   position:fixed;
   bottom: 0;
   z-index: 0;
