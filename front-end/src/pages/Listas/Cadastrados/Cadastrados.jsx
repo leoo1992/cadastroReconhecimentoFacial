@@ -1,19 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import "../listas.css";
-import api from "../axiosConfig";
-import DataTable from 'react-data-table-component';
-import { Triangle } from 'react-loader-spinner'
-import MenuIcon from '../../HomePage/Menuicon';
-import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import DeleteModal from './DeleteModal';
-import DesativarModal from './DesativarModal';
-import SubHeaderComponent from './SubHeaderComponent';
-import ContextActions from './ContextActions';
+import {
+  React,useState,useEffect,useCallback,api,DataTable,
+  Triangle,MenuIcon,useNavigate,toast,ToastContainer,jsPDF,XLSX,DeleteModal,
+  DesativarModal,SubHeaderComponent,ContextActions,ativoEnum,tipoEnum,customText,divElement,columns
+} from './CadastradosImports';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -25,14 +14,13 @@ const Cadastrados = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
   const [ativo, setAtivo] = useState("");
-  const navigate = useNavigate();
-  const divElement = document.querySelector('.rdt_TableHeader > div > div');
   const [showInactive, setShowInactive] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
   const [showModalDesativar, setShowModalDesativar] = useState(false);
   const [idToDesativar, setIdToDesativar] = useState(null);
+  const navigate = useNavigate();
 
   const handleConfirmDelete = async () => {
     try {
@@ -115,11 +103,6 @@ const Cadastrados = () => {
     divElement.textContent = selectedNome + '  -  Selecionado';
   }
 
-  const ativoEnum = {
-    0: "Não",
-    1: "Sim",
-  };
-
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
       let whereClause = {};
@@ -158,13 +141,6 @@ const Cadastrados = () => {
 
   const handlePerRowsChange = async (newPerPage) => {
     setPaginationPerPage(newPerPage);
-  };
-
-  const tipoEnum = {
-    0: "Aluno",
-    1: "Funcionário",
-    2: "Responsável",
-    3: "Terceiro",
   };
 
   const updateTheme = (newTheme) => {
@@ -252,73 +228,19 @@ const Cadastrados = () => {
 
     return (
       <ContextActions
-      selectedRows={selectedRows}
-      navigate={navigate}
-      handleImageChange={handleImageChange}
-      handleDelete={handleDelete}
-      handleDesativar={handleDesativar}
-      handleEditar={handleEditar}
-    />
+        selectedRows={selectedRows}
+        navigate={navigate}
+        handleImageChange={handleImageChange}
+        handleDelete={handleDelete}
+        handleDesativar={handleDesativar}
+        handleEditar={handleEditar}
+      />
     );
   }, [selectedRows, navigate]);
-
-  const customText = {
-    rowsPerPage: 'Linhas por página:',
-    previous: 'Anterior',
-    next: 'Próxima',
-    loading: 'Carregando',
-    noMatch: 'Nenhum registro encontrado',
-    page: 'Página',
-    of: 'de',
-    selected: '{0} selecionado',
-    noSelectedRowsSelected: '',
-    selectedRows: {
-      one: '{0} selecionado',
-      other: '{0} selecionados',
-    },
-    noRowsSelected: '',
-  };
 
   const customSelectedMessage = (selectedCount) => {
     return `${selectedCount} ${selectedCount === 1 ? 'selecionado' : 'selecionados'}`;
   };
-
-  const columns = [
-    {
-      name: 'Id',
-      selector: (row) => row.id,
-      sortable: true,
-      reorder: true,
-      width: '60px',
-    },
-    {
-      name: 'Nome',
-      selector: (row) => row.nome,
-      sortable: true,
-      reorder: true,
-    },
-    {
-      name: 'CPF',
-      selector: (row) => row.cpf,
-      sortable: true,
-      reorder: true,
-      width: '120px',
-    },
-    {
-      name: 'Tipo',
-      selector: (row) => tipoEnum[row.tipo],
-      sortable: true,
-      reorder: true,
-      width: '120px',
-    },
-    {
-      name: 'Ativo',
-      selector: (row) => ativoEnum[row.ativo],
-      sortable: true,
-      reorder: true,
-      width: '80px',
-    },
-  ];
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
