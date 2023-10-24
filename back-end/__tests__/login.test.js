@@ -1,5 +1,5 @@
-const request = require("supertest");
-const app = require("../app");
+const request = require("supertest"),
+  app = require("../app");
 
 describe("Testes para a rota de login", () => {
 

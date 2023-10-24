@@ -1,8 +1,10 @@
-const cam = document.getElementById('cam');
-const cadastroBtn = document.getElementById('cadastroBtn');
-const gestaoBtn = document.getElementById('irGestao');
-const canvas = document.getElementById('canvas');
-const labels = [];
+const cam = document.getElementById('cam'),
+    cadastroBtn = document.getElementById('cadastroBtn'),
+    gestaoBtn = document.getElementById('irGestao'),
+    canvas = document.getElementById('canvas'),
+    recognizedPeople = new Set(),
+    labels = [];
+let lastRecognitionTime = 0;
 
 console.error = () => { };
 console.warn = () => { };
@@ -16,8 +18,8 @@ gestaoBtn.addEventListener('click', async () => {
 });
 
 function ocultaCadastro() {
-    const telaCadastro = document.getElementById('telaCadastro');
-    const botaoMostrarOcultarCadastro = document.getElementById('botaoMostrarOcultarCadastro');
+    const telaCadastro = document.getElementById('telaCadastro'),
+        botaoMostrarOcultarCadastro = document.getElementById('botaoMostrarOcultarCadastro');
 
     if (telaCadastro.classList.contains('d-none')) {
         telaCadastro.classList.remove('d-none');
@@ -71,9 +73,6 @@ function mostrarToast(texto) {
         toast.classList.add("d-none");
     }, 4000);
 }
-
-
-
 
 async function carregarNomes() {
     try {
@@ -164,16 +163,11 @@ const loadLabels = () => {
 Promise.all([
     faceapi.nets.tinyFaceDetector.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
     faceapi.nets.faceLandmark68Net.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
-    faceapi.nets.faceRecognitionNet.loadFromUri(
-      "/reconhecimento/assets/lib/face-api/models"
-    ),
+    faceapi.nets.faceRecognitionNet.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
     faceapi.nets.faceExpressionNet.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
     faceapi.nets.ageGenderNet.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
     faceapi.nets.ssdMobilenetv1.loadFromUri("/reconhecimento/assets/lib/face-api/models"),
 ]).then(startVideo);
-
-const recognizedPeople = new Set();
-let lastRecognitionTime = 0;
 
 function resetRecognizedPeople() {
     recognizedPeople.clear();
@@ -184,10 +178,10 @@ cam.addEventListener('play', async () => {
     const canvasSize = {
         width: cam.videoWidth,
         height: cam.videoHeight
-    }
-    const labels = await loadLabels()
+    },
+        labels = await loadLabels(),
+        videoLayer = document.createElement('div');
     faceapi.matchDimensions(canvas, canvasSize);
-    const videoLayer = document.createElement('div');
     videoLayer.style.position = 'relative';
     videoLayer.style.width = '100%';
     videoLayer.style.height = '100%';
@@ -232,9 +226,11 @@ cam.addEventListener('play', async () => {
 })
 
 cadastroBtn.addEventListener('click', async () => {
-    const nome = document.getElementById('nomeInput').value;
-    const cpf = document.getElementById('cpfInput').value;
-    const tipo = document.getElementById('tipoInput').value;
+    const nome = document.getElementById('nomeInput').value,
+        cpf = document.getElementById('cpfInput').value,
+        tipo = document.getElementById('tipoInput').value,
+        canvasElement = document.createElement('canvas'),
+        context = canvasElement.getContext('2d');
 
     function validarCPF(cpf) {
         if (cpf.length !== 11) {
@@ -297,11 +293,8 @@ cadastroBtn.addEventListener('click', async () => {
         return;
     }
 
-    const canvasElement = document.createElement('canvas');
     canvasElement.width = cam.videoWidth;
     canvasElement.height = cam.videoHeight;
-
-    const context = canvasElement.getContext('2d');
     context.drawImage(cam, 0, 0, canvasElement.width, canvasElement.height);
 
     const responses = await fetch('http://localhost:3002/criar-pessoa', {
@@ -311,6 +304,7 @@ cadastroBtn.addEventListener('click', async () => {
         },
         body: JSON.stringify({ nome, cpf, tipo }),
     });
+
     if (responses.ok) {
         console.log('Cadastro realizado com sucesso.');
     } else {
@@ -344,6 +338,4 @@ cadastroBtn.addEventListener('click', async () => {
             alert('Erro ao se comunicar com o servidor.');
         }
     }, 'image/jpeg');
-
-
 });

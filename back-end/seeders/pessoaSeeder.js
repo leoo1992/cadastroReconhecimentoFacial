@@ -1,5 +1,5 @@
-const sequelize = require("../config/sequelize");
-const Pessoa = require("../models/Pessoa");
+const sequelize = require("../config/sequelize"),
+  Pessoa = require("../models/Pessoa");
 
 const seedPessoa = async () => {
   try {

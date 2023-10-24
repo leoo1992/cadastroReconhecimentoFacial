@@ -1,18 +1,18 @@
 require("dotenv").config();
-const express = require("express");
-const sequelize = require("./config/sequelize");
-const cors = require("cors");
-const Pessoa = require("./models/Pessoa");
-const Users = require("./models/Users");
-const Log = require("./models/Log");
-const Associations = require("./models/associations");
-const app = express();
-const port = 3000;
-const { validationResult } = require("express-validator");
-const { Op } = require('sequelize');
-const jwt = require('jsonwebtoken');
-const bcrypt = require("bcrypt");
-const moment = require('moment-timezone');
+const express = require("express"),
+  sequelize = require("./config/sequelize"),
+  cors = require("cors"),
+  Pessoa = require("./models/Pessoa"),
+  Users = require("./models/Users"),
+  Log = require("./models/Log"),
+  Associations = require("./models/associations"),
+  app = express(),
+  port = 3000,
+  { validationResult } = require("express-validator"),
+  { Op } = require('sequelize'),
+  jwt = require('jsonwebtoken'),
+  bcrypt = require("bcrypt"),
+  moment = require('moment-timezone');
 
 app.use(express.json());
 app.use(cors());
@@ -21,8 +21,8 @@ console.log(moment());
 // CONEXÃO **********************************
 sequelize.authenticate()
 sequelize.sync().then(() => {
-    app.listen(port);
-    console.log('Servidor rodando na porta ' + port);
+  app.listen(port);
+  console.log('Servidor rodando na porta ' + port);
 });
 
 //POSTS ROUTERS **********************************
@@ -39,7 +39,10 @@ app.post("/login", async (req, res) => {
       where: {
         usuario,
       },
-    });
+    }),
+      token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
 
     if (!user) {
       return res.status(401).json({ error: "Credenciais inválidas." });
@@ -50,10 +53,6 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
-
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
 
     res.status(200).json({ token });
   } catch (err) {
@@ -70,13 +69,12 @@ app.post("/cadastrousuarios", async (req, res) => {
   }
 
   try {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(senha, saltRounds);
-
-    const createdUser = await Users.create({
-      usuario,
-      senha: hashedPassword,
-    });
+    const saltRounds = 10,
+      hashedPassword = await bcrypt.hash(senha, saltRounds),
+      createdUser = await Users.create({
+        usuario,
+        senha: hashedPassword,
+      });
 
     res.status(200).json({ message: "Cadastro realizado com sucesso." });
   } catch (err) {
@@ -86,12 +84,12 @@ app.post("/cadastrousuarios", async (req, res) => {
 });
 // rota para cadastro
 app.post("/cadastro", async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req),
+    { nome, cpf, tipo, ativo } = req.body;
+
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
-  const { nome, cpf, tipo, ativo } = req.body;
 
   try {
     const createdUser = await Pessoa.create({
@@ -112,17 +110,15 @@ app.post("/cadastro", async (req, res) => {
 // Rota para atualizar por id
 app.put("/atualizar/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const { nome, cpf, tipo, ativo } = req.body;
-
-    const pessoaExistente = await Pessoa.findByPk(id);
+    const { id } = req.params,
+      { nome, cpf, tipo, ativo } = req.body,
+      pessoaExistente = await Pessoa.findByPk(id);
 
     if (!pessoaExistente) {
       return res.status(404).json({ error: "Registro não encontrado." });
     }
 
     await pessoaExistente.update({ nome, cpf, tipo, ativo });
-
     res.status(200).json(pessoaExistente);
   } catch (err) {
     console.error("Erro ao atualizar registro: ", err);
@@ -132,17 +128,15 @@ app.put("/atualizar/:id", async (req, res) => {
 // rota para desativar por id
 app.put("/desativar/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const { ativo } = req.body;
-
-    const pessoaExistente = await Pessoa.findByPk(id);
+    const { id } = req.params,
+      { ativo } = req.body,
+      pessoaExistente = await Pessoa.findByPk(id);
 
     if (!pessoaExistente) {
       return res.status(404).json({ error: "Registro não encontrado." });
     }
 
     await pessoaExistente.update({ ativo });
-
     res.status(200).json(pessoaExistente);
   } catch (err) {
     console.error("Erro ao atualizar registro: ", err);
@@ -154,9 +148,8 @@ app.put("/desativar/:id", async (req, res) => {
 // rota para buscar uma pessoa pelo id
 app.get("/atualizar/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const pessoaExistente = await Pessoa.findByPk(id);
+    const { id } = req.params,
+      pessoaExistente = await Pessoa.findByPk(id);
 
     if (!pessoaExistente) {
       return res.status(404).json({ error: "Registro não encontrado." });
@@ -198,14 +191,19 @@ app.get("/pesquisar", async (req, res) => {
 // rota Listar
 app.get("/listar", async (req, res) => {
   try {
-    const pagina = parseInt(req.query.pagina) || 1;
-    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-    const showInactive = req.query.showInactive === 'true' || false;
-    const searchQuery = req.query.search || '';
+    const pagina = parseInt(req.query.pagina) || 1,
+      limitePorPagina = parseInt(req.query.limitePorPagina) || 10,
+      showInactive = req.query.showInactive === 'true' || false,
+      searchQuery = req.query.search || '',
+      totalRegistros = await Pessoa.count({ where: whereClause }),
+      paginacao = (pagina - 1) * limitePorPagina,
+      numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1,
+      registros = await Pessoa.findAll({
+        where: whereClause,
+        limit: limitePorPagina,
+        offset: paginacao,
+      });
     let whereClause = showInactive ? {} : { ativo: 1 };
-    const totalRegistros = await Pessoa.count({ where: whereClause });
-    const paginacao = (pagina - 1) * limitePorPagina;
-    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
 
     if (searchQuery) {
       whereClause = {
@@ -217,12 +215,6 @@ app.get("/listar", async (req, res) => {
         ],
       };
     }
-
-    const registros = await Pessoa.findAll({
-      where: whereClause,
-      limit: limitePorPagina,
-      offset: paginacao,
-    });
 
     res.status(200).json({
       registros,
@@ -248,22 +240,21 @@ app.get("/imprimir", async (req, res) => {
 // rota pesquisar usuario
 app.get("/pesquisaruser", async (req, res) => {
   try {
-    const { termo } = req.query;
+    const { termo } = req.query,
+      resultados = await Users.findAll({
+        where: {
+          [Op.or]: [
+            { usuario: { [Op.like]: `%${termo}%` } },
+            { id: { [Op.eq]: termo } },
+          ],
+        },
+      });
 
     if (!termo || termo.length < 3) {
       return res.status(200).json({ resultados: [] });
     }
 
     console.log("Termo de pesquisa:", termo);
-
-    const resultados = await Users.findAll({
-      where: {
-        [Op.or]: [
-          { usuario: { [Op.like]: `%${termo}%` } },
-          { id: { [Op.eq]: termo } },
-        ],
-      },
-    });
 
     res.status(200).json({ resultados });
   } catch (err) {
@@ -274,10 +265,17 @@ app.get("/pesquisaruser", async (req, res) => {
 // rota listar usuario
 app.get("/listaruser", async (req, res) => {
   try {
-    const pagina = parseInt(req.query.pagina) || 1;
-    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-    const searchQuery = req.query.search || '';
-
+    const pagina = parseInt(req.query.pagina) || 1,
+      limitePorPagina = parseInt(req.query.limitePorPagina) || 10,
+      searchQuery = req.query.search || '',
+      totalRegistros = await Users.count({ where: whereClause }),
+      paginacao = (pagina - 1) * limitePorPagina,
+      numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1,
+      registros = await Users.findAll({
+        where: whereClause,
+        limit: limitePorPagina,
+        offset: paginacao,
+      });
     let whereClause = {};
 
     if (searchQuery) {
@@ -289,17 +287,6 @@ app.get("/listaruser", async (req, res) => {
         ],
       };
     }
-
-    const totalRegistros = await Users.count({ where: whereClause });
-
-    const paginacao = (pagina - 1) * limitePorPagina;
-    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
-
-    const registros = await Users.findAll({
-      where: whereClause,
-      limit: limitePorPagina,
-      offset: paginacao,
-    });
 
     res.status(200).json({
       registros,
@@ -325,17 +312,16 @@ app.get("/imprimiruser", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
-
 // rota listar Logs
 app.get("/listarlogs", async (req, res) => {
   try {
-    const pagina = parseInt(req.query.pagina) || 1;
-    const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-    const searchQuery = req.query.search || '';
-    let whereClause ={};
-    const totalRegistros = await Log.count({ where: whereClause });
-    const paginacao = (pagina - 1) * limitePorPagina;
-    const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+    const pagina = parseInt(req.query.pagina) || 1,
+      limitePorPagina = parseInt(req.query.limitePorPagina) || 10,
+      searchQuery = req.query.search || '',
+      totalRegistros = await Log.count({ where: whereClause }),
+      paginacao = (pagina - 1) * limitePorPagina,
+      numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
+    let whereClause = {};
 
     if (searchQuery) {
       whereClause = {
@@ -387,30 +373,29 @@ app.get("/imprimirlogs", async (req, res) => {
 });
 app.get("/pesquisarlogs", async (req, res) => {
   try {
-    const { termo } = req.query;
+    const { termo } = req.query,
+      registros = await Log.findAll({
+        where: {
+          [Op.or]: [
+            { '$Pessoas.nome$': { [Op.like]: `%${termo}%` } },
+          ],
+        },
+        include: [
+          {
+            model: Pessoa,
+            as: 'Pessoas',
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
 
     if (!termo || termo.length < 3) {
       return res.status(200).json({ resultados: [] });
     }
 
     console.log("Termo de pesquisa:", termo);
-
-    const registros = await Log.findAll({
-      where: {
-        [Op.or]: [
-          { '$Pessoas.nome$': { [Op.like]: `%${termo}%` } },
-        ],
-      },
-      include: [
-        {
-          model: Pessoa,
-          as: 'Pessoas',
-          through: {
-            attributes: [],
-          },
-        },
-      ],
-    });
 
     res.status(200).json({ registros });
   } catch (err) {
@@ -423,9 +408,8 @@ app.get("/pesquisarlogs", async (req, res) => {
 //rota para deletar por id:
 app.delete("/deletar/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const pessoaExistente = await Pessoa.findByPk(id);
+    const { id } = req.params,
+      pessoaExistente = await Pessoa.findByPk(id);
 
     if (!pessoaExistente) {
       return res.status(404).json({ error: "Registro não encontrado." });
@@ -442,9 +426,8 @@ app.delete("/deletar/:id", async (req, res) => {
 // rota deletar usuario por id
 app.delete("/deletaruser/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const UserExistente = await Users.findByPk(id);
+    const { id } = req.params,
+      UserExistente = await Users.findByPk(id);
 
     if (!UserExistente) {
       return res.status(404).json({ error: "Registro não encontrado." });

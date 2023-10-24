@@ -1,5 +1,5 @@
-const request = require('supertest');
-const app = require('../app');
+const request = require('supertest'),
+  app = require('../app');
 
 describe("Testes de Paginação na Rota /listar", () => {
   it("Deve retornar a primeira página com 20 registros", async () => {

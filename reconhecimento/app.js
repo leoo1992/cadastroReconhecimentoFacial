@@ -1,19 +1,19 @@
 require("dotenv").config();
-const express = require('express');
-const sequelize = require("./config/sequelize");
-const cors = require('cors');
-const app = express();
-const fs = require('fs');
-const path = require('path');
-const bodyParser = require('body-parser');
-const moment = require('moment-timezone');
-const port = 3002;
-const Pessoa = require("../back-end/models/Pessoa");
-const Log = require("../back-end/models/Log");
-const filePath = path.join(__dirname, 'RostosConhecidos.txt');
-const labels = [];
-const { Op } = require("sequelize");
-const Associations = require("../back-end/models/associations");
+const express = require('express'),
+    sequelize = require("./config/sequelize"),
+    cors = require('cors'),
+    app = express(),
+    fs = require('fs'),
+    path = require('path'),
+    bodyParser = require('body-parser'),
+    moment = require('moment-timezone'),
+    port = 3002,
+    Pessoa = require("../back-end/models/Pessoa"),
+    Log = require("../back-end/models/Log"),
+    filePath = path.join(__dirname, 'RostosConhecidos.txt'),
+    labels = [],
+    { Op } = require("sequelize"),
+    Associations = require("../back-end/models/associations");
 
 console.log(moment());
 
@@ -29,12 +29,12 @@ sequelize.sync().then(() => {
 });
 
 fs.readFile(filePath, 'utf8', (err, data) => {
+    const lines = data.trim().split('\n');
+
     if (err) {
         console.error('Erro ao ler o arquivo RostosConhecidos.txt:', err);
         return;
     }
-
-    const lines = data.trim().split('\n');
 
     lines.forEach(line => {
         labels.push(line.trim());
@@ -58,21 +58,20 @@ app.get('/obter-nomes', (req, res) => {
 });
 
 app.post('/salvar-imagem', (req, res) => {
-    const nome = req.headers.nome;
+    const nome = req.headers.nome,
+        nomeSemEspacos = nome.trim().replace(/\s+/g, ''),
+        pastaDestino = path.join(__dirname, 'assets', 'lib', 'face-api', 'labels', nomeSemEspacos),
+        caminhoImagem = path.join(pastaDestino, `${contador}.jpeg`);
+    let contador = 1;
 
     if (!nome) {
         return res.status(400).send('Nome não fornecido.');
     }
 
-    const nomeSemEspacos = nome.trim().replace(/\s+/g, '');
-
-    const pastaDestino = path.join(__dirname, 'assets', 'lib', 'face-api', 'labels', nomeSemEspacos);
-
     if (!fs.existsSync(pastaDestino)) {
         fs.mkdirSync(pastaDestino, { recursive: true });
     }
 
-    let contador = 1;
     while (fs.existsSync(path.join(pastaDestino, `${contador}.jpeg`)) && contador <= 5) {
         contador++;
     }
@@ -81,7 +80,6 @@ app.post('/salvar-imagem', (req, res) => {
         return res.status(400).send('A pasta está cheia (limite de 5 imagens).');
     }
 
-    const caminhoImagem = path.join(pastaDestino, `${contador}.jpeg`);
     fs.writeFileSync(caminhoImagem, req.body);
 
     if (!labels.includes(nomeSemEspacos)) {
@@ -95,22 +93,20 @@ app.post('/salvar-imagem', (req, res) => {
 
 app.post('/salvar-ou-atualizar-log', async (req, res) => {
     try {
-        const { nome } = req.body;
-        const dataAtual = moment().subtract(3, 'hours').local().format();
-        const fiveMinutesAgo = moment().subtract(3, 'hours').subtract(1, 'minutes').toDate();
-
-        const pessoa = await Pessoa.findOne({
-            where: { nome },
-        });
+        const { nome } = req.body,
+            dataAtual = moment().subtract(3, 'hours').local().format(),
+            fiveMinutesAgo = moment().subtract(3, 'hours').subtract(1, 'minutes').toDate(),
+            pessoa = await Pessoa.findOne({
+                where: { nome },
+            }),
+            ultimoLog = await pessoa.getLogs({
+                limit: 1,
+                order: [['data', 'DESC']],
+            });
 
         if (!pessoa) {
             return res.status(200).json({ message: 'Pessoa não encontrada ou aguardando' });
         }
-
-        const ultimoLog = await pessoa.getLogs({
-            limit: 1,
-            order: [['data', 'DESC']],
-        });
 
         if (ultimoLog.length === 0 || ultimoLog[0].data < fiveMinutesAgo) {
             const novoLog = await Log.create({
@@ -130,14 +126,13 @@ app.post('/salvar-ou-atualizar-log', async (req, res) => {
 
 app.post('/criar-pessoa', async (req, res) => {
     try {
-
-        const { nome, cpf, tipo } = req.body;
+        const { nome, cpf, tipo } = req.body,
+            existingPerson = await Pessoa.findOne({ where: { nome, cpf } });
 
         if (!nome || !cpf || !tipo) {
             return res.status(400).json({ message: 'Campos obrigatórios ausentes' });
         }
 
-        const existingPerson = await Pessoa.findOne({ where: { nome, cpf } });
         if (existingPerson) {
             return res.status(400).json({ message: 'Uma pessoa com o mesmo Nome ou CPF já existem' });
         }

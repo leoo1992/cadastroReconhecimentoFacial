@@ -1,6 +1,6 @@
-const sequelize = require("../config/sequelize");
-const Pessoa = require("./Pessoa");
-const Log = require("./Log");
+const sequelize = require("../config/sequelize"),
+  Pessoa = require("./Pessoa"),
+  Log = require("./Log");
 
 Pessoa.belongsToMany(Log, {
   through: "PessoaLog",
