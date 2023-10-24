@@ -1,17 +1,17 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import "./cadastro.css";
 import MenuIcon from '../HomePage/Menuicon';
-import {ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from '../Footer';
 import FormAtualizaFaces from './FormAtualizaFaces';
 
 const Atualiza = () => {
-  const [theme, setTheme] = useState("dark");
-  const updateTheme = (newTheme) => {
-    setTheme(newTheme);
-  };
+  const [theme, setTheme] = useState("dark"),
+    updateTheme = (newTheme) => {
+      setTheme(newTheme);
+    };
 
   return (
     <>

@@ -6,11 +6,10 @@ import Footer from '../Footer';
 import BotoesMenuLista from './BotoesMenuLista';
 
 const Listas = () => {
-  const [theme, setTheme] = useState("dark");
-
-  const updateTheme = (newTheme) => {
-    setTheme(newTheme);
-  };
+  const [theme, setTheme] = useState("dark"),
+    updateTheme = (newTheme) => {
+      setTheme(newTheme);
+    };
 
   return (
     <>

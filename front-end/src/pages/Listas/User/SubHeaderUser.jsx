@@ -13,9 +13,9 @@ const SubHeaderUser = ({
   onClear,
   searchQuery,
 }) => {
-  const addButtonTooltip = <Tooltip id="add-button-tooltip">Novo</Tooltip>;
-  const printButtonTooltipPDF = <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>;
-  const printButtonTooltipExcel = <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>;
+  const addButtonTooltip = <Tooltip id="add-button-tooltip">Novo</Tooltip>,
+    printButtonTooltipPDF = <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>,
+    printButtonTooltipExcel = <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>;
 
   return (
     <div className="d-flex flex-row m-0 p-0 w-100 justify-content-between flex-wrap">

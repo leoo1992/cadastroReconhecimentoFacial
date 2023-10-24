@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './home.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faArrowLeft, faHome, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faArrowLeft, faHome, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import Menu from '../HomePage/Menu';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -9,11 +9,10 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Cookies from 'js-cookie';
 
 function MenuIcon(props) {
-  const [theme, setTheme] = useState("dark");
-
-  const handleGoHome = () => {
-    window.location.href = '/home';
-  };
+  const [theme, setTheme] = useState("dark"),
+    handleGoHome = () => {
+      window.location.href = '/home';
+    };
 
   const handlelogout = () => {
     const cookies = Cookies.get();

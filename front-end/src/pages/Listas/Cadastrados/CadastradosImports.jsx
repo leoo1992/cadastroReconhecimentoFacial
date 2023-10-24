@@ -19,70 +19,66 @@ import ContextActions from './ContextActions';
 const ativoEnum = {
   0: "Não",
   1: "Sim",
-};
-
-const tipoEnum = {
-  0: "Aluno",
-  1: "Funcionário",
-  2: "Responsável",
-  3: "Terceiro",
-};
-
-const customText = {
-  rowsPerPage: 'Linhas por página:',
-  previous: 'Anterior',
-  next: 'Próxima',
-  loading: 'Carregando',
-  noMatch: 'Nenhum registro encontrado',
-  page: 'Página',
-  of: 'de',
-  selected: '{0} selecionado',
-  noSelectedRowsSelected: '',
-  selectedRows: {
-    one: '{0} selecionado',
-    other: '{0} selecionados',
+},
+  tipoEnum = {
+    0: "Aluno",
+    1: "Funcionário",
+    2: "Responsável",
+    3: "Terceiro",
   },
-  noRowsSelected: '',
-};
-
-const divElement = document.querySelector('.rdt_TableHeader > div > div');
-
-const columns = [
-  {
-    name: 'Id',
-    selector: (row) => row.id,
-    sortable: true,
-    reorder: true,
-    width: '60px',
+  customText = {
+    rowsPerPage: 'Linhas por página:',
+    previous: 'Anterior',
+    next: 'Próxima',
+    loading: 'Carregando',
+    noMatch: 'Nenhum registro encontrado',
+    page: 'Página',
+    of: 'de',
+    selected: '{0} selecionado',
+    noSelectedRowsSelected: '',
+    selectedRows: {
+      one: '{0} selecionado',
+      other: '{0} selecionados',
+    },
+    noRowsSelected: '',
   },
-  {
-    name: 'Nome',
-    selector: (row) => row.nome,
-    sortable: true,
-    reorder: true,
-  },
-  {
-    name: 'CPF',
-    selector: (row) => row.cpf,
-    sortable: true,
-    reorder: true,
-    width: '120px',
-  },
-  {
-    name: 'Tipo',
-    selector: (row) => tipoEnum[row.tipo],
-    sortable: true,
-    reorder: true,
-    width: '120px',
-  },
-  {
-    name: 'Ativo',
-    selector: (row) => ativoEnum[row.ativo],
-    sortable: true,
-    reorder: true,
-    width: '80px',
-  },
-];
+  divElement = document.querySelector('.rdt_TableHeader > div > div'),
+  columns = [
+    {
+      name: 'Id',
+      selector: (row) => row.id,
+      sortable: true,
+      reorder: true,
+      width: '60px',
+    },
+    {
+      name: 'Nome',
+      selector: (row) => row.nome,
+      sortable: true,
+      reorder: true,
+    },
+    {
+      name: 'CPF',
+      selector: (row) => row.cpf,
+      sortable: true,
+      reorder: true,
+      width: '120px',
+    },
+    {
+      name: 'Tipo',
+      selector: (row) => tipoEnum[row.tipo],
+      sortable: true,
+      reorder: true,
+      width: '120px',
+    },
+    {
+      name: 'Ativo',
+      selector: (row) => ativoEnum[row.ativo],
+      sortable: true,
+      reorder: true,
+      width: '80px',
+    },
+  ];
 
 export {
   React, useState, useEffect, useCallback, useNavigate,

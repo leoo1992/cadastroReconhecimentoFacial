@@ -8,10 +8,11 @@ import Footer from '../Footer';
 import FormCadastroFaces from './FormCadastroFaces';
 
 const Cadastro = () => {
-  const [theme, setTheme] = useState("dark");
-  const updateTheme = (newTheme) => {
-    setTheme(newTheme);
-  };
+  const [theme, setTheme] = useState("dark"),
+    updateTheme = (newTheme) => {
+      setTheme(newTheme);
+    };
+
   return (
     <>
       <ToastContainer

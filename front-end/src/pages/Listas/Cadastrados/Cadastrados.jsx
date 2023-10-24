@@ -1,26 +1,26 @@
 import {
-  React,useState,useEffect,useCallback,api,DataTable,
-  Triangle,MenuIcon,useNavigate,toast,ToastContainer,jsPDF,XLSX,DeleteModal,
-  DesativarModal,SubHeaderComponent,ContextActions,ativoEnum,tipoEnum,customText,divElement,columns
+  React, useState, useEffect, useCallback, api, DataTable,
+  Triangle, MenuIcon, useNavigate, toast, ToastContainer, jsPDF, XLSX, DeleteModal,
+  DesativarModal, SubHeaderComponent, ContextActions, ativoEnum, tipoEnum, customText, divElement, columns
 } from './CadastradosImports';
 
 const Cadastrados = () => {
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [toggleCleared, setToggleCleared] = useState(false);
-  const [theme, setTheme] = useState("dark");
-  const [paginationPerPage, setPaginationPerPage] = useState(10);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [totalRows, setTotalRows] = useState(0);
-  const [page, setPage] = useState(1);
-  const [ativo, setAtivo] = useState("");
-  const [showInactive, setShowInactive] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showModalDelete, setShowModalDelete] = useState(false);
-  const [idToDelete, setIdToDelete] = useState(null);
-  const [showModalDesativar, setShowModalDesativar] = useState(false);
-  const [idToDesativar, setIdToDesativar] = useState(null);
-  const navigate = useNavigate();
+  const [selectedRows, setSelectedRows] = useState([]),
+    [toggleCleared, setToggleCleared] = useState(false),
+    [theme, setTheme] = useState("dark"),
+    [paginationPerPage, setPaginationPerPage] = useState(10),
+    [data, setData] = useState([]),
+    [loading, setLoading] = useState(true),
+    [totalRows, setTotalRows] = useState(0),
+    [page, setPage] = useState(1),
+    [ativo, setAtivo] = useState(""),
+    [showInactive, setShowInactive] = useState(true),
+    [searchQuery, setSearchQuery] = useState(''),
+    [showModalDelete, setShowModalDelete] = useState(false),
+    [idToDelete, setIdToDelete] = useState(null),
+    [showModalDesativar, setShowModalDesativar] = useState(false),
+    [idToDesativar, setIdToDesativar] = useState(null),
+    navigate = useNavigate();
 
   const handleConfirmDelete = async () => {
     try {

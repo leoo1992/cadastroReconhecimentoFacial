@@ -11,18 +11,19 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { Link, useNavigate } from "react-router-dom";
 
 const FormCadastroUser = () => {
-  const navigate = useNavigate();
-  // eslint-disable-next-line
-  const [theme, setTheme] = useState("dark");
-  // eslint-disable-next-line
-  const [isFormValid, setIsFormValid] = useState(true);
-  const [showInactive, setShowInactive] = useState(true);
-  const [passwordType, setPasswordType] = useState("password");
-  const [isUserFilled, setIsUserFilled] = useState(false);
-  const [isPasswordFilled, setIsPasswordFilled] = useState(false);
-  const errorRef = useRef(null);
-  const [isConfirmPasswordFilled, setIsConfirmPasswordFilled] = useState(false);
-  const [confirmSenha, setConfirmSenha] = useState("");
+  const navigate = useNavigate(),
+    // eslint-disable-next-line
+    [theme, setTheme] = useState("dark"),
+    // eslint-disable-next-line
+    [isFormValid, setIsFormValid] = useState(true),
+    [showInactive, setShowInactive] = useState(true),
+    [passwordType, setPasswordType] = useState("password"),
+    [isUserFilled, setIsUserFilled] = useState(false),
+    [isPasswordFilled, setIsPasswordFilled] = useState(false),
+    errorRef = useRef(null),
+    [isConfirmPasswordFilled, setIsConfirmPasswordFilled] = useState(false),
+    [confirmSenha, setConfirmSenha] = useState("");
+
   useEffect(() => {
     setPasswordType(showInactive ? "password" : "text");
   }, [showInactive]);
@@ -145,92 +146,92 @@ const FormCadastroUser = () => {
         pauseOnHover={false}
         theme='dark'
       />
-        <Container className='d-flex justify-content-center fw-bold p-0 mt-2'>
-          <Form onSubmit={handleSubmit} className={`cadastro p-4 rounded-3 border ${theme === "dark" ? "border-white" : "border-black"}`}>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label className={`d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Usuário:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="usuario"
-                    value={formData.usuario}
-                    onChange={handleChange}
-                    required
-                    autoComplete="off"
-                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
-                  />
-                  {formErrors.usuario && (
-                    <div className="error-message">{formErrors.usuario}</div>
-                  )}
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label className={`mt-3 d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
-                  <Form.Control
-                    type={passwordType}
-                    name="senha"
-                    value={formData.senha}
-                    onChange={handleChange}
-                    required
-                    autoComplete="off"
-                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
-                  />
-                  {formErrors.senha && (
-                    <div className="error-message">{formErrors.senha}</div>
-                  )}
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label className={`mt-3 d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Confirmar Senha:</Form.Label>
-                  <Form.Control
-                    type={passwordType}
-                    name="confirmSenha"
-                    value={confirmSenha}
-                    onChange={handleChange}
-                    required
-                    autoComplete="off"
-                    className={`${theme === "dark" ? "border-white" : "border-black"}`}
-                  />
-                  {formErrors.confirmSenha && (
-                    <div className="error-message">{formErrors.confirmSenha}</div>
-                  )}
-                </Form.Group>
-              </Col>
-            </Row>
-            <div className="container d-flex m-0 p-0 justify-content-end">
-              <OverlayTrigger placement="bottom" overlay={<Tooltip id="ocultar-button-tooltip">Mostrar / Ocultar Senha</Tooltip>}>
-                <FontAwesomeIcon
-                  icon={showInactive ? faEye : faEyeSlash}
-                  onClick={() => setShowInactive(!showInactive)}
-                  className={`p-1 mt-3 d-flex btn btn-info fw-bold border-1 ${theme === "dark" ? "border-white" : "border-black"}`}
+      <Container className='d-flex justify-content-center fw-bold p-0 mt-2'>
+        <Form onSubmit={handleSubmit} className={`cadastro p-4 rounded-3 border ${theme === "dark" ? "border-white" : "border-black"}`}>
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Label className={`d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Usuário:</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="usuario"
+                  value={formData.usuario}
+                  onChange={handleChange}
+                  required
+                  autoComplete="off"
+                  className={`${theme === "dark" ? "border-white" : "border-black"}`}
                 />
-              </OverlayTrigger>
-            </div>
-            <Row>
-              <Col className="text-center pt-4 ">
-                <Link to="/" className={`btn btn-warning p-2 m-0 fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
-                  Voltar
-                </Link>
-                <span> </span>
-                <Button
-                  type="submit"
-                  variant="info"
-                  className={`fw-bold p-2 ${theme === "dark" ? "border-white" : "border-black"}`}
-                  disabled={!isUserFilled || !isPasswordFilled || !isConfirmPasswordFilled}
-                >
-                  Cadastrar
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Container>
+                {formErrors.usuario && (
+                  <div className="error-message">{formErrors.usuario}</div>
+                )}
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Label className={`mt-3 d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Senha:</Form.Label>
+                <Form.Control
+                  type={passwordType}
+                  name="senha"
+                  value={formData.senha}
+                  onChange={handleChange}
+                  required
+                  autoComplete="off"
+                  className={`${theme === "dark" ? "border-white" : "border-black"}`}
+                />
+                {formErrors.senha && (
+                  <div className="error-message">{formErrors.senha}</div>
+                )}
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Group>
+                <Form.Label className={`mt-3 d-flex ${theme === "dark" ? "text-light" : "text-dark"}`}>Confirmar Senha:</Form.Label>
+                <Form.Control
+                  type={passwordType}
+                  name="confirmSenha"
+                  value={confirmSenha}
+                  onChange={handleChange}
+                  required
+                  autoComplete="off"
+                  className={`${theme === "dark" ? "border-white" : "border-black"}`}
+                />
+                {formErrors.confirmSenha && (
+                  <div className="error-message">{formErrors.confirmSenha}</div>
+                )}
+              </Form.Group>
+            </Col>
+          </Row>
+          <div className="container d-flex m-0 p-0 justify-content-end">
+            <OverlayTrigger placement="bottom" overlay={<Tooltip id="ocultar-button-tooltip">Mostrar / Ocultar Senha</Tooltip>}>
+              <FontAwesomeIcon
+                icon={showInactive ? faEye : faEyeSlash}
+                onClick={() => setShowInactive(!showInactive)}
+                className={`p-1 mt-3 d-flex btn btn-info fw-bold border-1 ${theme === "dark" ? "border-white" : "border-black"}`}
+              />
+            </OverlayTrigger>
+          </div>
+          <Row>
+            <Col className="text-center pt-4 ">
+              <Link to="/" className={`btn btn-warning p-2 m-0 fw-bold ${theme === "dark" ? "border-white" : "border-black"}`}>
+                Voltar
+              </Link>
+              <span> </span>
+              <Button
+                type="submit"
+                variant="info"
+                className={`fw-bold p-2 ${theme === "dark" ? "border-white" : "border-black"}`}
+                disabled={!isUserFilled || !isPasswordFilled || !isConfirmPasswordFilled}
+              >
+                Cadastrar
+              </Button>
+            </Col>
+          </Row>
+        </Form>
+      </Container>
     </>
   );
 };

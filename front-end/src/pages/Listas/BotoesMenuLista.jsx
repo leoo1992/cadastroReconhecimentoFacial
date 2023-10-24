@@ -7,7 +7,6 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const BotoesMenuLista = () => {
-
   const createButtonWithTooltip = (text, link, tooltipText) => (
     <OverlayTrigger
       key={text}

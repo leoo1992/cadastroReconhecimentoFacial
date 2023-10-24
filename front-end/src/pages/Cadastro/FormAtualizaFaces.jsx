@@ -8,17 +8,22 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const FormAtualizaFaces = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [isFormValid, setIsFormValid] = useState(true);
-  const errorRef = useRef(null);
+  const navigate = useNavigate(),
+  errorRef = useRef(null),
+  { id } = useParams(),
   // eslint-disable-next-line
-  const [theme, setTheme] = useState("dark");
-  const [formData, setFormData] = useState({
-    nome: "",
-    cpf: "",
-    tipo: "",
-  });
+    [theme, setTheme] = useState("dark"),
+    [isFormValid, setIsFormValid] = useState(true),
+    [formData, setFormData] = useState({
+      nome: "",
+      cpf: "",
+      tipo: "",
+    }),
+    [formErrors, setFormErrors] = useState({
+      nome: "",
+      cpf: "",
+      tipo: "",
+    });
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -58,12 +63,6 @@ const FormAtualizaFaces = () => {
         toast.error("Erro ao atualizar");
       });
   };
-
-  const [formErrors, setFormErrors] = useState({
-    nome: "",
-    cpf: "",
-    tipo: "",
-  });
 
   useEffect(() => {
     if (errorRef.current) {

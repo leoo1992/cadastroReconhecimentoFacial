@@ -13,23 +13,21 @@ import Cookies from 'js-cookie';
 
 const FormLogin = () => {
   // eslint-disable-next-line
-  const [theme, setTheme] = useState("dark");
-  const [isFormValid, setIsFormValid] = useState(true);
-  const [showInactive, setShowInactive] = useState(true);
-  const [passwordType, setPasswordType] = useState("password");
-  const [isUserFilled, setIsUserFilled] = useState(false);
-  const [isPasswordFilled, setIsPasswordFilled] = useState(false);
-  const errorRef = useRef(null);
-
-  const [formData, setFormData] = useState({
-    usuario: "",
-    senha: "",
-  });
-
-  const [formErrors, setFormErrors] = useState({
-    usuario: "",
-    senha: "",
-  });
+  const [theme, setTheme] = useState("dark"),
+    [isFormValid, setIsFormValid] = useState(true),
+    [showInactive, setShowInactive] = useState(true),
+    [passwordType, setPasswordType] = useState("password"),
+    [isUserFilled, setIsUserFilled] = useState(false),
+    [isPasswordFilled, setIsPasswordFilled] = useState(false),
+    errorRef = useRef(null),
+    [formData, setFormData] = useState({
+      usuario: "",
+      senha: "",
+    }),
+    [formErrors, setFormErrors] = useState({
+      usuario: "",
+      senha: "",
+    });
 
   useEffect(() => {
     setPasswordType(showInactive ? "password" : "text");

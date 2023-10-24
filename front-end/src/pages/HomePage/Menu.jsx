@@ -12,33 +12,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faUserPlus, faMobileAlt } from "@fortawesome/free-solid-svg-icons";
 
 function Menu() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false),
+    handleClose = () => setOpen(false),
+    handleShow = () => setOpen(true),
+    duration = 300,
+    defaultStyle = {
+      transition: `opacity ${duration}ms ease-in-out`,
+      opacity: 0,
+      display: 'none',
+    };
 
-  const handleClose = () => setOpen(false);
-  const handleShow = () => setOpen(true);
-  const duration = 300;
-
-  const defaultStyle = {
-    transition: `opacity ${duration}ms ease-in-out`,
-    opacity: 0,
-    display: 'none',
+   const redirectToExternalURL = () => {
+      window.open("http://127.0.0.1:5500/reconhecimento/", "_blank");
   };
 
-  const redirectToExternalURL = () => {
-    window.open("http://127.0.0.1:5500/reconhecimento/", "_blank");
-  };
+   const transitionStyles = {
+      entering: { opacity: 0, display: 'block' },
+      entered: { opacity: 1, display: 'block' },
+      exiting: { opacity: 0, display: 'block' },
+      exited: { opacity: 0, display: 'none' },
+    };
 
-
-  const transitionStyles = {
-    entering: { opacity: 0, display: 'block' },
-    entered: { opacity: 1, display: 'block' },
-    exiting: { opacity: 0, display: 'block' },
-    exited: { opacity: 0, display: 'none' },
-  };
-
-  const closeButtonTooltip = (
-    <Tooltip id="close-button-tooltip">Fechar</Tooltip>
-  );
+   const closeButtonTooltip = (
+      <Tooltip id="close-button-tooltip">Fechar</Tooltip>
+    );
 
   return (
     <>

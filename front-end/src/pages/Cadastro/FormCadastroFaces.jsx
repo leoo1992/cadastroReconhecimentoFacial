@@ -8,20 +8,24 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const FormCadastroFaces = () => {
-  const navigate = useNavigate();
-  const [isFormValid, setIsFormValid] = useState(true);
-  const errorRef = useRef(null);
-  // eslint-disable-next-line
-  const [theme, setTheme] = useState("dark");
-  const [isImageUploaded, setIsImageUploaded] = useState(false);
-  const [isNameEntered, setIsNameEntered] = useState(false);
-  const [isSelfieButtonDisabled, setIsSelfieButtonDisabled] = useState(false);
-
-  const [formData, setFormData] = useState({
-    nome: "",
-    cpf: "",
-    tipo: "",
-  });
+  const navigate = useNavigate(),
+    [isFormValid, setIsFormValid] = useState(true),
+    errorRef = useRef(null),
+    // eslint-disable-next-line
+    [theme, setTheme] = useState("dark"),
+    [isImageUploaded, setIsImageUploaded] = useState(false),
+    [isNameEntered, setIsNameEntered] = useState(false),
+    [isSelfieButtonDisabled, setIsSelfieButtonDisabled] = useState(false),
+    [formData, setFormData] = useState({
+      nome: "",
+      cpf: "",
+      tipo: "",
+    }),
+    [formErrors, setFormErrors] = useState({
+      nome: "",
+      cpf: "",
+      tipo: "",
+    });
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -70,12 +74,6 @@ const FormCadastroFaces = () => {
         toast.error("Erro ao cadastrar : " + error);
       });
   };
-
-  const [formErrors, setFormErrors] = useState({
-    nome: "",
-    cpf: "",
-    tipo: "",
-  });
 
   useEffect(() => {
     if (errorRef.current) {

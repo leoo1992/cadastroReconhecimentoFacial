@@ -4,8 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import MenuIcon from '../HomePage/Menuicon';
 
 const DefaultPage = () => {
-  const [theme, setTheme] = useState("dark");
-  const updateTheme = (newTheme) => {
+  const [theme, setTheme] = useState("dark"),
+  updateTheme = (newTheme) => {
     setTheme(newTheme);
   };
 

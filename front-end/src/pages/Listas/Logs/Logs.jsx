@@ -1,49 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import "../listas.css";
-import api from "../axiosConfig";
-import DataTable from 'react-data-table-component';
-import { Triangle } from 'react-loader-spinner'
-import MenuIcon from '../../HomePage/Menuicon';
-import 'react-toastify/dist/ReactToastify.css';
-import Tooltip from 'react-bootstrap/Tooltip';
-import { SearchField } from '@aws-amplify/ui-react';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilePdf, faFileExcel, faChartBar } from "@fortawesome/free-solid-svg-icons";
-import { toast, ToastContainer } from 'react-toastify';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import casual from 'casual-browserify';
-import Nav from 'react-bootstrap/Nav';
-import Button from 'react-bootstrap/Button';
-
 import {
-  Chart as ChartJS,
-  LinearScale,
-  RadialLinearScale,
-  CategoryScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Legend,
-  Title,
-  Filler,
-} from 'chart.js';
-import { Line, Bar, Pie, Doughnut, PolarArea, Radar } from 'react-chartjs-2';
+  React, useState, useEffect, useCallback, api, DataTable, Triangle, MenuIcon, OverlayTrigger, FontAwesomeIcon,
+  faChartBar, toast, ToastContainer, jsPDF, XLSX, casual, SubHeaderLogs, ChartSection,
+  ativoEnum, tipoEnum, geraGraficoButtonTooltip, customText, columns
+} from './LogsImports'
 
 const Logs = () => {
-  const [theme, setTheme] = useState("dark");
-  const [paginationPerPage, setPaginationPerPage] = useState(10);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [totalRows, setTotalRows] = useState(0);
-  const [page, setPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showChart, setShowChart] = useState(false);
-  const [activeChart, setActiveChart] = useState('bar');
-  const [activeButton, setActiveButton] = useState('bar');
+  const [theme, setTheme] = useState("dark"),
+    [paginationPerPage, setPaginationPerPage] = useState(10),
+    [data, setData] = useState([]),
+    [loading, setLoading] = useState(true),
+    [totalRows, setTotalRows] = useState(0),
+    [page, setPage] = useState(1),
+    [searchQuery, setSearchQuery] = useState(''),
+    [showChart, setShowChart] = useState(false),
+    [activeChart, setActiveChart] = useState('bar'),
+    [activeButton, setActiveButton] = useState('bar');
 
   const handleButtonClick = (chartType) => {
     setActiveChart(chartType);
@@ -58,20 +29,6 @@ const Logs = () => {
   const toggleChartVisibility = () => {
     setShowChart(!showChart);
   };
-
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    RadialLinearScale,
-    BarElement,
-    PointElement,
-    LineElement,
-    Title,
-    Filler,
-    Legend,
-    ArcElement
-  );
-
 
   const exportToPDF = async () => {
     try {
@@ -163,16 +120,6 @@ const Logs = () => {
     });
   };
 
-  const printButtonTooltipPDF = (
-    <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>
-  );
-  const printButtonTooltipExcel = (
-    <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
-  );
-  const geraGraficoButtonTooltip = (
-    <Tooltip id="add-button-tooltip">Mostrar / Ocultar Gráfico</Tooltip>
-  );
-
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
       setData([]);
@@ -213,28 +160,6 @@ const Logs = () => {
     setTheme(newTheme);
   };
 
-
-  const customText = {
-    rowsPerPage: 'Linhas por página:',
-    previous: 'Anterior',
-    next: 'Próxima',
-    loading: 'Carregando',
-    noMatch: 'Nenhum registro encontrado',
-    page: 'Página',
-    of: 'de',
-  };
-
-  const ativoEnum = {
-    0: "Não",
-    1: "Sim",
-  };
-  const tipoEnum = {
-    0: "Aluno",
-    1: "Funcionário",
-    2: "Responsável",
-    3: "Terceiro",
-  };
-
   const formattedData = data ? data.flatMap(log => {
     if (!log.Pessoas || !Array.isArray(log.Pessoas)) {
       return [];
@@ -256,58 +181,6 @@ const Logs = () => {
       };
     });
   }) : [];
-
-
-  const columns = [
-    {
-      name: 'Id',
-      selector: (row) => row.id,
-      width: '65px',
-      sortable: true,
-      reorder: true,
-    },
-    {
-      name: 'Nome',
-      selector: (row) => row.pessoaNome,
-      sortable: true,
-      reorder: true,
-    },
-    {
-      name: 'Tipo',
-      selector: (row) => row.pessoaTipo,
-      sortable: true,
-      reorder: true,
-      width: '115px',
-    },
-    {
-      name: 'CPF',
-      selector: (row) => row.pessoaCpf,
-      sortable: true,
-      reorder: true,
-      width: '115px',
-    },
-    {
-      name: 'Data Entrada',
-      selector: (row) => row.data,
-      sortable: true,
-      reorder: true,
-      width: '120px',
-    },
-    {
-      name: 'Hora Entrada',
-      selector: (row) => row.hora,
-      sortable: true,
-      reorder: true,
-      width: '120px',
-    },
-    {
-      name: 'Ativo',
-      selector: (row) => row.pessoaAtivo,
-      sortable: true,
-      reorder: true,
-      width: '75px',
-    },
-  ];
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -337,25 +210,11 @@ const Logs = () => {
         label: 'Tipo',
         data: formattedData.map(() => casual.integer(0, 6)),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.75)',
-          'rgba(54, 162, 235, 0.75)',
-          'rgba(255, 206, 86, 0.75)',
-          'rgba(75, 192, 192, 0.75)',
-          'rgba(153, 102, 255, 0.75)',
-          'rgba(255, 159, 64, 0.75)',
-          'rgba(128, 0, 128, 0.75)',
-          'rgba(0, 128, 128, 0.75)',
-          'rgba(255, 69, 0, 0.75)',
-          'rgba(46, 139, 87, 0.75)',
-          'rgba(255, 215, 0, 0.75)',
-          'rgba(0, 255, 0, 0.75)',
-          'rgba(255, 0, 0, 0.75)',
-          'rgba(0, 0, 255, 0.75)',
-          'rgba(255, 165, 0, 0.75)',
-          'rgba(75, 0, 130, 0.75)',
-          'rgba(255, 192, 203, 0.75)',
-          'rgba(0, 255, 255, 0.75)',
-          'rgba(255, 255, 0, 0.75)',
+          'rgba(255, 99, 132, 0.75)', 'rgba(54, 162, 235, 0.75)', 'rgba(255, 206, 86, 0.75)', 'rgba(75, 192, 192, 0.75)',
+          'rgba(153, 102, 255, 0.75)', 'rgba(255, 159, 64, 0.75)', 'rgba(128, 0, 128, 0.75)', 'rgba(0, 128, 128, 0.75)',
+          'rgba(255, 69, 0, 0.75)', 'rgba(46, 139, 87, 0.75)', 'rgba(255, 215, 0, 0.75)', 'rgba(0, 255, 0, 0.75)',
+          'rgba(255, 0, 0, 0.75)', 'rgba(0, 0, 255, 0.75)', 'rgba(255, 165, 0, 0.75)', 'rgba(75, 0, 130, 0.75)',
+          'rgba(255, 192, 203, 0.75)', 'rgba(0, 255, 255, 0.75)', 'rgba(255, 255, 0, 0.75)',
         ],
         borderColor: [
           theme === 'dark' ? 'cyan' : 'black',
@@ -497,33 +356,14 @@ const Logs = () => {
                   dense
                   subHeader
                   subHeaderComponent={
-                    <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
-                      <div className='m-0 p-0 d-flex nowrap'>
-                        <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
-                          <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                        </OverlayTrigger>
-                        <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
-                          <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
-                        </OverlayTrigger>
-                      </div>
-                      <SearchField
-                        placeholder="Procurar"
-                        size="small"
-                        hasSearchButton={false}
-                        hasSearchIcon={false}
-                        labelHidden={false}
-                        onChange={(event) => onChange(event)}
-                        onClear={onClear}
-                        value={searchQuery}
-                        className={`m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap ${showChart ? 'd-none' : 'd-flex'}`}
-                        style={{
-                          textAlign: "center",
-                          borderRadius: "8px",
-                          lineHeight: "29px",
-                          width: '150px'
-                        }}
-                      />
-                    </div>
+                    <SubHeaderLogs
+                      exportToPDF={exportToPDF}
+                      exportToExcel={exportToExcel}
+                      onClear={onClear}
+                      onChange={onChange}
+                      searchQuery={searchQuery}
+                      showChart={showChart}
+                    />
                   }
                   subHeaderAlign="left"
                   style={{
@@ -536,84 +376,14 @@ const Logs = () => {
                 <div className="d-none p-0 m-0"></div>
               )}
               {showChart ? (
-                <>
-                  <div className='d-flex flex-column justify-content-center align-content-center align-items-center p-0 m-0 h-75 w-100'>
-                    <h5 className={`mt-5 text-${theme === 'dark' ? 'light' : 'dark'}`}>Gráficos de Logs</h5>
-                    <Nav variant="pills" defaultActiveKey="/home">
-                      <Nav.Item className='mb-4'>
-                        <Button
-                          className={`m-1 btn ${activeButton === 'bar' ? 'btn-primary' : 'btn-info'} btn-sm`}
-                          onClick={() => handleButtonClick('bar')}
-                        >Barras
-                        </Button>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Button
-                          className={`m-1 btn ${activeButton === 'line' ? 'btn-primary' : 'btn-info'} btn-sm`}
-                          onClick={() => handleButtonClick('line')}
-                        >Linha
-                        </Button>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Button
-                          className={`m-1 btn ${activeButton === 'pie' ? 'btn-primary' : 'btn-info'} btn-sm`}
-                          onClick={() => handleButtonClick('pie')}
-                        >Pizza
-                        </Button>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Button
-                          className={`m-1 btn ${activeButton === 'doughnut' ? 'btn-primary' : 'btn-info'} btn-sm`}
-                          onClick={() => handleButtonClick('doughnut')}
-                        >Doughnut
-                        </Button>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Button
-                          className={`m-1 btn ${activeButton === 'polar' ? 'btn-primary' : 'btn-info'} btn-sm`}
-                          onClick={() => handleButtonClick('polar')}
-                        >Polar
-                        </Button>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Button
-                          className={`m-1 btn ${activeButton === 'area' ? 'btn-primary' : 'btn-info'} btn-sm`}
-                          onClick={() => handleButtonClick('area')}
-                        >Area
-                        </Button>
-                      </Nav.Item>
-                    </Nav>
-                    <Bar
-                      data={chartData}
-                      options={options}
-                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'bar' ? 'd-flex' : 'd-none'}`}
-                    />
-                    <Line
-                      data={chartData} options={options}
-                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'line' ? 'd-flex' : 'd-none'}`}
-                    />
-                    <Pie
-                      data={chartData}
-                      options={options}
-                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'pie' ? 'd-flex' : 'd-none'}`}
-                    />
-                    <Doughnut
-                      data={chartData}
-                      options={options}
-                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'doughnut' ? 'd-flex' : 'd-none'}`}
-                    />
-                    <PolarArea
-                      data={chartData}
-                      options={options}
-                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'polar' ? 'd-flex' : 'd-none'}`}
-                    />
-                    <Radar
-                      data={chartData}
-                      options={options}
-                      className={`border border-1 border-black text-info p-3 m-0 ${activeChart === 'area' ? 'd-flex' : 'd-none'}`}
-                    />
-                  </div>
-                </>
+                <ChartSection
+                  theme={theme}
+                  chartData={chartData}
+                  options={options}
+                  activeChart={activeChart}
+                  activeButton={activeButton}
+                  handleButtonClick={handleButtonClick}
+                />
               ) : (
                 <div className="d-none p-0 m-0"></div>
               )}

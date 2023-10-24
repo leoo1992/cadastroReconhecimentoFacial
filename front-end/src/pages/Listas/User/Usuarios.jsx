@@ -1,33 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import '../listas.css';
-import api from '../axiosConfig';
-import DataTable from 'react-data-table-component';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Triangle } from 'react-loader-spinner';
-import MenuIcon from '../../HomePage/Menuicon';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import DeleteUserModal from './DeleteUserModal';
-import SubHeaderUser from './SubHeaderUser';
+import {
+  React, useState, useEffect, useCallback, api, DataTable, Triangle, MenuIcon, UserContextActions,
+  toast, ToastContainer, jsPDF, XLSX, DeleteUserModal, SubHeaderUser, columns, customText
+} from './UserImports';
 
 const Usuarios = () => {
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [toggleCleared, setToggleCleared] = useState(false);
-  const [theme, setTheme] = useState('dark');
-  const [paginationPerPage, setPaginationPerPage] = useState(10);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [totalRows, setTotalRows] = useState(0);
-  const [page, setPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showModalDelete, setShowModalDelete] = useState(false);
-  const [idToDelete, setIdToDelete] = useState(null);
+  const [selectedRows, setSelectedRows] = useState([]),
+    [toggleCleared, setToggleCleared] = useState(false),
+    [theme, setTheme] = useState('dark'),
+    [paginationPerPage, setPaginationPerPage] = useState(10),
+    [data, setData] = useState([]),
+    [loading, setLoading] = useState(true),
+    [totalRows, setTotalRows] = useState(0),
+    [page, setPage] = useState(1),
+    [searchQuery, setSearchQuery] = useState(''),
+    [showModalDelete, setShowModalDelete] = useState(false),
+    [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
     const divElement = document.querySelector('.rdt_TableHeader > div > div');
@@ -142,56 +129,12 @@ const Usuarios = () => {
         setIdToDelete(selectedIds[0]);
       }
     };
-    return (
-      <div className='p-0 m-0 container d-flex justify-content-end'>
-        <div className='p-0 m-0 row align-items-center'>
-          <div className='p-0 m-0'>
-            <OverlayTrigger placement='bottom' overlay={<Tooltip id='delete-button-tooltip'>Excluir</Tooltip>}>
-              <FontAwesomeIcon icon={faTrash} className='btn p-1 m-1 text-bg-danger' key='delete' onClick={handleDelete} />
-            </OverlayTrigger>
-          </div>
-          <br />
-        </div>
-      </div>
-    );
+    return <UserContextActions selectedRows={selectedRows} handleDelete={handleDelete} />;
   }, [selectedRows]);
-
-  const customText = {
-    rowsPerPage: 'Linhas por página:',
-    previous: 'Anterior',
-    next: 'Próxima',
-    loading: 'Carregando',
-    noMatch: 'Nenhum registro encontrado',
-    page: 'Página',
-    of: 'de',
-    selected: '{0} selecionado',
-    noSelectedRowsSelected: '',
-    selectedRows: {
-      one: '{0} selecionado',
-      other: '{0} selecionados',
-    },
-    noRowsSelected: '',
-  };
 
   const customSelectedMessage = (selectedCount) => {
     return `${selectedCount} ${selectedCount === 1 ? 'selecionado' : 'selecionados'}`;
   };
-
-  const columns = [
-    {
-      name: 'Id',
-      selector: (row) => row.id,
-      sortable: true,
-      reorder: true,
-      width: '60px',
-    },
-    {
-      name: 'Usuario',
-      selector: (row) => row.usuario,
-      sortable: true,
-      reorder: true,
-    },
-  ];
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

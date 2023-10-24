@@ -6,17 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 
-console.error = () => {};
-console.warn = () => {};
-console.info = () => {};
-console.log = () => {};
-console.trace = () => {};
-console.debug = () => {};
+const root = document.getElementById('root'),
+  timeToken = new Date(),
+  cookies = Cookies.get(),
+  actionsExecuted = localStorage.getItem('actionsExecuted');
 
-const root = document.getElementById('root');
-
-const timeToken= new Date();
-const cookies = Cookies.get();
+console.error = () => { };
+console.warn = () => { };
+console.info = () => { };
+console.log = () => { };
+console.trace = () => { };
+console.debug = () => { };
 
 if (timeToken.getHours() < new Date().getHours()) {
   localStorage.removeItem("token");
@@ -25,7 +25,6 @@ if (timeToken.getHours() < new Date().getHours()) {
   sessionStorage.clear();
 };
 
-const actionsExecuted = localStorage.getItem('actionsExecuted');
 if (!actionsExecuted) {
   const cookies = Cookies.get();
   for (const cookie in cookies) {
@@ -38,10 +37,9 @@ if (!actionsExecuted) {
 
 const render = () => {
   ReactDOM.createRoot(root).render(
-      <App />
+    <App />
   );
 };
 
 render();
-
 reportWebVitals();
