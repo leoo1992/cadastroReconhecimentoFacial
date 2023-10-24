@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import "./listas.css";
-import api from "./axiosConfig";
+import "../listas.css";
+import api from "../axiosConfig";
 import DataTable from 'react-data-table-component';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTimesCircle, faTrash, faPlus, faEye, faEyeSlash, faCameraRetro, faFilePdf, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { Triangle } from 'react-loader-spinner'
-import MenuIcon from '../HomePage/Menuicon';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import { Link, useNavigate } from 'react-router-dom';
-import Tooltip from 'react-bootstrap/Tooltip';
-import { SearchField } from '@aws-amplify/ui-react';
+import MenuIcon from '../../HomePage/Menuicon';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Modal, Button } from 'react-bootstrap';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import DeleteModal from './DeleteModal';
+import DesativarModal from './DesativarModal';
+import SubHeaderComponent from './SubHeaderComponent';
+import ContextActions from './ContextActions';
 
 const Cadastrados = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -49,7 +47,6 @@ const Cadastrados = () => {
       toast.error("Erro ao excluir o registro");
     }
   };
-
 
   const fetchAllData = async () => {
     try {
@@ -136,7 +133,6 @@ const Cadastrados = () => {
         },
       });
 
-
       const { registros, totalregistros } = response.data;
 
       setData(registros);
@@ -203,7 +199,6 @@ const Cadastrados = () => {
     };
 
     const handleEditar = async () => {
-      debugger
       if (selectedRows.length === 1) {
         const selectedId = selectedRows[0].id;
         navigate(`/atualiza/${selectedId}`);
@@ -256,36 +251,14 @@ const Cadastrados = () => {
     };
 
     return (
-      <>
-        <div className='p-0 m-0 container-fluid d-flex justify-content-end align-items-center' >
-
-          <label htmlFor="image-upload" className="btn text-bg-light m-1 p-0 btn">
-            <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-image-tooltip">Add Image</Tooltip>}>
-              <FontAwesomeIcon icon={faCameraRetro} className='m-0 p-0' />
-            </OverlayTrigger>
-            <input
-              type="file"
-              id="image-upload"
-              accept=".jpeg"
-              style={{ display: 'none' }}
-              onChange={handleImageChange}
-              className='m-0 p-0 btn-sm btn'
-            />
-          </label>
-
-          <OverlayTrigger placement="bottom" overlay={<Tooltip id="edit-button-tooltip">Editar</Tooltip>}>
-            <FontAwesomeIcon icon={faEdit} className="btn text-bg-primary p-1 m-1" onClick={handleEditar} />
-          </OverlayTrigger>
-
-          <OverlayTrigger placement="bottom" overlay={<Tooltip id="times-circle-button-tooltip">Desativar</Tooltip>}>
-            <FontAwesomeIcon icon={faTimesCircle} className="btn text-bg-warning p-1 m-1" onClick={handleDesativar} />
-          </OverlayTrigger>
-
-          <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
-            <FontAwesomeIcon icon={faTrash} className="btn p-1 m-1 text-bg-danger" key="delete" onClick={handleDelete} />
-          </OverlayTrigger>
-        </div>
-      </>
+      <ContextActions
+      selectedRows={selectedRows}
+      navigate={navigate}
+      handleImageChange={handleImageChange}
+      handleDelete={handleDelete}
+      handleDesativar={handleDesativar}
+      handleEditar={handleEditar}
+    />
     );
   }, [selectedRows, navigate]);
 
@@ -356,18 +329,6 @@ const Cadastrados = () => {
     return () => clearTimeout(timeoutId);
   }, [page, paginationPerPage, fetchUsers, showInactive, searchQuery]);
 
-
-  const addButtonTooltip = (
-    <Tooltip id="add-button-tooltip">Novo</Tooltip>
-  );
-
-  const printButtonTooltipPDF = (
-    <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>
-  );
-  const printButtonTooltipExcel = (
-    <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
-  );
-
   const onClear = () => {
     setSearchQuery('');
     search('');
@@ -380,47 +341,9 @@ const Cadastrados = () => {
 
   return (
     <>
-      <Modal show={showModalDelete} onHide={handleCancelDelete}>
-        <div className={`modal-content text-center w-auto ${theme === "dark" ? "bg-dark text-white fw-bold" : "bg-light"}`}>
-          <Modal.Header>
-            <Modal.Title className='fs-5'>Exclusão</Modal.Title>
-            <Button className='btn btn-info btn-close bg-info btn-sm p-2' onClick={handleCancelDelete}></Button>
-          </Modal.Header>
-          <Modal.Body className='fs-6'>
-            Tem certeza que deseja excluir?
-          </Modal.Body>
-          <Modal.Footer className='justify-justify-content-evenly'>
-            <Button variant="info fw-bold" onClick={handleCancelDelete}>
-              Cancelar
-            </Button>
-            <Button variant="danger fw-bold" onClick={handleConfirmDelete}>
-              Confirmar
-            </Button>
-          </Modal.Footer>
-        </div>
-      </Modal>
-      <Modal show={showModalDesativar} onHide={handleCancelDesativar}>
-        <div className={`modal-content text-center w-auto ${theme === "dark" ? "bg-dark text-white fw-bold" : "bg-light"}`}>
-          <Modal.Header>
-            <Modal.Title className='fs-5'>{ativo === "1" ? "Desativar" : "Ativar"}</Modal.Title>
-            <Button className='btn btn-info btn-close bg-info btn-sm p-2' onClick={handleCancelDesativar}></Button>
-          </Modal.Header>
-          <Modal.Body className='fs-6'>
-            Tem certeza que deseja {ativo === "1" ? "desativar" : "ativar"}?
-          </Modal.Body>
-          <Modal.Footer className='justify-justify-content-evenly'>
-            <Button variant="info fw-bold" onClick={handleCancelDesativar}>
-              Cancelar
-            </Button>
-            <Button variant={ativo === "1" ? "danger" : "success"} onClick={handleConfirmDesativar}>
-              Confirmar
-            </Button>
-          </Modal.Footer>
-        </div>
-      </Modal>
-
-      <ToastContainer
-        position="top-center"
+      <DeleteModal show={showModalDelete} onCancel={handleCancelDelete} onConfirm={handleConfirmDelete} />
+      <DesativarModal show={showModalDesativar} onCancel={handleCancelDesativar} onConfirm={handleConfirmDesativar} ativo={ativo} />
+      <ToastContainer position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -481,48 +404,15 @@ const Cadastrados = () => {
               dense
               subHeader
               subHeaderComponent={
-                <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
-                  <div className='m-0 p-0 d-flex nowrap'>
-                    <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
-                      <Link to="/cadastro">
-                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                      </Link>
-                    </OverlayTrigger>
-                    {showInactive ? (
-                      <OverlayTrigger placement="bottom" overlay={<Tooltip id="ocultar-button-tooltip">Ocultar Inativos</Tooltip>}>
-                        <FontAwesomeIcon icon={faEyeSlash} onClick={() => setShowInactive(false)} className='eye-icon btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                      </OverlayTrigger>
-                    ) : (
-                      <OverlayTrigger placement="bottom" overlay={<Tooltip id="exibir-button-tooltip">Exibir Inativos</Tooltip>}>
-                        <FontAwesomeIcon icon={faEye} onClick={() => setShowInactive(true)} className='eye-icon btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                      </OverlayTrigger>
-                    )}
-                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
-                      <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                    </OverlayTrigger>
-                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
-                      <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
-                    </OverlayTrigger>
-                  </div>
-
-                  <SearchField
-                    placeholder="Procurar"
-                    size="small"
-                    hasSearchButton={false}
-                    hasSearchIcon={false}
-                    labelHidden={false}
-                    onChange={(event) => onChange(event)}
-                    onClear={onClear}
-                    value={searchQuery}
-                    className='m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap d-flex'
-                    style={{
-                      textAlign: "center",
-                      borderRadius: "8px",
-                      lineHeight: "29px",
-                      width: '150px'
-                    }}
-                  />
-                </div>
+                <SubHeaderComponent
+                  showInactive={showInactive}
+                  setShowInactive={setShowInactive}
+                  exportToPDF={exportToPDF}
+                  exportToExcel={exportToExcel}
+                  searchQuery={searchQuery}
+                  onChange={onChange}
+                  onClear={onClear}
+                />
               }
               subHeaderAlign="left"
               style={{ width: '100%', height: '100%' }}

@@ -1,62 +1,52 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import "./listas.css";
-import api from "./axiosConfig";
+import '../listas.css';
+import api from '../axiosConfig';
 import DataTable from 'react-data-table-component';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faPlus, faFilePdf, faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { Triangle } from 'react-loader-spinner'
-import MenuIcon from '../HomePage/Menuicon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Triangle } from 'react-loader-spinner';
+import MenuIcon from '../../HomePage/Menuicon';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import { Link } from 'react-router-dom';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { SearchField } from '@aws-amplify/ui-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Modal, Button } from 'react-bootstrap';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-
+import DeleteUserModal from './DeleteUserModal';
+import SubHeaderUser from './SubHeaderUser';
 
 const Usuarios = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggleCleared, setToggleCleared] = useState(false);
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState('dark');
   const [paginationPerPage, setPaginationPerPage] = useState(10);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [page, setPage] = useState(1);
-  const divElement = document.querySelector('.rdt_TableHeader > div > div');
   const [searchQuery, setSearchQuery] = useState('');
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
 
+  useEffect(() => {
+    const divElement = document.querySelector('.rdt_TableHeader > div > div');
 
-  const handleConfirmDelete = async () => {
-    try {
-      await api.delete(`/deletaruser/${idToDelete}`);
-      setShowModalDelete(false);
-      setToggleCleared(!toggleCleared);
-      toast.success("Usuário excluído com sucesso!");
-      setTimeout(() => {
-        window.location.reload();
-      }, 4000);
-    } catch (error) {
-      toast.error("Erro ao excluir o usuário");
+    if (divElement) {
+      const selectedId = selectedRows.map((r) => r.id);
+      divElement.textContent = selectedId + '  -  Selecionado';
     }
-  };
+  }, [selectedRows]);
 
-  const fetchAllData = async () => {
+  const fetchAllData = useCallback(async () => {
     try {
-      const response = await api.get('/imprimiruser', {
-      });
+      const response = await api.get('/imprimiruser', {});
       return response.data.registros;
     } catch (error) {
       console.error('Error fetching all data: ', error);
       return [];
     }
-  };
+  }, []);
 
   const exportToPDF = async () => {
     const allData = await fetchAllData();
@@ -67,7 +57,7 @@ const Usuarios = () => {
       body: tableData,
     });
     doc.save('usuarios.pdf');
-    toast.info("Download Iniciado");
+    toast.info('Download Iniciado');
   };
 
   const exportToExcel = async () => {
@@ -80,23 +70,30 @@ const Usuarios = () => {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Usuarios');
     XLSX.writeFile(wb, 'Usuarios.xlsx');
-    toast.info("Download Iniciado");
+    toast.info('Download Iniciado');
   };
 
+  const handleConfirmDelete = async () => {
+    try {
+      await api.delete(`/deletaruser/${idToDelete}`);
+      setShowModalDelete(false);
+      setToggleCleared(!toggleCleared);
+      toast.success('Usuário excluído com sucesso!');
+      setTimeout(() => {
+        window.location.reload();
+      }, 4000);
+    } catch (error) {
+      toast.error('Erro ao excluir o usuário');
+    }
+  };
 
   const handleCancelDelete = () => {
     setShowModalDelete(false);
   };
 
-  if (divElement) {
-    const selectedId = selectedRows.map((r) => r.id);
-    divElement.textContent = selectedId + '  -  Selecionado';
-  }
-
   const fetchUsers = useCallback(async (page, perPage, searchQuery) => {
     try {
-      let whereClause = {};
-
+      const whereClause = {};
       const response = await api.get(`/listaruser?pagina=${page}&limitePorPagina=${paginationPerPage}&search=${searchQuery}`, {
         params: {
           where: whereClause,
@@ -108,7 +105,7 @@ const Usuarios = () => {
       setData(registros);
       setTotalRows(totalregistros);
     } catch (error) {
-      console.error("Erro ao buscar dados do servidor: ", error);
+      console.error('Erro ao buscar dados do servidor: ', error);
     }
   }, [paginationPerPage]);
 
@@ -117,7 +114,7 @@ const Usuarios = () => {
       const response = await api.get(`/pesquisaruser?termo=${query}`);
       setData(response.data.resultados);
     } catch (error) {
-      console.error("Erro ao realizar pesquisa: ", error);
+      console.error('Erro ao realizar pesquisa: ', error);
     }
   };
 
@@ -125,7 +122,7 @@ const Usuarios = () => {
     setPage(newPage);
   };
 
-  const handlePerRowsChange = async (newPerPage) => {
+  const handlePerRowsChange = (newPerPage) => {
     setPaginationPerPage(newPerPage);
   };
 
@@ -146,18 +143,16 @@ const Usuarios = () => {
       }
     };
     return (
-      <>
-        <div className='p-0 m-0 container d-flex justify-content-end' >
-          <div className='p-0 m-0 row align-items-center' >
-            <div className='p-0 m-0'>
-              <OverlayTrigger placement="bottom" overlay={<Tooltip id="delete-button-tooltip">Excluir</Tooltip>}>
-                <FontAwesomeIcon icon={faTrash} className="btn p-1 m-1 text-bg-danger" key="delete" onClick={handleDelete} />
-              </OverlayTrigger>
-            </div>
-            <br />
+      <div className='p-0 m-0 container d-flex justify-content-end'>
+        <div className='p-0 m-0 row align-items-center'>
+          <div className='p-0 m-0'>
+            <OverlayTrigger placement='bottom' overlay={<Tooltip id='delete-button-tooltip'>Excluir</Tooltip>}>
+              <FontAwesomeIcon icon={faTrash} className='btn p-1 m-1 text-bg-danger' key='delete' onClick={handleDelete} />
+            </OverlayTrigger>
           </div>
+          <br />
         </div>
-      </>
+      </div>
     );
   }, [selectedRows]);
 
@@ -195,7 +190,7 @@ const Usuarios = () => {
       selector: (row) => row.usuario,
       sortable: true,
       reorder: true,
-    }
+    },
   ];
 
   useEffect(() => {
@@ -206,18 +201,6 @@ const Usuarios = () => {
     }, 1000);
     return () => clearTimeout(timeoutId);
   }, [page, paginationPerPage, fetchUsers, searchQuery]);
-
-
-  const addButtonTooltip = (
-    <Tooltip id="add-button-tooltip">Novo</Tooltip>
-  );
-
-  const printButtonTooltipPDF = (
-    <Tooltip id="add-button-tooltip">Imprimir PDF</Tooltip>
-  );
-  const printButtonTooltipExcel = (
-    <Tooltip id="add-button-tooltip">Imprimir Excel</Tooltip>
-  );
 
   const onClear = () => {
     setSearchQuery('');
@@ -231,28 +214,14 @@ const Usuarios = () => {
 
   return (
     <>
-      <Modal show={showModalDelete} onHide={handleCancelDelete}>
-        <div className={`modal-content text-center w-auto ${theme === "dark" ? "bg-dark text-white fw-bold" : "bg-light"}`}>
-          <Modal.Header>
-            <Modal.Title className='fs-5'>Exclusão</Modal.Title>
-            <Button className='btn btn-info btn-close bg-info btn-sm p-2' onClick={handleCancelDelete}></Button>
-          </Modal.Header>
-          <Modal.Body className='fs-6'>
-            Tem certeza que deseja excluir?
-          </Modal.Body>
-          <Modal.Footer className='justify-justify-content-evenly'>
-            <Button variant="info fw-bold" onClick={handleCancelDelete}>
-              Cancelar
-            </Button>
-            <Button variant="danger fw-bold" onClick={handleConfirmDelete}>
-              Confirmar
-            </Button>
-          </Modal.Footer>
-        </div>
-      </Modal>
-
+      <DeleteUserModal
+        showModal={showModalDelete}
+        handleConfirmDelete={handleConfirmDelete}
+        handleCancelDelete={handleCancelDelete}
+        theme={theme}
+      />
       <ToastContainer
-        position="top-center"
+        position='top-center'
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -268,25 +237,25 @@ const Usuarios = () => {
           <Triangle
             color='cyan'
             className='vh-100 vw-100 p-0 m-0'
-            ariaLabel="triangle-loading"
+            ariaLabel='triangle-loading'
             visible={true}
           />
           <h1 className='text-center text-info mt-3 pt-3'>{customText.loading}</h1>
         </div>
       ) : (
         <>
-          <div className="top-0 text-end bg-fundo col d-flex sombra-baixo">
-            <h4 className='text-start text-info m-0 p-2 col align-self-center' >Usuários</h4>
+          <div className='top-0 text-end bg-fundo col d-flex sombra-baixo'>
+            <h4 className='text-start text-info m-0 p-2 col align-self-center'>Usuários</h4>
             <MenuIcon updateTheme={updateTheme} />
           </div>
-          <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
+          <div className={`container-fluid m-0 p-0 vh-100 ${theme === 'dark' ? 'bg-dark' : 'bg-light'}`}>
             <DataTable
               className=''
               columns={columns}
               striped
               data={data}
               actions
-              defaultSortField="id"
+              defaultSortField='id'
               contextActions={contextActions}
               onSelectedRowsChange={handleRowSelected}
               clearSelectedRows={toggleCleared}
@@ -313,47 +282,22 @@ const Usuarios = () => {
               dense
               subHeader
               subHeaderComponent={
-                <div className='d-flex flex-row m-0 p-0 w-100  justify-content-between flex-wrap'>
-                  <div className='m-0 p-0 d-flex nowrap'>
-                    <OverlayTrigger placement="bottom" overlay={addButtonTooltip}>
-                      <Link to="/cadastrousers">
-                        <FontAwesomeIcon icon={faPlus} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                      </Link>
-                    </OverlayTrigger>
-                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipPDF}>
-                      <FontAwesomeIcon icon={faFilePdf} onClick={exportToPDF} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' />
-                    </OverlayTrigger>
-                    <OverlayTrigger placement='bottom' overlay={printButtonTooltipExcel}>
-                      <FontAwesomeIcon icon={faFileExcel} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={exportToExcel} />
-                    </OverlayTrigger>
-                  </div>
-                  <SearchField
-                    placeholder="Procurar"
-                    size="small"
-                    hasSearchButton={false}
-                    hasSearchIcon={false}
-                    labelHidden={false}
-                    onChange={(event) => onChange(event)}
-                    onClear={onClear}
-                    value={searchQuery}
-                    className='m-0 p-0 rounded border-0 text-center fw-bolder fs-6 input-group-sm flex-wrap d-flex'
-                    style={{
-                      textAlign: "center",
-                      borderRadius: "8px",
-                      lineHeight: "29px",
-                      width: '150px'
-                    }}
-                  />
-                </div>
+                <SubHeaderUser
+                  exportToPDF={exportToPDF}
+                  exportToExcel={exportToExcel}
+                  onChange={onChange}
+                  onClear={onClear}
+                  searchQuery={searchQuery}
+                />
               }
-              subHeaderAlign="left"
+              subHeaderAlign='left'
               style={{ width: '100%', height: '100%' }}
             />
           </div>
         </>
-      )
-      }
+      )}
     </>
   );
 };
+
 export default Usuarios;

@@ -6,9 +6,9 @@ import Listas from "./pages/Listas";
 import Login from "./pages/LoginPage";
 import CadastrarUser from "./pages/LoginPage/CadastroUser";
 import Atualiza from "./pages/Cadastro/Atualiza";
-import Cadastrados from "./pages/Listas/Cadastrados";
-import Usuarios from "./pages/Listas/Usuarios";
-import Logs from "./pages/Listas/Logs";
+import Cadastrados from "./pages/Listas/Cadastrados/Cadastrados";
+import Usuarios from "./pages/Listas/User/Usuarios";
+import Logs from "./pages/Listas/Logs/Logs";
 
 const AppRoutes = () => {
   const [authenticated, setAuthenticated] = useState(false);

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import "./listas.css";
-import api from "./axiosConfig";
+import "../listas.css";
+import api from "../axiosConfig";
 import DataTable from 'react-data-table-component';
 import { Triangle } from 'react-loader-spinner'
-import MenuIcon from '../HomePage/Menuicon';
+import MenuIcon from '../../HomePage/Menuicon';
 import 'react-toastify/dist/ReactToastify.css';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { SearchField } from '@aws-amplify/ui-react';

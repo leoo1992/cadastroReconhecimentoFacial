@@ -25,7 +25,6 @@ sequelize.sync().then(() => {
     console.log('Servidor rodando na porta ' + port);
 });
 
-
 //POSTS ROUTERS **********************************
 // rota login
 app.post("/login", async (req, res) => {
@@ -62,7 +61,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Erro ao fazer login." });
   }
 });
-
 // rota cadastro usuarios
 app.post("/cadastrousuarios", async (req, res) => {
   const { usuario, senha } = req.body;
@@ -369,7 +367,6 @@ app.get("/listarlogs", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
-
 app.get("/imprimirlogs", async (req, res) => {
   try {
     const registros = await Log.findAll({
@@ -388,7 +385,6 @@ app.get("/imprimirlogs", async (req, res) => {
     res.status(500).json({ error: "Erro ao listar os dados." });
   }
 });
-
 app.get("/pesquisarlogs", async (req, res) => {
   try {
     const { termo } = req.query;
@@ -435,10 +431,6 @@ app.delete("/deletar/:id", async (req, res) => {
       return res.status(404).json({ error: "Registro não encontrado." });
     }
 
-    await PessoaResponsabilidade.destroy({
-      where: { ResponsavelId: id },
-    });
-
     await pessoaExistente.destroy();
 
     res.status(204).send();
@@ -448,7 +440,7 @@ app.delete("/deletar/:id", async (req, res) => {
   }
 });
 // rota deletar usuario por id
-app.delete("/deletaruser", async (req, res) => {
+app.delete("/deletaruser/:id", async (req, res) => {
   try {
     const { id } = req.params;
 

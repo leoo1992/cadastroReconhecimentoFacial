@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-const BotoesLista = () => {
+const BotoesMenuLista = () => {
 
   const createButtonWithTooltip = (text, link, tooltipText) => (
     <OverlayTrigger
@@ -33,4 +33,4 @@ const BotoesLista = () => {
   );
 };
 
-export default BotoesLista;
+export default BotoesMenuLista;
