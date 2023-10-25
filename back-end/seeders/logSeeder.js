@@ -8,7 +8,7 @@ const seedLog = async () => {
 
     const logData = [
       {
-        data: new Date("2023-08-28 14:00:00"),
+        data: new Date(),
       },
       {
         data: new Date(),
