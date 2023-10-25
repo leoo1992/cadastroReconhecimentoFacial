@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator');
-const Pessoa = require('../models/Pessoa');
+const Pessoa = require('../../models/Pessoa');
 
 // rota para cadastro de pessoas
 router.post("/cadastro", async (req, res) => {

@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Pessoa = require('../models/Pessoa');
+const Users = require("../../models/Users");
 
-//rota para deletar por id:
-router.delete("/deletar/:id", async (req, res) => {
+// rota deletar usuario por id
+router.delete("/deletaruser/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const pessoaExistente = await Pessoa.findByPk(id);
+    const UserExistente = await Users.findByPk(id);
 
-    if (!pessoaExistente) {
+    if (!UserExistente) {
       return res.status(404).json({ error: "Registro não encontrado." });
     }
-    await pessoaExistente.destroy();
+    await UserExistente.destroy();
     res.status(204).send();
   } catch (err) {
     console.error("Erro ao excluir registro: ", err);

@@ -1,16 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const Pessoa = require('../models/Pessoa');
+const Log = require("../../models/Log");
 const { Op } = require('sequelize');
+const Pessoa = require('../../models/Pessoa');
 
-router.get("/listar", async (req, res) => {
+// rota listar Logs
+router.get("/listarlogs", async (req, res) => {
   try {
     const pagina = parseInt(req.query.pagina) || 1;
     const limitePorPagina = parseInt(req.query.limitePorPagina) || 10;
-    const showInactive = req.query.showInactive === 'true' || false;
     const searchQuery = req.query.search || '';
-    let whereClause = showInactive ? {} : { ativo: 1 };
-    const totalRegistros = await Pessoa.count({ where: whereClause });
+    let whereClause ={};
+    const totalRegistros = await Log.count({ where: whereClause });
     const paginacao = (pagina - 1) * limitePorPagina;
     const numeroDePaginas = Math.ceil(totalRegistros / limitePorPagina) || 1;
 
@@ -18,19 +19,20 @@ router.get("/listar", async (req, res) => {
       whereClause = {
         ...whereClause,
         [Op.or]: [
-          { nome: { [Op.like]: `%${searchQuery}%` } },
-          { cpf: { [Op.like]: `%${searchQuery}%` } },
-          { id: { [Op.eq]: searchQuery } },
+          { 'id': { [Op.like]: `%${searchQuery}%` } },
         ],
       };
     }
-
-    const registros = await Pessoa.findAll({
+    const registros = await Log.findAll({
       where: whereClause,
       limit: limitePorPagina,
       offset: paginacao,
+      include: [
+        {
+          model: Pessoa,
+        },
+      ],
     });
-
     res.status(200).json({
       registros,
       numerodepaginas: numeroDePaginas,

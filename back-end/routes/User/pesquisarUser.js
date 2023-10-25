@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Log = require("../models/Log");
+const Users = require("../../models/Users");
 const { Op } = require('sequelize');
-const Pessoa = require('../models/Pessoa');
 
-router.get("/pesquisarlogs", async (req, res) => {
+// rota pesquisar usuario
+router.get("/pesquisaruser", async (req, res) => {
   try {
     const { termo } = req.query;
 
@@ -14,24 +14,16 @@ router.get("/pesquisarlogs", async (req, res) => {
 
     console.log("Termo de pesquisa:", termo);
 
-    const registros = await Log.findAll({
+    const resultados = await Users.findAll({
       where: {
         [Op.or]: [
-          { '$Pessoas.nome$': { [Op.like]: `%${termo}%` } },
+          { usuario: { [Op.like]: `%${termo}%` } },
+          { id: { [Op.eq]: termo } },
         ],
       },
-      include: [
-        {
-          model: Pessoa,
-          as: 'Pessoas',
-          through: {
-            attributes: [],
-          },
-        },
-      ],
     });
 
-    res.status(200).json({ registros });
+    res.status(200).json({ resultados });
   } catch (err) {
     console.error("Erro ao realizar pesquisa geral: ", err);
     res.status(500).json({ error: "Erro ao realizar pesquisa geral." });

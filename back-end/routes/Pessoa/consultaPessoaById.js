@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Pessoa = require('../models/Pessoa');
+const Pessoa = require('../../models/Pessoa');
 
 // rota para buscar uma pessoa pelo id
 router.get("/atualizar/:id", async (req, res) => {

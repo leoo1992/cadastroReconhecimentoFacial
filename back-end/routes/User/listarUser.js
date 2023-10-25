@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Users = require("../models/Users");
+const Users = require("../../models/Users");
 const { Op } = require('sequelize');
 
 // rota listar usuario

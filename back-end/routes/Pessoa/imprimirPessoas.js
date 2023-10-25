@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Users = require("../models/Users");
+const Pessoa = require('../../models/Pessoa');
 
-router.get("/imprimiruser", async (req, res) => {
+router.get("/imprimir", async (req, res) => {
   try {
-    const registros = await Users.findAll({
-      attributes: ['id', 'usuario'],
-    });
+    const registros = await Pessoa.findAll();
     res.status(200).json({
       registros,
     });

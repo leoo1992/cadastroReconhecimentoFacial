@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Log = require("../models/Log");
-const Pessoa = require('../models/Pessoa');
+const Log = require("../../models/Log");
+const Pessoa = require('../../models/Pessoa');
 
 router.get("/imprimirlogs", async (req, res) => {
   try {
