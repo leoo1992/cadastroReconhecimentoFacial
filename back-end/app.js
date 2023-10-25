@@ -6,28 +6,30 @@ const app = express();
 const port = 3000;
 const moment = require('moment-timezone');
 
+//IMPORTS AUTH
+const loginRouter = require("./routes/Auth/login");
+
 //IMPORTS USER
-const loginRouter = require("./routes/login");
-const cadastroUserRouter = require("./routes/cadastrosUsuario");
-const pesquisarUserRouter = require("./routes/pesquisarUser");
-const listarUserRouter = require("./routes/listarUser");
-const imprimirUserRouter = require("./routes/imprimirUser");
-const deletarUserByIdRouter = require("./routes/deletarUserById");
+const cadastroUserRouter = require("./routes/User/cadastrosUsuario");
+const pesquisarUserRouter = require("./routes/User/pesquisarUser");
+const listarUserRouter = require("./routes/User/listarUser");
+const imprimirUserRouter = require("./routes/User/imprimirUser");
+const deletarUserByIdRouter = require("./routes/User/deletarUserById");
 
 //IMPORTS PESSOA
-const cadastroPessoaRouter = require("./routes/cadastroPessoa");
-const atualizarPessoaByIdRouter = require("./routes/atualizarPessoaById");
-const desativarPessoaByIdRouter = require("./routes/desativarPessoaById");
-const consultaPessoaByIdRouter = require("./routes/consultaPessoaById");
-const pesquisaGeralPessoasRouter = require("./routes/pesquisaGeralPessoas");
-const listarPessoaRouter = require("./routes/listarPessoa");
-const imprimirPessoasRouter = require("./routes/imprimirPessoas");
-const deletarPessoaByIdRouter = require("./routes/deletarPessoaById");
+const cadastroPessoaRouter = require("./routes/Pessoa/cadastroPessoa");
+const atualizarPessoaByIdRouter = require("./routes/Pessoa/atualizarPessoaById");
+const desativarPessoaByIdRouter = require("./routes/Pessoa/desativarPessoaById");
+const consultaPessoaByIdRouter = require("./routes/Pessoa/consultaPessoaById");
+const pesquisaGeralPessoasRouter = require("./routes/Pessoa/pesquisaGeralPessoas");
+const listarPessoaRouter = require("./routes/Pessoa/listarPessoa");
+const imprimirPessoasRouter = require("./routes/Pessoa/imprimirPessoas");
+const deletarPessoaByIdRouter = require("./routes/Pessoa/deletarPessoaById");
 
 //IMPORTS LOG
-const pesquisarLogsRouter = require("./routes/pesquisarLogs");
-const listarLogsRouter = require("./routes/listarLogs");
-const imprimirLogsRouter = require("./routes/imprimirLogs");
+const pesquisarLogsRouter = require("./routes/Log/pesquisarLogs");
+const listarLogsRouter = require("./routes/Log/listarLogs");
+const imprimirLogsRouter = require("./routes/Log/imprimirLogs");
 
 require("dotenv").config();
 app.use(express.json());
@@ -41,8 +43,10 @@ sequelize.sync().then(() => {
     console.log('Servidor rodando na porta ' + port);
 });
 
-//ROTAS USER
+//ROTA AUTH
 app.use("/", loginRouter);
+
+//ROTAS USER
 app.use("/", cadastroUserRouter);
 app.use("/", pesquisarUserRouter);
 app.use("/", listarUserRouter);
