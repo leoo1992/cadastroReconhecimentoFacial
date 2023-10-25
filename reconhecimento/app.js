@@ -1,19 +1,19 @@
 require("dotenv").config();
-const express = require('express'),
-    sequelize = require("./config/sequelize"),
-    cors = require('cors'),
-    app = express(),
-    fs = require('fs'),
-    path = require('path'),
-    bodyParser = require('body-parser'),
-    moment = require('moment-timezone'),
-    port = 3002,
-    Pessoa = require("../back-end/models/Pessoa"),
-    Log = require("../back-end/models/Log"),
-    filePath = path.join(__dirname, 'RostosConhecidos.txt'),
-    labels = [],
-    { Op } = require("sequelize"),
-    Associations = require("../back-end/models/associations");
+const express = require('express');
+const sequelize = require("./config/sequelize");
+const cors = require('cors');
+const app = express();
+const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
+const moment = require('moment-timezone');
+const port = 3002;
+const Pessoa = require("../back-end/models/Pessoa");
+const Log = require("../back-end/models/Log");
+const filePath = path.join(__dirname, 'RostosConhecidos.txt');
+const labels = [];
+const { Op } = require("sequelize");
+const Associations = require("../back-end/models/associations");
 
 console.log(moment());
 
@@ -58,37 +58,42 @@ app.get('/obter-nomes', (req, res) => {
 });
 
 app.post('/salvar-imagem', (req, res) => {
-    const nome = req.headers.nome,
-        nomeSemEspacos = nome.trim().replace(/\s+/g, ''),
-        pastaDestino = path.join(__dirname, 'assets', 'lib', 'face-api', 'labels', nomeSemEspacos),
-        caminhoImagem = path.join(pastaDestino, `${contador}.jpeg`);
-    let contador = 1;
+    try {
+        const nome = req.headers.nome;
+        const nomeSemEspacos = nome.trim().replace(/\s+/g, '');
+        const pastaDestino = path.join(__dirname, 'assets', 'lib', 'face-api', 'labels', nomeSemEspacos);
+        let contador = 1;
+        const caminhoImagem = path.join(pastaDestino, `${contador}.jpeg`);
+        
+        if (!nome) {
+            return res.status(400).send('Nome não fornecido.');
+        }
+        
+        if (!fs.existsSync(pastaDestino)) {
+            fs.mkdirSync(pastaDestino, { recursive: true });
+        }
+        
+        while (fs.existsSync(path.join(pastaDestino, `${contador}.jpeg`)) && contador <= 5) {
+            contador++;
+        }
 
-    if (!nome) {
-        return res.status(400).send('Nome não fornecido.');
+        if (contador > 5) {
+            return res.status(400).send('A pasta está cheia (limite de 5 imagens).');
+        }
+
+        fs.writeFileSync(caminhoImagem, req.body);
+
+        if (!labels.includes(nomeSemEspacos)) {
+            labels.push(nomeSemEspacos);
+            fs.appendFileSync(filePath, '\n' + nomeSemEspacos);
+        }
+        console.log("Op salvar img realizada com sucesso");
+        res.status(200).send('Imagem e nome salvos com sucesso.');
+        console.log('Nomes carregados:', labels);
+    } catch (error) {
+        console.error('Erro ao salvar a imagem:', error);
+        res.status(500).send('Erro ao salvar a imagem.');
     }
-
-    if (!fs.existsSync(pastaDestino)) {
-        fs.mkdirSync(pastaDestino, { recursive: true });
-    }
-
-    while (fs.existsSync(path.join(pastaDestino, `${contador}.jpeg`)) && contador <= 5) {
-        contador++;
-    }
-
-    if (contador > 5) {
-        return res.status(400).send('A pasta está cheia (limite de 5 imagens).');
-    }
-
-    fs.writeFileSync(caminhoImagem, req.body);
-
-    if (!labels.includes(nomeSemEspacos)) {
-        labels.push(nomeSemEspacos);
-        fs.appendFileSync(filePath, '\n' + nomeSemEspacos);
-    }
-    console.log("Op salvar img realizada com sucesso");
-    res.status(200).send('Imagem e nome salvos com sucesso.');
-    console.log('Nomes carregados:', labels);
 });
 
 app.post('/salvar-ou-atualizar-log', async (req, res) => {
