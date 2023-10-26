@@ -243,6 +243,15 @@ const Cadastrados = () => {
   };
 
   useEffect(() => {
+    const divElement = document.querySelector('.rdt_TableHeader > div > div');
+
+    if (divElement) {
+      const selectedId = selectedRows.map((r) => r.id);
+      divElement.textContent = selectedId + '  -  Selecionado';
+    }
+  }, [selectedRows]);
+
+  useEffect(() => {
     const timeoutId = setTimeout(() => {
       search(searchQuery);
       fetchUsers(page, paginationPerPage, searchQuery);
