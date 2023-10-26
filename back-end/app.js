@@ -30,6 +30,7 @@ const deletarPessoaByIdRouter = require("./routes/Pessoa/deletarPessoaById");
 const pesquisarLogsRouter = require("./routes/Log/pesquisarLogs");
 const listarLogsRouter = require("./routes/Log/listarLogs");
 const imprimirLogsRouter = require("./routes/Log/imprimirLogs");
+const contarLogsRouter = require("./routes/Log/contarLogs");
 
 require("dotenv").config();
 app.use(express.json());
@@ -67,5 +68,6 @@ app.use("/", deletarPessoaByIdRouter);
 app.use("/", listarLogsRouter);
 app.use("/", imprimirLogsRouter);
 app.use("/", pesquisarLogsRouter);
+app.use("/", contarLogsRouter);
 
 module.exports = app;

@@ -95,3 +95,43 @@ exports.pesquisarLogs = async (req, res) => {
     res.status(500).json({ error: 'Erro ao realizar pesquisa geral.' });
   }
 };
+
+// Função que retorna quantas pessoas entraram hoje
+exports.countLogshoje = async (req, res) => {
+  try {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const amanha = new Date(hoje);
+    amanha.setDate(hoje.getDate() + 1);
+
+    const count = await Pessoa.count({
+      where: {
+        '$Logs.data$': {
+          [Op.between]: [hoje, amanha],
+        },
+      },
+      include: [
+        {
+          model: Log,
+          required: true,
+          where: {
+            data: {
+              [Op.between]: [hoje, amanha],
+            },
+          },
+        },
+      ],
+      distinct: true,
+    });
+
+    res.status(200).json({
+      totalPessoasHoje: count,
+    });
+  } catch (err) {
+    console.error('Erro ao contar os logs de hoje: ', err);
+    res.status(500).json({ error: 'Erro ao contar os logs de hoje.' });
+  }
+};
+
+

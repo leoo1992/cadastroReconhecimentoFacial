@@ -14,7 +14,8 @@ const Logs = () => {
     [searchQuery, setSearchQuery] = useState(''),
     [showChart, setShowChart] = useState(false),
     [activeChart, setActiveChart] = useState('bar'),
-    [activeButton, setActiveButton] = useState('bar');
+    [activeButton, setActiveButton] = useState('bar'),
+    [quantidadePessoasHoje, setQuantidadePessoasHoje] = useState(null);
 
   const handleButtonClick = (chartType) => {
     setActiveChart(chartType);
@@ -183,6 +184,17 @@ const Logs = () => {
   }) : [];
 
   useEffect(() => {
+    const fetchQuantidadePessoasHoje = async () => {
+      try {
+        const response = await api.get('/logs-hoje');
+        const { totalPessoasHoje } = response.data;
+        setQuantidadePessoasHoje(totalPessoasHoje);
+      } catch (error) {
+        console.error('Erro ao buscar quantidade de pessoas que fizeram log hoje: ', error);
+      }
+    };
+    fetchQuantidadePessoasHoje();
+
     const timeoutId = setTimeout(() => {
       search(searchQuery);
       fetchUsers(page, paginationPerPage, searchQuery);
@@ -325,6 +337,9 @@ const Logs = () => {
             </div>
             <div className={`container-fluid m-0 p-0 vh-100 ${theme === "dark" ? "bg-dark" : "bg-light"}`}>
               <div className='d-flex justify-content-end'>
+                <div className='d-inline text-center'>
+                  <p className="text-info m-1 p-1 fw-bold fs-5 text-center">Acessos Hoje:<span className="text-warning m-1 p-1 fw-bold fs-5">{quantidadePessoasHoje}</span></p>
+                </div>
                 <OverlayTrigger placement='bottom' overlay={geraGraficoButtonTooltip}>
                   <FontAwesomeIcon icon={faChartBar} className='btn btn-sm btn-light text-bg-primary p-1 m-1 fs-5' onClick={toggleChartVisibility} />
                 </OverlayTrigger>
