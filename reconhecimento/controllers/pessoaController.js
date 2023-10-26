@@ -9,7 +9,7 @@ const salvarImagem = (req, res) => {
     try {
         const nome = req.headers.nome;
         const nomeSemEspacos = nome.trim().replace(/\s+/g, '');
-        const pastaDestino = path.join(__dirname, 'assets', 'lib', 'face-api', 'labels', nomeSemEspacos);
+        const pastaDestino = path.join(__dirname, '../','assets', 'lib', 'face-api', 'labels', nomeSemEspacos);
         let contador = 1;
         const caminhoImagem = path.join(pastaDestino, `${contador}.jpeg`);
 
