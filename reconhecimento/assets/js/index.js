@@ -4,7 +4,21 @@ const cam = document.getElementById('cam'),
     canvas = document.getElementById('canvas'),
     recognizedPeople = new Set(),
     labels = [];
+
 let lastRecognitionTime = 0;
+
+document.getElementById('cpfInput').addEventListener('input', function (event) {
+    const cpf1 = event.target.value;
+    event.target.value = formatarCPF(cpf1);
+});
+
+function formatarCPF(cpf1) {
+    cpf1 = cpf1.replace(/\D/g, ''); 
+    cpf1 = cpf1.replace(/(\d{3})(\d)/, '$1.$2'); 
+    cpf1 = cpf1.replace(/(\d{3})(\d)/, '$1.$2'); 
+    cpf1 = cpf1.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    return cpf1;
+}
 
 console.error = () => { };
 console.warn = () => { };
@@ -201,7 +215,7 @@ cam.addEventListener('play', async () => {
             .withFaceLandmarks()
             .withFaceDescriptors()
         const resizedDetections = faceapi.resizeResults(detections, canvasSize)
-        if (labels.length === 0 || !labels.length || !labels ) {
+        if (labels.length === 0 || !labels.length || !labels) {
             console.error('Pastas vazias ou não reconhecidas');
             return
         }
@@ -231,10 +245,12 @@ cam.addEventListener('play', async () => {
 
 cadastroBtn.addEventListener('click', async () => {
     const nome = document.getElementById('nomeInput').value,
-        cpf = document.getElementById('cpfInput').value,
+        cpf1 = document.getElementById('cpfInput').value,
         tipo = document.getElementById('tipoInput').value,
         canvasElement = document.createElement('canvas'),
         context = canvasElement.getContext('2d');
+
+    const cpf = cpf1.replace(/[\.-]/g, '');
 
     function validarCPF(cpf) {
         if (cpf.length !== 11) {
