@@ -201,6 +201,10 @@ cam.addEventListener('play', async () => {
             .withFaceLandmarks()
             .withFaceDescriptors()
         const resizedDetections = faceapi.resizeResults(detections, canvasSize)
+        if (labels.length === 0 || !labels.length || !labels ) {
+            console.error('Pastas vazias ou não reconhecidas');
+            return
+        }
         const faceMatcher = new faceapi.FaceMatcher(labels, 0.6)
         const results = resizedDetections.map(d =>
             faceMatcher.findBestMatch(d.descriptor)
