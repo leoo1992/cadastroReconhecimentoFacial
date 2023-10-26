@@ -6,6 +6,8 @@ import "./cadastro.css";
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import InputMask from 'react-input-mask';
+
 
 const FormCadastroFaces = () => {
   const navigate = useNavigate(),
@@ -173,15 +175,19 @@ const FormCadastroFaces = () => {
           </Row>
           <Row>
             <Col>
-              <Form.Group className="pt-2">
-                <Form.Label className={theme === "dark" ? "text-light" : "text-dark"} htmlFor="cpf">CPF:</Form.Label>
-                <Form.Control
+              <Form.Label className={` pt-2 ${theme === "dark" ? "text-light" : "text-dark"}`} htmlFor="cpf">CPF:</Form.Label>
+              <Form.Group className="">
+                <InputMask
+                  mask="999.999.999-99"
+                  maskChar={null}
                   type="text"
                   id="cpf"
                   name="cpf"
                   value={formData.cpf}
+                  alwaysShowMask={false}
                   onChange={handleChange}
                   required
+                  className="rounded p-2 w-100"
                 />
                 {formErrors.cpf && (
                   <div className="error-message">{formErrors.cpf}</div>
@@ -189,6 +195,7 @@ const FormCadastroFaces = () => {
               </Form.Group>
             </Col>
           </Row>
+
           <Row>
             <Col>
               <Form.Group className="pt-2">

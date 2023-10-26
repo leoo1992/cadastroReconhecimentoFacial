@@ -6,12 +6,13 @@ import "./cadastro.css";
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import InputMask from 'react-input-mask';
 
 const FormAtualizaFaces = () => {
   const navigate = useNavigate(),
-  errorRef = useRef(null),
-  { id } = useParams(),
-  // eslint-disable-next-line
+    errorRef = useRef(null),
+    { id } = useParams(),
+    // eslint-disable-next-line
     [theme, setTheme] = useState("dark"),
     [isFormValid, setIsFormValid] = useState(true),
     [formData, setFormData] = useState({
@@ -99,10 +100,10 @@ const FormAtualizaFaces = () => {
           <Row>
             <Col>
               <Form.Group>
-                <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Nome:</Form.Label>
+                <Form.Label htmlFor="nome" className={theme === "dark" ? "text-light" : "text-dark"}>Nome:</Form.Label>
                 <Form.Control
                   type="text"
-                  name="nome"
+                  id="nome"
                   value={formData.nome}
                   onChange={handleChange}
                   required
@@ -115,14 +116,18 @@ const FormAtualizaFaces = () => {
           </Row>
           <Row>
             <Col>
-              <Form.Group>
-                <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>CPF:</Form.Label>
-                <Form.Control
+              <Form.Label className={`pt-1 ${theme === "dark" ? "text-light" : "text-dark"}`} htmlFor="cpf">CPF:</Form.Label>
+              <Form.Group className="">
+                <InputMask
+                  mask="999.999.999-99"
+                  maskChar={null}
                   type="text"
-                  name="cpf"
+                  id="cpf"
                   value={formData.cpf}
+                  alwaysShowMask={false}
                   onChange={handleChange}
                   required
+                  className="rounded p-2 w-100"
                 />
                 {formErrors.cpf && (
                   <div className="error-message">{formErrors.cpf}</div>
@@ -133,10 +138,10 @@ const FormAtualizaFaces = () => {
           <Row>
             <Col>
               <Form.Group>
-                <Form.Label className={theme === "dark" ? "text-light" : "text-dark"}>Tipo:</Form.Label>
+                <Form.Label htmlFor="tipo" className={theme === "dark" ? "text-light" : "text-dark"}>Tipo:</Form.Label>
                 <Form.Control
                   as="select"
-                  name="tipo"
+                  id="tipo"
                   value={formData.tipo}
                   onChange={handleChange}
                   required
@@ -151,6 +156,7 @@ const FormAtualizaFaces = () => {
                   <div className="error-message">{formErrors.tipo}</div>
                 )}
               </Form.Group>
+
             </Col>
           </Row>
           <Row>

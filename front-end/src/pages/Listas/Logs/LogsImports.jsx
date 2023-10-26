@@ -23,6 +23,10 @@ import {
   LineElement, ArcElement, Legend, Title, Filler,
 } from 'chart.js';
 
+const formatarCPF = (cpf) => {
+  return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+};
+
 const ativoEnum = {
   0: "Não",
   1: "Sim",
@@ -85,10 +89,10 @@ const columns = [
   },
   {
     name: 'CPF',
-    selector: (row) => row.pessoaCpf,
+    selector: (row) => formatarCPF(row.pessoaCpf),
     sortable: true,
     reorder: true,
-    width: '115px',
+    width: '120px',
   },
   {
     name: 'Data Entrada',

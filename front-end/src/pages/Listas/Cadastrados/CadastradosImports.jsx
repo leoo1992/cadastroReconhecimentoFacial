@@ -16,6 +16,10 @@ import DesativarModal from './DesativarModal';
 import SubHeaderComponent from './SubHeaderComponent';
 import ContextActions from './ContextActions';
 
+const formatarCPF = (cpf) => {
+  return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+};
+
 const ativoEnum = {
   0: "Não",
   1: "Sim",
@@ -59,7 +63,7 @@ const ativoEnum = {
     },
     {
       name: 'CPF',
-      selector: (row) => row.cpf,
+      selector: (row) => formatarCPF(row.cpf),
       sortable: true,
       reorder: true,
       width: '120px',
