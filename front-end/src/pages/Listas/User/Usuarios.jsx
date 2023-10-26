@@ -1,6 +1,6 @@
 import {
   React, useState, useEffect, useCallback, api, DataTable, Triangle, MenuIcon, UserContextActions,
-  toast, ToastContainer, jsPDF, XLSX, DeleteUserModal, SubHeaderUser, columns, customText
+  toast, ToastContainer, jsPDF, XLSX, DeleteUserModal, SubHeaderUser, columns, customText, ListasFooter
 } from './UserImports';
 
 const Usuarios = () => {
@@ -237,6 +237,7 @@ const Usuarios = () => {
               style={{ width: '100%', height: '100%' }}
             />
           </div>
+          <ListasFooter />
         </>
       )}
     </>

@@ -15,6 +15,7 @@ import DeleteModal from './DeleteModal';
 import DesativarModal from './DesativarModal';
 import SubHeaderComponent from './SubHeaderComponent';
 import ContextActions from './ContextActions';
+import ListasFooter from '../ListasFooter';
 
 const formatarCPF = (cpf) => {
   return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
@@ -88,5 +89,5 @@ export {
   React, useState, useEffect, useCallback, useNavigate,
   api, jsPDF, XLSX, toast, ToastContainer, DataTable, Triangle,
   DeleteModal, MenuIcon, DesativarModal, SubHeaderComponent, ContextActions,
-  ativoEnum, tipoEnum, customText, divElement, columns
+  ativoEnum, tipoEnum, customText, divElement, columns, ListasFooter
 };

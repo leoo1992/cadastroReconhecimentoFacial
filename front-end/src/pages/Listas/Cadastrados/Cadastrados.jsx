@@ -1,7 +1,7 @@
 import {
   React, useState, useEffect, useCallback, api, DataTable,
   Triangle, MenuIcon, useNavigate, toast, ToastContainer, jsPDF, XLSX, DeleteModal,
-  DesativarModal, SubHeaderComponent, ContextActions, ativoEnum, tipoEnum, customText, divElement, columns
+  DesativarModal, SubHeaderComponent, ContextActions, ativoEnum, tipoEnum, customText, divElement, columns, ListasFooter
 } from './CadastradosImports';
 
 const Cadastrados = () => {
@@ -349,6 +349,7 @@ const Cadastrados = () => {
               style={{ width: '100%', height: '100%' }}
             />
           </div>
+          <ListasFooter />
         </>
       )}
     </>

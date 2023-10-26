@@ -1,7 +1,7 @@
 import {
   React, useState, useEffect, useCallback, api, DataTable, Triangle, MenuIcon, OverlayTrigger, FontAwesomeIcon,
   faChartBar, toast, ToastContainer, jsPDF, XLSX, casual, SubHeaderLogs, ChartSection,
-  ativoEnum, tipoEnum, geraGraficoButtonTooltip, customText, columns
+  ativoEnum, tipoEnum, geraGraficoButtonTooltip, customText, columns, ListasFooter
 } from './LogsImports'
 
 const Logs = () => {
@@ -403,6 +403,7 @@ const Logs = () => {
                 <div className="d-none p-0 m-0"></div>
               )}
             </div>
+            <ListasFooter />
           </>
         )
       }

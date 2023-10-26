@@ -22,6 +22,7 @@ import {
   LinearScale, RadialLinearScale, CategoryScale, BarElement, PointElement,
   LineElement, ArcElement, Legend, Title, Filler,
 } from 'chart.js';
+import ListasFooter from '../ListasFooter';
 
 const formatarCPF = (cpf) => {
   return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
@@ -121,5 +122,5 @@ export {
   React, useState, useEffect, useCallback, api, DataTable, Triangle, MenuIcon, Tooltip, OverlayTrigger, FontAwesomeIcon,
   faChartBar, toast, ToastContainer, jsPDF, XLSX, casual, SubHeaderLogs, ChartSection, ChartJS, LinearScale,
   RadialLinearScale, CategoryScale, BarElement, PointElement, LineElement, ArcElement, Legend, Title, Filler,
-  ativoEnum, tipoEnum, geraGraficoButtonTooltip, customText, columns
+  ativoEnum, tipoEnum, geraGraficoButtonTooltip, customText, columns, ListasFooter
 };

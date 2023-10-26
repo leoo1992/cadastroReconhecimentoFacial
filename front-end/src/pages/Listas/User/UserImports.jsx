@@ -16,6 +16,7 @@ import * as XLSX from 'xlsx';
 import DeleteUserModal from './DeleteUserModal';
 import SubHeaderUser from './SubHeaderUser';
 import UserContextActions from './UserContextActions';
+import ListasFooter from '../ListasFooter';
 
 const columns = [
   {
@@ -71,5 +72,6 @@ export {
   SubHeaderUser,
   columns,
   customText,
-  UserContextActions
+  UserContextActions,
+  ListasFooter
 };
