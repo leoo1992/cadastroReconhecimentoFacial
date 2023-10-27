@@ -13,14 +13,13 @@ import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
-  const [theme, setTheme] = useState("dark"),
-    toggleTheme = () => {
-      if (theme === "dark") {
-        setTheme("default");
-      } else {
-        setTheme("dark");
-      }
-    };
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'default' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
 
   const createButtonWithTooltip = (text, link, icon, tooltipText, target) => (
     <OverlayTrigger

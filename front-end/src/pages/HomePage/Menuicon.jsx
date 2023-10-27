@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './home.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon, faArrowLeft, faHome, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
@@ -9,8 +9,13 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Cookies from 'js-cookie';
 
 function MenuIcon(props) {
-  const [theme, setTheme] = useState("dark"),
-    handleGoHome = () => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    props.updateTheme(theme);
+  }, [theme, props]);
+
+   const handleGoHome = () => {
       window.location.href = '/home';
     };
 
@@ -30,13 +35,9 @@ function MenuIcon(props) {
   };
 
   const toggleTheme = () => {
-    if (theme === "dark") {
-      setTheme("default");
-      props.updateTheme("default");
-    } else {
-      setTheme("dark");
-      props.updateTheme("dark");
-    }
+    const newTheme = theme === "dark" ? "default" : "dark";
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
   const goBackTooltip = (

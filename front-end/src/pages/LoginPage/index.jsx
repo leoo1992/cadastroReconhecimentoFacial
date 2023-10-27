@@ -13,14 +13,12 @@ import FormLogin from './FormLogin';
 
 const LoginPage = () => {
 
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
 
   const toggleTheme = () => {
-    if (theme === "dark") {
-      setTheme("default");
-    } else {
-      setTheme("dark");
-    }
+    const newTheme = theme === 'dark' ? 'default' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
   const toggleThemeTooltip = (

@@ -12,19 +12,19 @@ import Footer from '../Footer';
 import FormCadastroUser from './FormCadastroUser';
 
 const CadastroUsers = () => {
-  const [theme, setTheme] = useState("dark"),
-    toggleTheme = () => {
-      if (theme === "dark") {
-        setTheme("default");
-      } else {
-        setTheme("dark");
-      }
-    },
-    toggleThemeTooltip = (
-      <Tooltip id="toggle-theme-tooltip">
-        {theme === "dark" ? "Modo Claro" : "Modo Escuro"}
-      </Tooltip>
-    );
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'default' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  const toggleThemeTooltip = (
+    <Tooltip id="toggle-theme-tooltip">
+      {theme === "dark" ? "Modo Claro" : "Modo Escuro"}
+    </Tooltip>
+  );
 
   return (
     <>
