@@ -9,7 +9,7 @@ O front-end de gestão é construído em React e é responsável por gerenciar o
 - Realização de CRUD de faces cadastradas e usuarios do sistema.
 - Uso da biblioteca Chart.js para visualizar dados estatísticos relacionados ao reconhecimento facial.
 - Uso de DataTable React para exibir e gerenciar dados relacionados ao reconhecimento facial.
-- Sistema de Login com token JWT (básico).
+- Sistema de Login com token JWT (básico), com rotas privadas.
 - Uso de acessibilidade com tema dark realizado em localStorage.
 
 ## Back-end (Node.js, Express, Sequelize, MySQL)
@@ -37,50 +37,51 @@ Na terceira parte do projeto, você encontrará um diretório dedicado ao reconh
 
 ## Como Instalar
 
-OBS: leia o README.md que esta dentro da pasta .vscode
+- OBS: leia o README.md que esta dentro da pasta .vscode
 
 1. Clone todo o repositório:
-git clone ...
+- git clone ...
 
 2. Navegue até o diretório do front-end e Instale as dependências:
-cd .\front-end\
-npm install
+- cd .\front-end\
+- npm install
 
 3. Acesse o Back-End e Instale as dependências::
-cd..
-cd .\back-end\
-npm install
+- cd..
+- cd .\back-end\
+- npm install
 
 4. Instale o env e configure-o:
-Crie um arquivo .env na pasta raiz do back
-
-Ajuste e cole o script conforme a configuração da sua conecção do mySQL:
-DB_HOST= seu-host
-DB_PORT= sua-porta
-DB_USER= seu-usuario
-DB_PASSWORD= seu-password
-DB_DATABASE= reconhecimento  <-- Crie esse shema no seu banco
-JWT_SECRET= defina-sua-secret-key
-process.env.TZ=America/Sao_Paulo <-- Ajuste seu fuso horario>
+- Crie um arquivo .env na pasta raiz do back
+- Ajuste e cole o script conforme a configuração da seu MySQL:
+- DB_HOST= seu-host
+- DB_PORT= sua-porta
+- DB_USER= seu-usuario
+- DB_PASSWORD= seu-password
+- DB_DATABASE= reconhecimento  <-- Crie esse shema no seu banco
+- JWT_SECRET= defina-sua-secret-key
+- process.env.TZ=America/Sao_Paulo <-- Ajuste seu fuso horario>
 
 5. Acesse o Reconhecimento e Instale as dependências::
-cd..
-cd .\reconhecimento\
-npm install
+- cd..
+- cd .\reconhecimento\
+- npm install
 
 ## Como Executar e Usar
 
 1. Acesse e Inicie o back-end:
-node app.js
+- node app.js
 
 2. Acesse e Inicie o front-end:
-npm start
+- npm start
 
 3. Inicie o reconhecimneto:
-use o Live-Server para inicia-lo
+- use o Live-Server para inicia-lo
 
 4. Crie um Usuario para acessar o sistema de gestão (Front - React)
 
 5. Cadatre ao menos uma face para reconhecimento.
 
 Divirta-se explorando o reconhecimento facial! Se tiver alguma dúvida ou precisar de assistência, sinta-se à vontade para entrar em contato.
+
+# ESTE PROJETO ESTÁ EM CONSTANTE DESENVOLVIMENTO
