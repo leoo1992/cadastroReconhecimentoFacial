@@ -11,6 +11,10 @@ O front-end de gestão é construído em React e é responsável por gerenciar o
 - Uso de DataTable React para exibir e gerenciar dados relacionados ao reconhecimento facial.
 - Sistema de Login com token JWT (básico), com rotas privadas.
 - Uso de acessibilidade com tema dark realizado em localStorage.
+- Uso de toasts e tooltips
+- Menu Offcanvas 
+- Efeitos CSS Transitions, Animations, Shadows, Hovers
+- Uso do Bootstrap
 
 ## Back-end (Node.js, Express, Sequelize, MySQL)
 
@@ -25,7 +29,7 @@ O back-end é construído em Node.js e utiliza o framework Express para criar a 
 
 ## Reconhecimento (JavaScript, FaceAPI)
 
-Na terceira parte do projeto, você encontrará um diretório dedicado ao reconhecimento facial nativo em JavaScript. A biblioteca FaceAPI é usada para realizar a detecção e reconhecimento facial. Esta parte do projeto pode ser usada para fins de aprendizado e demonstração do reconhecimento facial.
+Na terceira parte do projeto, você encontrará um diretório dedicado ao reconhecimento facial nativo em JavaScript. A biblioteca FaceAPI é usada para realizar a detecção e reconhecimento facial. Esta parte do projeto pode ser usada para fins de reconhecimento de MULTIFACES simultanêas. Reconhece e realiza a liberação de acesso (foi usado o exemplo de uma escola).
 
 ## Pré-requisitos
 
@@ -33,7 +37,8 @@ Na terceira parte do projeto, você encontrará um diretório dedicado ao reconh
 - Live-Server Vs Code
 - VS Code (Existem task prontas que auxiliam a instalação e atualização das dependencias)
 - Banco de dados MySQL configurado (os modelos serão gerados pelo ORM - Sequelize)
-- Conhecimento em JS, React, Node.js e Sequelize
+- Conhecimento em MySql, JS, React, Node.js, Sequelize e Bootstrap
+- Camera - libere a permissão da camera
 
 ## Como Instalar
 
@@ -84,4 +89,24 @@ Na terceira parte do projeto, você encontrará um diretório dedicado ao reconh
 
 Divirta-se explorando o reconhecimento facial! Se tiver alguma dúvida ou precisar de assistência, sinta-se à vontade para entrar em contato.
 
-# ESTE PROJETO ESTÁ EM CONSTANTE DESENVOLVIMENTO
+## Imagens do projeto
+
+- Inicio
+![Gestao](./Gestao.png)
+
+- Lista de Logs
+![Logs](./Logs.png)
+
+- Gráficos
+![Chart](./Chart.png)
+
+- Cadastro
+![CadastroFaces](./CadastroFaces.png)
+
+- Login
+![Login](./Login.png)
+
+- Reconhecimento
+![Reconhecimento](./Reconhecimento.png)
+
+### ESTE PROJETO ESTÁ EM CONSTANTE DESENVOLVIMENTO
