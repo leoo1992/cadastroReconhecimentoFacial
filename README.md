@@ -92,21 +92,21 @@ Divirta-se explorando o reconhecimento facial! Se tiver alguma dúvida ou precis
 ## Imagens do projeto
 
 - Inicio
-![Gestao](./info-images/Gestao.png)
+- ![Gestao](./Gestao.png)
 
 - Lista de Logs
-![Logs](./info-images/Logs.png)
+- ![Logs](./Logs.png)
 
 - Gráficos
-![Chart](./info-images/Chart.png)
+- ![Chart](./Chart.png)
 
 - Cadastro
-![CadastroFaces](./info-images/CadastroFaces.png)
+- ![CadastroFaces](./CadastroFaces.png)
 
 - Login
-![Login](./info-images/Login.png)
+- ![Login](./Login.png)
 
 - Reconhecimento
-![Reconhecimento](./info-images/Reconhecimento.png)
+- ![Reconhecimento](./Reconhecimento.png)
 
 ### ESTE PROJETO ESTÁ EM CONSTANTE DESENVOLVIMENTO
