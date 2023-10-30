@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.9"
 
 services:
   db:
@@ -10,8 +10,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
      - "3306:3306"
- #  volumes:
-  #    - ./
 
   back-end:
     image: node
@@ -21,29 +19,10 @@ services:
      - db
     ports:
      - "3000:3000"
- #  volumes:
-  #    - ./
-
-  reconhecimento:
-    image: javascript
-    container_name: reconhecimento-js    
-    restart: always
-    depends_on:
-     - back-end
-    ports:
      - "3002:3002"
- #  volumes:
-  #    - ./
-
-  front-end:
-    image: react
-    container_name: front-end-react
-    restart: always
-    depends_on:
-     - front-end
-    ports:
      - "3001:3001"
- #  volumes:
-  #    - ./
-      
-
+    volumes:
+     - .:/var/www
+    build:
+        context: .
+        dockerfile: Dockerfile
