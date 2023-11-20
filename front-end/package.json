@@ -35,7 +35,7 @@
     "node": "^21.1.0",
     "node-fetch": "^3.3.2",
     "nth-check": "^2.1.1",
-    "openai": "^4.6.0",
+    "openai": "^4.14.2",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
