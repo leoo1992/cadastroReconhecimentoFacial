@@ -31,7 +31,7 @@
     "inputmask": "^5.0.8",
     "jquery": "^3.7.1",
     "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.7.0",
+    "jspdf-autotable": "^3.7.1",
     "node": "^21.1.0",
     "node-fetch": "^3.3.2",
     "nth-check": "^2.1.1",
