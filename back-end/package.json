@@ -35,7 +35,7 @@
     "nodemon": "^3.0.1",
     "nvm": "^0.0.4",
     "path": "^0.12.7",
-    "sanitize-html": "^2.11.0",
+    "sanitize-html": "^2.12.1",
     "sequelize": "^6.34.0",
     "tough-cookie": "^4.1.3"
   },
