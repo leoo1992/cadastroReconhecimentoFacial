@@ -40,7 +40,7 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-chartjs-2": "^5.2.0",
-    "react-data-table-component": "^7.5.4",
+    "react-data-table-component": "^7.6.2",
     "react-dimmer": "^1.0.7",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
