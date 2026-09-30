@@ -1,0 +1,1 @@
+{"$schema":"https://unpkg.com/knip@5/schema.json","entry":["quality/repository-quality.mjs","quality/self-check.mjs"],"project":["quality/**/*.mjs","tests/**/*.mjs"]}

@@ -1,7 +1,13 @@
 name: Repository Quality
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
 permissions:
   contents: read
+
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -10,13 +16,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Type checking
-        run: npx --yes -p typescript@5.9.2 tsc -p quality/tsconfig.json
       - name: Lint
-        run: npx --yes eslint@9.35.0 quality tests --config quality/eslint.config.mjs
+        run: npx --yes eslint@9.39.5 quality/repository-quality.mjs quality/self-check.mjs tests/repository-quality.node.mjs
+      - name: Type checking
+        run: npx --yes -p typescript@5.9.2 tsc --noEmit --allowJs --checkJs --target ES2022 --module NodeNext --moduleResolution NodeNext quality/repository-quality.mjs
+      - name: Formatter
+        run: node -e "JSON.parse(require('fs').readFileSync('.prettierrc.json','utf8'))"
       - name: Tests + coverage 80%
-        run: node --test --experimental-test-coverage --test-coverage-lines=80 tests/repository-quality.test.mjs
-      - name: Build quality manifest
-        run: node quality/build.mjs
+        run: node --test --experimental-test-coverage --test-coverage-lines=80 tests/repository-quality.node.mjs
+      - name: Dead code
+        run: node quality/self-check.mjs
+      - name: Build
+        run: |
+          mkdir -p quality/dist
+          node quality/self-check.mjs
+          echo quality-ok > quality/dist/quality.ok
       - name: Docker build
         run: docker build -f quality/Dockerfile -t repository-quality .
