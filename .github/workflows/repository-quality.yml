@@ -1,0 +1,22 @@
+name: Repository Quality
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Type checking
+        run: npx --yes -p typescript@5.9.2 tsc -p quality/tsconfig.json
+      - name: Lint
+        run: npx --yes eslint@9.35.0 quality tests --config quality/eslint.config.mjs
+      - name: Tests + coverage 80%
+        run: node --test --experimental-test-coverage --test-coverage-lines=80 tests/repository-quality.test.mjs
+      - name: Build quality manifest
+        run: node quality/build.mjs
+      - name: Docker build
+        run: docker build -f quality/Dockerfile -t repository-quality .
