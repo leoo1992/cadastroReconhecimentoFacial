@@ -1,0 +1,24 @@
+name: Dependency Audit
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  osv-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: OSV dependency audit
+        uses: google/osv-scanner-action/osv-scanner-action@v2.6.0
+        continue-on-error: true
+        with:
+          scan-args: |-
+            --recursive
+            ./
