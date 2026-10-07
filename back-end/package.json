@@ -44,5 +44,8 @@
     "sequelize-cli": "^6.6.1",
     "supertest": "^6.3.3"
   },
-  "main": "app.js"
+  "main": "app.js",
+  "engines": {
+    "node": ">=18"
+  }
 }
